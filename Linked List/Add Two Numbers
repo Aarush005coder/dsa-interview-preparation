@@ -1,0 +1,103 @@
+/*
+------------------------------------------------------------
+Problem    : Add Two Numbers
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Medium
+
+Problem:
+Given two non-empty linked lists representing two non-negative
+integers, where each node stores a single digit in reverse order,
+return the sum as a linked list in the same reverse order.
+
+Approach:
+Since the digits are stored in reverse order, we can simulate the
+same process used in elementary addition by traversing both linked
+lists simultaneously from head to tail.
+
+At each step, we add the current digits from both lists along with
+any carry generated from the previous addition. A new node is then
+created to store the resulting digit.
+
+Why does this work?
+
+Because both linked lists store digits from least significant to
+most significant, we can process them in a single traversal without
+reversing the lists.
+
+A dummy node is used to simplify result list construction and avoid
+handling a special case for the head node. The carry is propagated
+to the next iteration whenever the digit sum exceeds 9. The process
+continues until both lists are fully traversed and no carry remains.
+
+Algorithm:
+1. Create a dummy node to build the result list.
+2. Initialize a pointer to the dummy node and set carry to 0.
+3. Traverse both linked lists simultaneously.
+4. Read the current digit from each list (use 0 if a list ends).
+5. Compute the total sum including the carry.
+6. Update the carry and create a new node containing the current digit.
+7. Move all pointers to the next nodes.
+8. Continue until both lists and the carry are exhausted.
+9. Return the node following the dummy node.
+
+Time Complexity : O(max(n, m))
+
+Reason:
+Each node from both linked lists is processed exactly once.
+
+Space Complexity : O(max(n, m))
+
+Reason:
+A new linked list is created to store the result, containing at
+most max(n, m) + 1 nodes.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        // Dummy node simplifies the construction of the result list.
+        ListNode* dummy = new ListNode(0);
+        ListNode* current = dummy;
+
+        // Stores the carry generated during addition.
+        int carry = 0;
+
+        // Continue until both lists are fully processed
+        // and there is no remaining carry.
+        while (l1 != nullptr || l2 != nullptr || carry != 0) {
+
+            // Read the current digit from each list.
+            // If a list is exhausted, use 0.
+            int value1 = (l1 != nullptr) ? l1->val : 0;
+            int value2 = (l2 != nullptr) ? l2->val : 0;
+
+            // Add the current digits along with the carry.
+            int sum = value1 + value2 + carry;
+
+            // Update the carry for the next iteration.
+            carry = sum / 10;
+
+            // Extract the current digit of the answer.
+            int digit = sum % 10;
+
+            // Append the computed digit to the result list.
+            current->next = new ListNode(digit);
+            current = current->next;
+
+            // Move to the next node in each list if available.
+            if (l1 != nullptr) {
+                l1 = l1->next;
+            }
+
+            if (l2 != nullptr) {
+                l2 = l2->next;
+            }
+        }
+
+        // Skip the dummy node and return the actual result.
+        return dummy->next;
+    }
+};
