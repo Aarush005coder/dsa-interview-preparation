@@ -61,7 +61,7 @@ For every problem, I aim to maintain:
 
 | Topic               | Problems Solved |
 | ------------------- | --------------: |
-| Arrays              |               0 |
+| Arrays              |               1 |
 | Strings             |               0 |
 | Linked List         |               0 |
 | Stack               |               0 |
