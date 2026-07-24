@@ -1,7 +1,36 @@
 # Arrays
 
-This folder contains array-based problems solved in C++.
+This folder contains **Array** problems solved in **C++**. Each solution includes a clean implementation, an explanation of the approach, algorithm, and time & space complexity analysis.
 
-| # | Problem | Difficulty | Solution |
-|---|---------|------------|----------|
-| 1 | Two Sum |     Easy   |    ✅   |
+---
+
+## 📚 Problems
+
+| # | Problem | Difficulty | Status |
+|---|---------|------------|--------|
+| 1 | Two Sum | Easy | ✅ |
+
+---
+
+## 📌 Concepts Covered
+
+- Array Traversal
+- Hash Map
+- Two Pointers
+- Prefix Sum
+- Sliding Window
+- Sorting
+- Binary Search on Arrays
+
+---
+
+## 🎯 Learning Goals
+
+- Build a strong foundation in array-based problem solving.
+- Learn common patterns and optimization techniques.
+- Improve algorithmic thinking and problem-solving skills.
+- Write clean, optimized, and well-documented C++ solutions.
+
+---
+
+**Problems Solved:** **1**
