@@ -73,18 +73,37 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 
 ## 📈 Progress
 
-| Topic               | Problems Solved |
-| ------------------- | --------------: |
-| Arrays              |               1 |
-| Strings             |               0 |
-| Linked List         |               0 |
-| Stack               |               0 |
-| Queue               |               0 |
-| Trees               |               0 |
-| Graph               |               0 |
-| Dynamic Programming |               0 |
-| Greedy              |               0 |
-| Others              |               0 |
+| Topic | Solved |
+|--------|-------:|
+| Arrays | 1 |
+| Linked List | 1 |
+| Strings | 0 |
+| Matrix | 0 |
+| Hashing | 0 |
+| Sorting | 0 |
+| Searching | 0 |
+| Binary Search | 0 |
+| Two Pointers | 0 |
+| Sliding Window | 0 |
+| Prefix Sum | 0 |
+| Bit Manipulation | 0 |
+| Recursion | 0 |
+| Backtracking | 0 |
+| Stack | 0 |
+| Queue | 0 |
+| Trees | 0 |
+| Binary Search Tree | 0 |
+| Heap | 0 |
+| Trie | 0 |
+| Graph | 0 |
+| Dynamic Programming | 0 |
+| Greedy | 0 |
+| Math | 0 |
+| Segment Tree | 0 |
+| Fenwick Tree | 0 |
+| Union Find | 0 |
+| Miscellaneous | 0 |
+
 
 > This progress table will be updated regularly as I continue my DSA preparation.
 
