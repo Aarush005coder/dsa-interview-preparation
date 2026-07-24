@@ -18,6 +18,20 @@ For every problem, I aim to maintain:
 
 ---
 
+## 🎯 Goal
+
+**2-3 Problems • Every Day**
+
+Solve two Data Structures & Algorithms problems every day while focusing on:
+
+- Understanding the underlying concept
+- Writing clean and optimized C++ solutions
+- Analyzing time and space complexity
+- Maintaining consistent documentation
+- Building strong problem-solving skills through daily practice
+
+---
+
 ## 🛠️ Language
 
 * C++
