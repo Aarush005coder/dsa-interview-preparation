@@ -1,1 +1,76 @@
+/*
+------------------------------------------------------------
+Problem    : Two Sum
+Platform   : LeetCode
+Topic      : Arrays, Hash Map
+Difficulty : Easy
 
+Problem Statement:
+Given an integer array `nums` and an integer `target`,
+return the indices of the two numbers such that they add
+up to the target. Each input has exactly one valid solution,
+and the same element cannot be used twice.
+
+Approach:
+A brute-force solution checks every possible pair, resulting
+in O(n²) time complexity, which is inefficient for large inputs.
+
+To optimize this, we use a hash map to store the numbers we
+have already visited along with their indices. For each current
+element, we calculate the required complement
+(complement = target - nums[i]).
+
+Why does this work?
+For every element, there is only one value that can complete
+the target sum. By storing previously visited elements in a
+hash map, we can instantly check whether that required value
+already exists instead of scanning the entire array again.
+
+Since hash map lookup takes O(1) on average, this reduces the
+overall complexity from O(n²) to O(n).
+
+Algorithm:
+1. Initialize an empty hash map.
+2. Iterate through the array.
+3. Compute the complement for the current element.
+4. If the complement exists in the hash map, return both indices.
+5. Otherwise, store the current element and its index.
+6. Continue until the required pair is found.
+
+Time Complexity : O(n)
+Reason: The array is traversed exactly once. Each hash map insertion
+and lookup takes O(1) on average, resulting in an overall
+linear time complexity.
+
+Space Complexity : O(n)
+Reason: In the worst case, every element is stored in the hash map
+before the solution is found.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        int n = nums.size();
+        unordered_map<int, int> indexMap;
+
+        for (int i = 0; i < n; i++) {
+            int complement = target - nums[i];
+
+            // If the required complement is already present,
+            // we have found the two numbers whose sum is target.
+            if (indexMap.find(complement) != indexMap.end()) {
+                return {indexMap[complement], i};
+            }
+
+            // Store the current number and its index
+            // for future complement lookups.
+            indexMap[nums[i]] = i;
+        }
+
+        // According to the problem constraints,
+        // a valid solution always exists.
+        return {};
+    }
+};
