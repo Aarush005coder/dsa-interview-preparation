@@ -1,0 +1,89 @@
+/*
+------------------------------------------------------------
+Problem    : Longest Substring Without Repeating Characters
+Platform   : LeetCode
+Topic      : Sliding Window
+Difficulty : Medium
+
+Problem:
+Given a string `s`, find the length of the longest
+substring that contains no repeating characters.
+
+Approach:
+A brute-force approach checks every possible substring and
+verifies whether it contains duplicate characters, resulting
+in O(n²) or higher time complexity.
+
+To optimize this, we use the Sliding Window technique along
+with an array to store the last index at which each character
+appeared.
+
+As we traverse the string, we maintain a window containing
+only unique characters. If the current character already
+exists within the current window, we move the starting point
+of the window just after its previous occurrence.
+
+Why does this work?
+
+The sliding window always represents a valid substring with
+unique characters. Instead of restarting the search whenever
+a duplicate is found, we simply adjust the left boundary of
+the window. Since every character is processed only once,
+the algorithm efficiently finds the maximum window length
+without performing unnecessary comparisons.
+
+Algorithm:
+1. Initialize the starting index of the window.
+2. Store the last occurrence of every character.
+3. Traverse the string from left to right.
+4. If the current character exists inside the current window,
+   move the starting index after its previous occurrence.
+5. Update the character's latest index.
+6. Calculate the current window length.
+7. Update the maximum length found.
+
+Time Complexity : O(n)
+
+Reason:
+Each character is visited exactly once while the window moves
+forward through the string.
+
+Space Complexity : O(1)
+
+Reason:
+An array of fixed size (256) is used to store the last
+occurrence of each ASCII character.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int maxLength = 0;
+
+        // Marks the index before the start of the current window.
+        int windowStart = -1;
+
+        // Stores the last occurrence of every ASCII character.
+        vector<int> lastIndex(256, -1);
+
+        // Traverse the string using the sliding window technique.
+        for (int i = 0; i < s.size(); i++) {
+
+            // If the current character already exists inside the
+            // current window, move the window start forward.
+            if (lastIndex[s[i]] > windowStart) {
+                windowStart = lastIndex[s[i]];
+            }
+
+            // Update the latest occurrence of the current character.
+            lastIndex[s[i]] = i;
+
+            // Update the maximum length of a valid substring.
+            maxLength = max(maxLength, i - windowStart);
+        }
+
+        return maxLength;
+    }
+};
