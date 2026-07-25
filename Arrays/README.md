@@ -34,4 +34,4 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
