@@ -1,0 +1,99 @@
+/*
+------------------------------------------------------------
+Problem    : Median of Two Sorted Arrays
+Platform   : LeetCode
+Topic      : Arrays
+Difficulty : Hard
+
+Problem:
+Given two sorted arrays, return the median of the combined
+sorted array.
+
+Note:
+This solution uses the Merge Approach with O(m + n) time
+complexity. Although accepted, the optimal solution uses
+Binary Search and achieves O(log(min(m, n))) time complexity.
+
+Approach:
+Since both arrays are already sorted, we merge them into a
+single sorted array using the merge process from Merge Sort.
+
+Once the merged array is obtained, finding the median becomes
+straightforward. If the total number of elements is odd, the
+middle element is the median. Otherwise, the median is the
+average of the two middle elements.
+
+Why does this work?
+
+Merging two sorted arrays preserves the sorted order of all
+elements. Therefore, after merging, the median can be found
+directly using its definition without any additional sorting.
+
+Algorithm:
+1. Create an empty array to store the merged elements.
+2. Compare the current elements of both arrays.
+3. Insert the smaller element into the merged array.
+4. Continue until one array is exhausted.
+5. Append the remaining elements of the other array.
+6. Compute the median based on the total number of elements.
+
+Time Complexity : O(m + n)
+
+Reason:
+Each element from both arrays is visited exactly once during
+the merge process.
+
+Space Complexity : O(m + n)
+
+Reason:
+An additional array is used to store all merged elements.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+
+        // Stores the merged sorted array.
+        vector<int> merged;
+
+        int first = 0;
+        int second = 0;
+
+        // Merge both sorted arrays.
+        while (first < nums1.size() && second < nums2.size()) {
+
+            if (nums1[first] < nums2[second]) {
+                merged.push_back(nums1[first]);
+                first++;
+            }
+            else {
+                merged.push_back(nums2[second]);
+                second++;
+            }
+        }
+
+        // Append remaining elements from the first array.
+        while (first < nums1.size()) {
+            merged.push_back(nums1[first]);
+            first++;
+        }
+
+        // Append remaining elements from the second array.
+        while (second < nums2.size()) {
+            merged.push_back(nums2[second]);
+            second++;
+        }
+
+        int totalSize = merged.size();
+
+        // Even number of elements.
+        if (totalSize % 2 == 0) {
+            return (merged[totalSize / 2 - 1] + merged[totalSize / 2]) / 2.0;
+        }
+
+        // Odd number of elements.
+        return merged[totalSize / 2];
+    }
+};
