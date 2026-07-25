@@ -38,12 +38,16 @@ Algorithm:
 6. Continue until the required pair is found.
 
 Time Complexity : O(n)
-Reason: The array is traversed exactly once. Each hash map insertion
+
+Reason: 
+The array is traversed exactly once. Each hash map insertion
 and lookup takes O(1) on average, resulting in an overall
 linear time complexity.
 
 Space Complexity : O(n)
-Reason: In the worst case, every element is stored in the hash map
+
+Reason: 
+In the worst case, every element is stored in the hash map
 before the solution is found.
 
 ------------------------------------------------------------
