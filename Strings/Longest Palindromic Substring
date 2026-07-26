@@ -1,0 +1,108 @@
+/*
+------------------------------------------------------------
+Problem    : Longest Palindromic Substring
+Platform   : LeetCode
+Topic      : Strings
+Difficulty : Medium
+
+Problem:
+Given a string `s`, return the longest palindromic
+substring present in the string.
+
+Approach:
+A palindrome mirrors itself around its center. Every palindrome
+has either:
+- A single character as its center (odd-length palindrome), or
+- Two consecutive characters as its center (even-length palindrome).
+
+For each character in the string, we consider both possibilities
+and expand outward while the characters on both sides remain
+equal. The longest palindrome found during this process is the
+answer.
+
+Why does this work?
+
+Every palindrome can be uniquely identified by its center.
+Instead of checking every possible substring, we directly expand
+from each possible center. This avoids unnecessary comparisons
+and guarantees that every valid palindrome is examined exactly
+once from its center.
+
+Algorithm:
+1. Handle the edge cases of an empty or single-character string.
+2. Initialize the longest palindrome with the first character.
+3. For every index:
+   - Expand around the current character (odd-length).
+   - Expand around the current and next character (even-length).
+4. Update the longest palindrome whenever a longer one is found.
+5. Return the longest palindromic substring.
+
+Time Complexity : O(n²)
+
+Reason:
+There are O(n) possible centers, and each expansion may take
+O(n) time in the worst case.
+
+Space Complexity : O(1)
+
+Reason:
+Only a few variables are used apart from the output string.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Expands around the given center and returns
+    // the longest palindrome formed.
+    string expandAroundCenter(const string& s, int left, int right) {
+
+        while (left >= 0 &&
+               right < s.size() &&
+               s[left] == s[right]) {
+
+            left--;
+            right++;
+        }
+
+        return s.substr(left + 1, right - left - 1);
+    }
+
+public:
+
+    string longestPalindrome(string s) {
+
+        // Handle the empty string.
+        if (s.empty()) {
+            return "";
+        }
+
+        // A single character is itself a palindrome.
+        if (s.size() == 1) {
+            return s;
+        }
+
+        // Stores the longest palindrome found.
+        string longest = s.substr(0, 1);
+
+        for (int i = 0; i < s.size(); i++) {
+
+            // Check for an odd-length palindrome.
+            string oddPalindrome = expandAroundCenter(s, i, i);
+
+            if (oddPalindrome.size() > longest.size()) {
+                longest = oddPalindrome;
+            }
+
+            // Check for an even-length palindrome.
+            string evenPalindrome = expandAroundCenter(s, i, i + 1);
+
+            if (evenPalindrome.size() > longest.size()) {
+                longest = evenPalindrome;
+            }
+        }
+
+        return longest;
+    }
+};
