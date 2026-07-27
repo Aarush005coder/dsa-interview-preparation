@@ -1,0 +1,104 @@
+/*
+------------------------------------------------------------
+Problem    : String to Integer (atoi)
+Platform   : LeetCode
+Topic      : Strings
+Difficulty : Medium
+
+Problem:
+Implement the `myAtoi()` function that converts a string into
+a 32-bit signed integer following the given parsing rules.
+
+The function should:
+- Ignore leading whitespaces.
+- Determine the sign.
+- Read consecutive digits.
+- Stop at the first non-digit character.
+- Clamp the result within the 32-bit signed integer range.
+
+Approach:
+We simulate the conversion process step by step.
+
+First, skip all leading whitespaces. Then determine whether
+the number is positive or negative by checking for '+' or '-'.
+
+Next, read each digit one by one and build the integer.
+Before returning, ensure the value remains within the
+32-bit signed integer range. If it exceeds the limits,
+return INT_MAX or INT_MIN accordingly.
+
+Why does this work?
+
+The algorithm follows the problem statement exactly by
+processing the string from left to right.
+
+Each character is examined only once, making the solution
+efficient while correctly handling whitespaces, optional
+signs, invalid characters, and integer overflow.
+
+Algorithm:
+1. Skip leading whitespaces.
+2. Determine the sign.
+3. Read consecutive digits.
+4. Construct the integer digit by digit.
+5. Check for overflow after every digit.
+6. Return the signed integer.
+
+Time Complexity : O(n)
+
+Reason:
+Each character in the string is processed at most once.
+
+Space Complexity : O(1)
+
+Reason:
+Only a constant number of variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int myAtoi(string s) {
+
+        int index = 0;
+
+        // Skip leading whitespaces.
+        while (index < s.size() && s[index] == ' ') {
+            index++;
+        }
+
+        // Determine the sign.
+        int sign = 1;
+
+        if (index < s.size() &&
+            (s[index] == '+' || s[index] == '-')) {
+
+            sign = (s[index] == '-') ? -1 : 1;
+            index++;
+        }
+
+        // Stores the converted integer.
+        long long result = 0;
+
+        // Read consecutive digits.
+        while (index < s.size() && isdigit(s[index])) {
+
+            result = result * 10 + (s[index] - '0');
+
+            // Clamp to INT_MAX if overflow occurs.
+            if (sign == 1 && result > INT_MAX) {
+                return INT_MAX;
+            }
+
+            // Clamp to INT_MIN if underflow occurs.
+            if (sign == -1 && -result < INT_MIN) {
+                return INT_MIN;
+            }
+
+            index++;
+        }
+
+        return static_cast<int>(sign * result);
+    }
+};
