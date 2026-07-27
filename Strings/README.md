@@ -10,7 +10,7 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 |---|---------|------------|--------|
 | 1 | Longest Palindromic Substring | Medium | ✅ |
 | 2 | Zigzag Conversion | Medium | ✅ |
-| 3 | String to Integer (atoi) | ✅ |
+| 3 | String to Integer (atoi) | Medium | ✅ |
 
 ---
 
