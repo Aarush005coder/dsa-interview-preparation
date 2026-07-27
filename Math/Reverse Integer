@@ -1,0 +1,84 @@
+/*
+------------------------------------------------------------
+Problem    : Reverse Integer
+Platform   : LeetCode
+Topic      : Math
+Difficulty : Medium
+
+Problem:
+Given a signed 32-bit integer, reverse its digits. Return
+0 if the reversed integer overflows the signed 32-bit
+integer range.
+
+Approach:
+Extract the last digit of the integer one by one using the
+modulus operator and append it to the reversed number.
+
+After extracting a digit, remove it from the original number
+by performing integer division by 10. Repeat this process
+until all digits have been processed.
+
+Finally, check whether the reversed number lies within the
+32-bit signed integer range. If it overflows, return 0.
+
+Why does this work?
+
+Every iteration extracts exactly one digit from the original
+number and appends it to the end of the reversed number.
+This reconstructs the digits in reverse order while
+preserving their relative positions.
+
+The overflow check ensures that only valid 32-bit integers
+are returned.
+
+Algorithm:
+1. Initialize the reversed number as 0.
+2. Extract the last digit using the modulus operator.
+3. Append the digit to the reversed number.
+4. Remove the last digit from the original number.
+5. Repeat until the original number becomes 0.
+6. If the reversed number exceeds the 32-bit signed integer
+   range, return 0.
+7. Otherwise, return the reversed number.
+
+Time Complexity : O(log₁₀(n))
+
+Reason:
+One iteration is performed for each digit of the integer.
+
+Space Complexity : O(1)
+
+Reason:
+Only a few variables are used regardless of the input size.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int reverse(int x) {
+
+        // Stores the reversed integer.
+        long long reversedNumber = 0;
+
+        // Reverse the digits one by one.
+        while (x != 0) {
+
+            // Extract the last digit.
+            int digit = x % 10;
+
+            // Append the extracted digit.
+            reversedNumber = reversedNumber * 10 + digit;
+
+            // Remove the last digit.
+            x /= 10;
+        }
+
+        // Return 0 if the reversed integer overflows.
+        if (reversedNumber > INT_MAX || reversedNumber < INT_MIN) {
+            return 0;
+        }
+
+        return static_cast<int>(reversedNumber);
+    }
+};
