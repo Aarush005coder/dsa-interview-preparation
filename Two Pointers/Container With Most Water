@@ -1,0 +1,104 @@
+/*
+------------------------------------------------------------
+Problem    : Container With Most Water
+Platform   : LeetCode
+Topic      : Two Pointers
+Difficulty : Medium
+
+Problem:
+Given an integer array height where height[i] represents the
+height of a vertical line, find two lines that together with
+the x-axis form a container that can store the maximum amount
+of water.
+
+Return the maximum area of water that can be stored.
+
+Approach:
+We use the Two Pointer technique.
+
+Initially, place one pointer at the start of the array and
+another pointer at the end.
+
+The area of the container is calculated using:
+
+Area = width * minimum height of both lines
+
+After calculating the current area, we move the pointer
+having the smaller height because the shorter line limits the
+amount of water.
+
+Why does this work?
+
+The width decreases after every move, so to increase the area,
+we need to search for a taller boundary. Moving the taller
+line cannot improve the result because the shorter line will
+still decide the container height.
+
+Algorithm:
+1. Initialize two pointers:
+   - left = 0
+   - right = n - 1
+
+2. Calculate the current water capacity.
+
+3. Update the maximum area.
+
+4. Move the pointer with smaller height.
+
+5. Continue until both pointers meet.
+
+Time Complexity : O(n)
+
+Space Complexity : O(1)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+
+        // Pointer starting from the left side
+        int left = 0;
+
+        // Pointer starting from the right side
+        int right = height.size() - 1;
+
+        // Stores the maximum water area found so far
+        int max_water = 0;
+
+
+        // Continue until both pointers meet
+        while(left < right) {
+
+            // Calculate width between two lines
+            int width = right - left;
+
+
+            // Container height is limited by the shorter line
+            int container_height = min(height[left], height[right]);
+
+
+            // Calculate current container area
+            int area = width * container_height;
+
+
+            // Update maximum area
+            max_water = max(max_water, area);
+
+
+            // Move the shorter line pointer
+            // because it limits the possible maximum area
+            if(height[left] < height[right]) {
+                left++;
+            }
+            else {
+                right--;
+            }
+        }
+
+
+        // Return maximum amount of water container can store
+        return max_water;
+    }
+};
