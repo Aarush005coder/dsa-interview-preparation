@@ -9,6 +9,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Reverse Integer | Medium | ✅ |
+| 2 | Palindrome Number | Easy | ✅ |
 
 ---
 
@@ -34,4 +35,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
