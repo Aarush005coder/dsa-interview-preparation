@@ -98,7 +98,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Graph | 0 |
 | Dynamic Programming | 0 |
 | Greedy | 0 |
-| Math | 1 |
+| Math | 2 |
 | Segment Tree | 0 |
 | Fenwick Tree | 0 |
 | Union Find | 0 |
