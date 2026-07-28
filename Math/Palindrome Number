@@ -1,0 +1,99 @@
+/*
+------------------------------------------------------------
+Problem    : Palindrome Number
+Platform   : LeetCode
+Topic      : Math
+Difficulty : Easy
+
+Problem:
+Given an integer x, return true if x is a palindrome,
+and false otherwise.
+
+A palindrome number is a number that remains the same
+when reversed.
+
+Example:
+Input  : x = 121
+Output : true
+
+Input  : x = -121
+Output : false
+
+
+Approach:
+Instead of converting the integer into a string, we reverse
+only half of the number and compare it with the remaining
+half.
+
+First, handle edge cases:
+- Negative numbers are never palindrome.
+- Numbers ending with 0 cannot be palindrome except 0 itself.
+
+Then, reverse the second half of the number.
+For numbers with odd digits, the middle digit is ignored
+by dividing the reversed number by 10.
+
+Why does this work?
+
+A palindrome has identical digits from both ends.
+By reversing only half of the number, we can compare both
+parts while avoiding extra space and preventing integer
+overflow.
+
+
+Algorithm:
+1. Return false for negative numbers.
+2. Return false for numbers ending with 0 (except 0).
+3. Reverse the second half of the number.
+4. Compare both halves.
+5. Return true if they match.
+
+
+Time Complexity : O(log10(x))
+
+Reason:
+The number of digits in x is processed only once and we
+reverse only half of them.
+
+
+Space Complexity : O(1)
+
+Reason:
+Only constant extra variables are used.
+
+
+------------------------------------------------------------
+*/
+
+
+class Solution {
+public:
+    bool isPalindrome(int x) {
+
+        // Negative numbers cannot be palindrome.
+        // Numbers ending with 0 cannot be palindrome except 0.
+        if (x < 0 || (x % 10 == 0 && x != 0)) {
+            return false;
+        }
+
+        if (x == 0) {
+            return true;
+        }
+
+        int reversed = 0;
+
+        // Reverse only half of the number.
+        while (x > reversed) {
+
+            int digit = x % 10;
+
+            reversed = reversed * 10 + digit;
+
+            x /= 10;
+        }
+
+        // For even digits: x == reversed
+        // For odd digits: x == reversed/10 (ignore middle digit)
+        return x == reversed || x == reversed / 10;
+    }
+};
