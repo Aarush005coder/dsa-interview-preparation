@@ -83,7 +83,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Sorting | 0 |
 | Searching | 0 |
 | Binary Search | 0 |
-| Two Pointers | 0 |
+| Two Pointers | 1 |
 | Sliding Window | 1 |
 | Prefix Sum | 0 |
 | Bit Manipulation | 0 |
