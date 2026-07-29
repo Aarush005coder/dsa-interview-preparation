@@ -1,0 +1,140 @@
+/*
+------------------------------------------------------------
+Problem    : 3Sum
+Platform   : LeetCode
+Topic      : Two Pointers
+Difficulty : Medium
+
+Problem:
+Given an integer array nums, return all the unique triplets
+[nums[i], nums[j], nums[k]] such that:
+
+- i != j
+- i != k
+- j != k
+- nums[i] + nums[j] + nums[k] == 0
+
+The solution set must not contain duplicate triplets.
+
+Example:
+Input  : [-1,0,1,2,-1,-4]
+Output : [[-1,-1,2],[-1,0,1]]
+
+Input  : [0,1,1]
+Output : []
+
+Approach:
+First, sort the array.
+
+Fix one element at a time and use two pointers to find the
+remaining two elements whose sum equals the negative of the
+fixed element.
+
+To avoid duplicate triplets:
+- Skip duplicate values for the fixed element.
+- After finding a valid triplet, skip duplicate values for
+  both left and right pointers.
+
+Why does this work?
+
+Sorting allows us to efficiently use the Two Pointer
+technique.
+
+If the current sum is too small, move the left pointer to
+increase the sum.
+
+If the current sum is too large, move the right pointer to
+decrease the sum.
+
+This guarantees that every unique triplet is found exactly
+once.
+
+Algorithm:
+1. Sort the array.
+2. Fix one element.
+3. Use two pointers to search for the remaining two numbers.
+4. If the sum is zero:
+   - Store the triplet.
+   - Skip duplicate elements.
+5. If the sum is less than zero, move the left pointer.
+6. Otherwise, move the right pointer.
+7. Return all unique triplets.
+
+Time Complexity : O(n²)
+
+Reason:
+Sorting takes O(n log n), and the two-pointer search runs in
+O(n²), which dominates the overall complexity.
+
+Space Complexity : O(1)
+
+Reason:
+Ignoring the output list, only constant extra space is used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+
+        vector<vector<int>> result;
+
+        // Sort the array for the Two Pointer approach
+        sort(nums.begin(), nums.end());
+
+        // Fix one element at a time
+        for (int i = 0; i < nums.size() - 2; i++) {
+
+            // Skip duplicate first elements
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            // Initialize two pointers
+            int left = i + 1;
+            int right = nums.size() - 1;
+
+            while (left < right) {
+
+                // Calculate the current triplet sum
+                int total = nums[i] + nums[left] + nums[right];
+
+                // Valid triplet found
+                if (total == 0) {
+
+                    result.push_back({nums[i], nums[left], nums[right]});
+
+                    // Skip duplicate values for the left pointer
+                    while (left < right &&
+                           nums[left] == nums[left + 1]) {
+                        left++;
+                    }
+
+                    // Skip duplicate values for the right pointer
+                    while (left < right &&
+                           nums[right] == nums[right - 1]) {
+                        right--;
+                    }
+
+                    // Move both pointers
+                    left++;
+                    right--;
+                }
+
+                // Need a larger sum
+                else if (total < 0) {
+                    left++;
+                }
+
+                // Need a smaller sum
+                else {
+                    right--;
+                }
+            }
+        }
+
+        // Return all unique triplets
+        return result;
+    }
+};
