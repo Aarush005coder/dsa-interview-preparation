@@ -9,6 +9,7 @@ This folder contains **Two Pointers** problems solved in **C++**. Each solution 
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Container With Most Water | Medium | ✅ |
+| 2 | 3Sum | Medium | ✅ |
 
 ---
 
@@ -50,4 +51,4 @@ This technique helps reduce time complexity and is one of the most important pat
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
