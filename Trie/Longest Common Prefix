@@ -1,0 +1,189 @@
+/*
+------------------------------------------------------------
+Problem    : Longest Common Prefix
+Platform   : LeetCode
+Topic      : Trie
+Difficulty : Easy
+
+Problem:
+Given an array of strings, return the longest common prefix
+among all the strings.
+
+If there is no common prefix, return an empty string.
+
+Example:
+Input  : ["flower","flow","flight"]
+Output : "fl"
+
+Input  : ["dog","racecar","car"]
+Output : ""
+
+Approach:
+We use a Trie (Prefix Tree) to efficiently find the longest
+common prefix.
+
+First, insert every string into the Trie.
+
+Each Trie node stores:
+- Its children.
+- The number of children (count).
+- Whether it marks the end of a word.
+
+To find the longest common prefix, start from the root and
+traverse the Trie using the first string.
+
+Continue while:
+- The current node has exactly one child.
+- The current node is not the end of a word.
+
+The traversal stops as soon as multiple branches appear or
+a complete word ends.
+
+Why does this work?
+
+The common prefix exists only while every inserted string
+follows the same path in the Trie.
+
+If a node has more than one child, the strings diverge.
+If a node is terminal, one string ends there, so the common
+prefix cannot extend further.
+
+Algorithm:
+1. Create an empty Trie.
+2. Insert every string into the Trie.
+3. Traverse the Trie using the first string.
+4. Continue while only one child exists.
+5. Stop at branching or terminal node.
+6. Return the collected prefix.
+
+Time Complexity : O(N × L)
+
+Reason:
+Insertion takes O(N × L), where N is the number of strings
+and L is the average string length.
+Finding the prefix takes O(L).
+
+Space Complexity : O(N × L)
+
+Reason:
+The Trie stores every character of all inserted strings.
+
+------------------------------------------------------------
+*/
+
+class TrieNode {
+public:
+    char data;
+
+    // Stores pointers to child nodes
+    TrieNode* child[26];
+
+    // Number of children of the current node
+    int count;
+
+    // Indicates whether a word ends here
+    bool isTerminal;
+
+    TrieNode(char ch) {
+        data = ch;
+
+        for (int i = 0; i < 26; i++) {
+            child[i] = NULL;
+        }
+
+        count = 0;
+        isTerminal = false;
+    }
+};
+
+class Trie {
+public:
+    TrieNode* root;
+
+    Trie(char ch) {
+        root = new TrieNode(ch);
+    }
+
+    // Inserts a word into the Trie
+    void insert(TrieNode* root, string word) {
+
+        // Entire word has been inserted
+        if (word.length() == 0) {
+            root->isTerminal = true;
+            return;
+        }
+
+        int index = word[0] - 'a';
+        TrieNode* childNode;
+
+        // Move to existing child
+        if (root->child[index] != NULL) {
+            childNode = root->child[index];
+        }
+
+        // Create a new child node
+        else {
+            childNode = new TrieNode(word[0]);
+            root->count++;
+            root->child[index] = childNode;
+        }
+
+        insert(childNode, word.substr(1));
+    }
+
+    // Helper function to insert a complete word
+    void insertWord(string word) {
+        insert(root, word);
+    }
+
+    // Finds the longest common prefix
+    void longestCommonPrefix(string str, string &ans) {
+
+        TrieNode* temp = root;
+
+        // Traverse the Trie using the first string
+        for (int i = 0; i < str.length(); i++) {
+
+            // Stop if current node represents the end of a word
+            if (temp->isTerminal) {
+                break;
+            }
+
+            // Continue only if there is exactly one child
+            if (temp->count == 1) {
+
+                ans.push_back(str[i]);
+
+                int index = str[i] - 'a';
+                temp = temp->child[index];
+            }
+
+            // Multiple branches found
+            else {
+                break;
+            }
+        }
+    }
+};
+
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+
+        // Create the Trie
+        Trie* trie = new Trie('\0');
+
+        // Insert all strings into the Trie
+        for (int i = 0; i < strs.size(); i++) {
+            trie->insertWord(strs[i]);
+        }
+
+        // Use the first string to find the common prefix
+        string first = strs[0];
+        string answer = "";
+
+        trie->longestCommonPrefix(first, answer);
+
+        return answer;
+    }
+};
