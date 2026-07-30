@@ -1,0 +1,108 @@
+/*
+------------------------------------------------------------
+Problem    : 3Sum Closest
+Platform   : LeetCode
+Topic      : Two Pointers
+Difficulty : Medium
+
+Problem:
+Given an integer array `nums` and an integer `target`,
+find three integers whose sum is closest to the target.
+Return the sum of those three integers.
+
+Approach:
+First, sort the array. Then, fix one element and use the
+Two Pointers technique to find the remaining two elements.
+
+For every fixed element, maintain two pointers:
+- One starting just after the fixed element.
+- One starting from the end of the array.
+
+Calculate the current sum and compare it with the closest
+sum found so far. If the current sum is closer to the target,
+update the answer. Depending on whether the current sum is
+smaller or larger than the target, move the appropriate
+pointer to search for a closer sum.
+
+Why does this work?
+
+Sorting the array allows us to efficiently adjust the sum
+using two pointers. Moving the left pointer increases the
+sum, while moving the right pointer decreases it.
+
+Since every possible triplet is explored in an organized
+manner, the algorithm guarantees that the closest sum is
+found without checking every combination explicitly.
+
+Algorithm:
+1. Sort the array.
+2. Initialize the closest sum using the first three elements.
+3. Fix one element at a time.
+4. Use two pointers to find the best pair.
+5. Update the closest sum whenever a better one is found.
+6. Move the pointers based on the comparison with the target.
+7. Return immediately if an exact match is found.
+8. Return the closest sum.
+
+Time Complexity : O(n²)
+
+Reason:
+Sorting takes O(n log n), and for each element, the two
+pointers traverse the remaining array once.
+
+Space Complexity : O(1)
+
+Reason:
+The algorithm uses only constant extra space apart from the
+sorting operation.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+
+        // Sort the array to apply the Two Pointers technique.
+        sort(nums.begin(), nums.end());
+
+        int n = nums.size();
+
+        // Initialize the closest sum.
+        int closestSum = nums[0] + nums[1] + nums[2];
+
+        // Fix one element and search for the remaining pair.
+        for (int i = 0; i < n - 2; i++) {
+
+            int left = i + 1;
+            int right = n - 1;
+
+            while (left < right) {
+
+                int currentSum = nums[i] + nums[left] + nums[right];
+
+                // Update the closest sum if a better answer is found.
+                if (abs(currentSum - target) < abs(closestSum - target)) {
+                    closestSum = currentSum;
+                }
+
+                // Increase the sum.
+                if (currentSum < target) {
+                    left++;
+                }
+
+                // Decrease the sum.
+                else if (currentSum > target) {
+                    right--;
+                }
+
+                // Exact target found.
+                else {
+                    return currentSum;
+                }
+            }
+        }
+
+        return closestSum;
+    }
+};
