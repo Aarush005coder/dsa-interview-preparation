@@ -1,0 +1,126 @@
+/*
+------------------------------------------------------------
+Problem    : Letter Combinations of a Phone Number
+Platform   : LeetCode
+Topic      : Backtracking
+Difficulty : Medium
+
+Problem:
+Given a string containing digits from 2 to 9, return all
+possible letter combinations that the number could represent
+based on the telephone keypad mapping.
+
+Approach:
+Use the Backtracking technique to generate all possible
+combinations.
+
+Starting from the first digit, choose one possible letter
+mapped to that digit and recursively process the next digit.
+After returning from recursion, remove the last chosen
+character to explore the remaining possibilities.
+
+This process continues until every digit has been processed,
+at which point a complete combination is added to the answer.
+
+Why does this work?
+
+Each digit represents multiple choices. Backtracking explores
+every possible choice while maintaining the current partial
+combination.
+
+After exploring one path, it undoes the last choice and
+continues with the next one, ensuring that all valid
+combinations are generated exactly once.
+
+Algorithm:
+1. Handle the empty input case.
+2. Store the digit-to-letter mapping.
+3. Start backtracking from the first digit.
+4. For the current digit, iterate through all possible letters.
+5. Add one letter to the current combination.
+6. Recursively process the next digit.
+7. Remove the last letter to backtrack.
+8. When all digits are processed, store the combination.
+
+Time Complexity : O(4ⁿ)
+
+Reason:
+Each digit can generate at most 4 possible letters, leading
+to at most 4ⁿ combinations.
+
+Space Complexity : O(n)
+
+Reason:
+The recursion depth and current combination require at most
+O(n) extra space, where n is the length of the input string.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Generates all possible letter combinations recursively.
+    void generateCombinations(const string& digits,
+                              string& currentCombination,
+                              int index,
+                              vector<string>& result,
+                              const vector<string>& mapping) {
+
+        // A complete combination has been formed.
+        if (index == digits.size()) {
+            result.push_back(currentCombination);
+            return;
+        }
+
+        // Letters corresponding to the current digit.
+        string letters = mapping[digits[index] - '0'];
+
+        for (char letter : letters) {
+
+            // Choose the current letter.
+            currentCombination.push_back(letter);
+
+            // Process the next digit.
+            generateCombinations(
+                digits,
+                currentCombination,
+                index + 1,
+                result,
+                mapping
+            );
+
+            // Undo the choice for the next possibility.
+            currentCombination.pop_back();
+        }
+    }
+
+public:
+    vector<string> letterCombinations(string digits) {
+
+        vector<string> result;
+
+        // No combinations exist for an empty input.
+        if (digits.empty()) {
+            return result;
+        }
+
+        // Telephone keypad mapping.
+        vector<string> mapping = {
+            "", "", "abc", "def", "ghi",
+            "jkl", "mno", "pqrs", "tuv", "wxyz"
+        };
+
+        string currentCombination;
+
+        generateCombinations(
+            digits,
+            currentCombination,
+            0,
+            result,
+            mapping
+        );
+
+        return result;
+    }
+};
