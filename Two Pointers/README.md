@@ -10,6 +10,7 @@ This folder contains **Two Pointers** problems solved in **C++**. Each solution 
 |---|---------|------------|--------|
 | 1 | Container With Most Water | Medium | ✅ |
 | 2 | 3Sum | Medium | ✅ |
+| 3 | 3Sum Closest | Medium | ✅ |
 
 ---
 
@@ -51,4 +52,4 @@ This technique helps reduce time complexity and is one of the most important pat
 
 ---
 
-**Problems Solved:** **2**
+**Problems Solved:** **3**
