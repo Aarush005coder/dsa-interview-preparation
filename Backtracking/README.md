@@ -8,6 +8,7 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
+| 1 | Letter Combinations of a Phone Number | Medium | ✅ |
 
 ---
 
@@ -33,4 +34,4 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 
 ---
 
-**Problems Solved:** **0**
+**Problems Solved:** **1**
