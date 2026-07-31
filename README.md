@@ -76,7 +76,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Topic | Solved |
 |--------|-------:|
 | Arrays | 2 |
-| Linked List | 1 |
+| Linked List | 2 |
 | Strings | 3 |
 | Matrix | 0 |
 | Hashing | 0 |
