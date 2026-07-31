@@ -9,6 +9,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Add Two Numbers | Medium | ✅ |
+| 2 | Remove Nth Node From End of List | Medium | ✅ |
 
 ---
 
@@ -31,4 +32,4 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
