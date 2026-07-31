@@ -83,12 +83,12 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Sorting | 0 |
 | Searching | 0 |
 | Binary Search | 0 |
-| Two Pointers | 2 |
+| Two Pointers | 3 |
 | Sliding Window | 1 |
 | Prefix Sum | 0 |
 | Bit Manipulation | 0 |
 | Recursion | 0 |
-| Backtracking | 0 |
+| Backtracking | 1 |
 | Stack | 1 |
 | Queue | 0 |
 | Trees | 0 |
