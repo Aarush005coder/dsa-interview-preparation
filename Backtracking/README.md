@@ -9,6 +9,7 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Letter Combinations of a Phone Number | Medium | ✅ |
+| 2 | Generate Parentheses | Medium | ✅ |
 
 ---
 
@@ -34,4 +35,4 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
