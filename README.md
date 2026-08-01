@@ -76,7 +76,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Topic | Solved |
 |--------|-------:|
 | Arrays | 2 |
-| Linked List | 2 |
+| Linked List | 3 |
 | Strings | 3 |
 | Matrix | 0 |
 | Hashing | 0 |
@@ -88,7 +88,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Prefix Sum | 0 |
 | Bit Manipulation | 0 |
 | Recursion | 0 |
-| Backtracking | 1 |
+| Backtracking | 2 |
 | Stack | 1 |
 | Queue | 0 |
 | Trees | 0 |
