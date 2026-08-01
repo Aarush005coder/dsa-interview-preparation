@@ -10,6 +10,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 |---|---------|------------|--------|
 | 1 | Add Two Numbers | Medium | ✅ |
 | 2 | Remove Nth Node From End of List | Medium | ✅ |
+| 3 | Merge Two Sorted Lists | Easy | ✅ |
 
 ---
 
@@ -32,4 +33,4 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 
 ---
 
-**Problems Solved:** **2**
+**Problems Solved:** **3**
