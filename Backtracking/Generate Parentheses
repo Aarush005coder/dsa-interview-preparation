@@ -1,0 +1,109 @@
+/*
+------------------------------------------------------------
+Problem    : Generate Parentheses
+Platform   : LeetCode
+Topic      : Backtracking
+Difficulty : Medium
+
+Problem:
+Given n pairs of parentheses, generate all possible
+combinations of well-formed parentheses.
+
+Approach:
+Use the Backtracking technique to build the parentheses
+string one character at a time.
+
+Maintain two counters:
+- Number of opening parentheses used.
+- Number of closing parentheses used.
+
+An opening parenthesis can be added as long as the number of
+opening parentheses is less than n.
+
+A closing parenthesis can be added only when the number of
+closing parentheses is less than the number of opening
+parentheses. This guarantees that every generated string
+remains valid throughout the construction.
+
+Why does this work?
+
+Backtracking explores every possible valid choice while
+eliminating invalid combinations early.
+
+By ensuring that closing parentheses never exceed opening
+parentheses, every generated string is guaranteed to be
+well-formed without requiring any additional validation.
+
+Algorithm:
+1. Start with an empty string.
+2. If the string length becomes 2 × n, store it.
+3. Add an opening parenthesis if fewer than n have been used.
+4. Add a closing parenthesis only if it keeps the string valid.
+5. Continue recursively until all valid combinations are generated.
+
+Time Complexity : O(4ⁿ / √n)
+
+Reason:
+The number of valid combinations is the nth Catalan Number,
+which is approximately O(4ⁿ / √n).
+
+Space Complexity : O(n)
+
+Reason:
+The recursion depth is at most 2 × n, resulting in O(n)
+auxiliary space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Generates all valid parenthesis combinations.
+    void generateCombinations(
+        vector<string>& result,
+        string current,
+        int openCount,
+        int closeCount,
+        int totalPairs) {
+
+        // A valid combination has been formed.
+        if (current.length() == totalPairs * 2) {
+            result.push_back(current);
+            return;
+        }
+
+        // Add an opening parenthesis if possible.
+        if (openCount < totalPairs) {
+            generateCombinations(
+                result,
+                current + '(',
+                openCount + 1,
+                closeCount,
+                totalPairs
+            );
+        }
+
+        // Add a closing parenthesis only if the
+        // resulting string remains valid.
+        if (closeCount < openCount) {
+            generateCombinations(
+                result,
+                current + ')',
+                openCount,
+                closeCount + 1,
+                totalPairs
+            );
+        }
+    }
+
+public:
+    vector<string> generateParenthesis(int n) {
+
+        vector<string> result;
+
+        generateCombinations(result, "", 0, 0, n);
+
+        return result;
+    }
+};
