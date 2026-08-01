@@ -1,0 +1,83 @@
+/*
+------------------------------------------------------------
+Problem    : Merge Two Sorted Lists
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Easy
+
+Problem:
+Given the heads of two sorted linked lists, merge them into
+a single sorted linked list and return its head.
+
+The merged list should be created by reusing the existing
+nodes from the input lists.
+
+Approach:
+Use recursion to compare the current nodes of both linked
+lists.
+
+If one list is empty, return the other list since it is
+already sorted.
+
+Otherwise, compare the values of the current nodes. The
+smaller node becomes part of the merged list, and its next
+pointer is recursively connected to the merged result of the
+remaining nodes.
+
+Why does this work?
+
+At each recursive call, the smaller node is selected and
+placed in the correct position of the merged list.
+
+Since both input lists are already sorted, recursively
+merging the remaining nodes preserves the sorted order
+throughout the entire list.
+
+Algorithm:
+1. If the first list is empty, return the second list.
+2. If the second list is empty, return the first list.
+3. Compare the current nodes of both lists.
+4. Select the smaller node.
+5. Recursively merge the remaining nodes.
+6. Return the selected node as the head of the merged list.
+
+Time Complexity : O(n + m)
+
+Reason:
+Each node from both linked lists is visited exactly once.
+
+Space Complexity : O(n + m)
+
+Reason:
+The recursive calls use stack space proportional to the total
+number of nodes.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+
+        // If the first list is empty, return the second list.
+        if (list1 == nullptr) {
+            return list2;
+        }
+
+        // If the second list is empty, return the first list.
+        if (list2 == nullptr) {
+            return list1;
+        }
+
+        // Select the smaller node and recursively merge
+        // the remaining nodes.
+        if (list1->val < list2->val) {
+
+            list1->next = mergeTwoLists(list1->next, list2);
+            return list1;
+        }
+
+        list2->next = mergeTwoLists(list1, list2->next);
+        return list2;
+    }
+};
