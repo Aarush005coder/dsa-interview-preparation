@@ -11,6 +11,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 | 1 | Add Two Numbers | Medium | ✅ |
 | 2 | Remove Nth Node From End of List | Medium | ✅ |
 | 3 | Merge Two Sorted Lists | Easy | ✅ |
+| 4 | Merge K Sorted Lists | Hard | ✅ |
 
 ---
 
@@ -33,4 +34,4 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 
 ---
 
-**Problems Solved:** **3**
+**Problems Solved:** **4**
