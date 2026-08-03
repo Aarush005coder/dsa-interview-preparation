@@ -1,0 +1,80 @@
+/*
+------------------------------------------------------------
+Problem    : Swap Nodes in Pairs
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Medium
+
+Problem:
+Given the head of a linked list, swap every two adjacent
+nodes and return the head of the modified list.
+
+The values inside the nodes cannot be modified. Only the
+node connections may be changed.
+
+Approach:
+Use recursion to swap one pair of nodes at a time.
+
+The first two nodes are swapped, and the remaining linked
+list is recursively processed. The head of the swapped
+remaining list is then connected to the current pair.
+
+The second node becomes the new head of the current pair,
+while the first node becomes the second node after swapping.
+
+Why does this work?
+
+Every recursive call is responsible for swapping exactly one
+pair of adjacent nodes.
+
+Once the current pair is swapped, recursion correctly handles
+the remaining linked list and returns its new head. Connecting
+the swapped pair with the recursively processed list produces
+the final correctly swapped linked list.
+
+Algorithm:
+1. Handle the base case where fewer than two nodes remain.
+2. Store references to the first and second nodes.
+3. Recursively swap the remaining linked list.
+4. Connect the first node to the swapped remaining list.
+5. Make the second node point to the first node.
+6. Return the second node as the new head.
+
+Time Complexity : O(n)
+
+Reason:
+Each node is visited exactly once.
+
+Space Complexity : O(n)
+
+Reason:
+The recursive calls use stack space proportional to the
+number of nodes.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+
+        // If fewer than two nodes remain,
+        // no swapping is required.
+        if (head == nullptr || head->next == nullptr) {
+            return head;
+        }
+
+        // The first two nodes to be swapped.
+        ListNode* firstNode = head;
+        ListNode* secondNode = head->next;
+
+        // Recursively swap the remaining linked list.
+        firstNode->next = swapPairs(secondNode->next);
+
+        // Complete the swap.
+        secondNode->next = firstNode;
+
+        // The second node becomes the new head.
+        return secondNode;
+    }
+};
