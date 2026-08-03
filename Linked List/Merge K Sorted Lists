@@ -1,0 +1,114 @@
+/*
+------------------------------------------------------------
+Problem    : Merge K Sorted Lists
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Hard
+
+Problem:
+You are given an array of k sorted linked lists. Merge all
+the linked lists into a single sorted linked list and return
+its head.
+
+Approach:
+Use a Min Heap (Priority Queue) to efficiently keep track of
+the smallest current node among all linked lists.
+
+Initially, insert the first node of every non-empty linked
+list into the min heap. Repeatedly extract the smallest node,
+append it to the merged list, and if that node has a next
+node, insert it into the heap.
+
+Continue this process until the heap becomes empty.
+
+Why does this work?
+
+Since each linked list is already sorted, the smallest
+unprocessed node from every list is always at its head.
+
+The min heap efficiently identifies the overall smallest node
+among all current heads in O(log k) time, where k is the
+number of linked lists. By continuously removing the smallest
+node and inserting its successor, the merged list remains
+sorted throughout the process.
+
+Algorithm:
+1. Create a min heap.
+2. Insert the head of every non-empty linked list.
+3. Create a dummy node for the merged list.
+4. While the heap is not empty:
+   - Remove the smallest node.
+   - Append it to the merged list.
+   - If the removed node has a next node, insert it into the heap.
+5. Return the merged list.
+
+Time Complexity : O(N log k)
+
+Reason:
+Each of the N nodes is inserted into and removed from the
+priority queue exactly once. Each heap operation takes
+O(log k) time.
+
+Space Complexity : O(k)
+
+Reason:
+The priority queue stores at most one node from each linked
+list at any time.
+
+------------------------------------------------------------
+*/
+
+struct Compare {
+
+    // Creates a min heap based on node values.
+    bool operator()(ListNode* firstNode, ListNode* secondNode) {
+        return firstNode->val > secondNode->val;
+    }
+};
+
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+
+        // Min heap storing the current smallest node
+        // from each linked list.
+        priority_queue<
+            ListNode*,
+            vector<ListNode*>,
+            Compare
+        > minHeap;
+
+        // Insert the head of every non-empty list.
+        for (ListNode* head : lists) {
+            if (head != nullptr) {
+                minHeap.push(head);
+            }
+        }
+
+        // Dummy node simplifies list construction.
+        ListNode* dummy = new ListNode(-1);
+        ListNode* tail = dummy;
+
+        // Merge all linked lists.
+        while (!minHeap.empty()) {
+
+            // Get the smallest available node.
+            ListNode* currentNode = minHeap.top();
+            minHeap.pop();
+
+            // Append it to the merged list.
+            tail->next = currentNode;
+            tail = tail->next;
+
+            // Insert the next node from the same list.
+            if (currentNode->next != nullptr) {
+                minHeap.push(currentNode->next);
+            }
+        }
+
+        ListNode* mergedHead = dummy->next;
+        delete dummy;
+
+        return mergedHead;
+    }
+};
