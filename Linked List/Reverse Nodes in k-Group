@@ -1,0 +1,127 @@
+/*
+------------------------------------------------------------
+Problem    : Reverse Nodes in k-Group
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Hard
+
+Problem:
+Given the head of a linked list, reverse the nodes of the
+list in groups of size k.
+
+If the number of remaining nodes is less than k, leave them
+unchanged. Only the node connections may be modified; the
+values inside the nodes must remain unchanged.
+
+Approach:
+Traverse the linked list one group at a time.
+
+For each group, first check whether k nodes are available.
+If not, stop because the remaining nodes should not be
+reversed.
+
+Otherwise, reverse the current group in-place, reconnect it
+with the previous part of the list, and continue processing
+the next group.
+
+A dummy node is used to simplify handling the head of the
+linked list.
+
+Why does this work?
+
+Each iteration processes exactly one group of k nodes.
+
+The helper function reverses only the current group while
+preserving the connection to the rest of the list. After the
+group is reversed, reconnecting the previous and next parts
+maintains the correct order of the entire linked list.
+
+Algorithm:
+1. Create a dummy node before the head.
+2. Find the kth node of the current group.
+3. If fewer than k nodes remain, stop.
+4. Reverse the current group.
+5. Connect the reversed group to the previous and next parts.
+6. Move to the next group.
+7. Return the modified head.
+
+Time Complexity : O(n)
+
+Reason:
+Each node is visited a constant number of times.
+
+Space Complexity : O(1)
+
+Reason:
+The reversal is performed in-place using only a few pointers.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Reverses the linked list from head to tail (inclusive).
+    ListNode* reverseGroup(ListNode* head, ListNode* tail) {
+
+        ListNode* previousNode = tail->next;
+        ListNode* currentNode = head;
+
+        while (previousNode != tail) {
+
+            ListNode* nextNode = currentNode->next;
+
+            currentNode->next = previousNode;
+
+            previousNode = currentNode;
+            currentNode = nextNode;
+        }
+
+        return tail;
+    }
+
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+
+        // No reversal is required.
+        if (head == nullptr || k == 1) {
+            return head;
+        }
+
+        // Dummy node simplifies reconnection.
+        ListNode dummy(0);
+        dummy.next = head;
+
+        ListNode* previousGroup = &dummy;
+
+        while (true) {
+
+            // Find the kth node of the current group.
+            ListNode* kthNode = previousGroup;
+
+            for (int i = 0; i < k && kthNode != nullptr; i++) {
+                kthNode = kthNode->next;
+            }
+
+            // Fewer than k nodes remain.
+            if (kthNode == nullptr) {
+                break;
+            }
+
+            ListNode* groupStart = previousGroup->next;
+            ListNode* nextGroup = kthNode->next;
+
+            // Reverse the current group.
+            reverseGroup(groupStart, kthNode);
+
+            // Connect the reversed group.
+            previousGroup->next = kthNode;
+            groupStart->next = nextGroup;
+
+            // Move to the next group.
+            previousGroup = groupStart;
+        }
+
+        return dummy.next;
+    }
+};
