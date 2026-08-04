@@ -76,14 +76,14 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Topic | Solved |
 |--------|-------:|
 | Arrays | 2 |
-| Linked List | 5 |
+| Linked List | 6 |
 | Strings | 3 |
 | Matrix | 0 |
 | Hashing | 0 |
 | Sorting | 0 |
 | Searching | 0 |
 | Binary Search | 0 |
-| Two Pointers | 3 |
+| Two Pointers | 4 |
 | Sliding Window | 1 |
 | Prefix Sum | 0 |
 | Bit Manipulation | 0 |
