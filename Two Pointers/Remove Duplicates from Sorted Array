@@ -1,0 +1,88 @@
+/*
+------------------------------------------------------------
+Problem    : Remove Duplicates from Sorted Array
+Platform   : LeetCode
+Topic      : Two Pointers
+Difficulty : Easy
+
+Problem:
+Given a sorted array, remove the duplicates in-place such
+that each unique element appears only once.
+
+Return the number of unique elements. The first k positions
+of the array should contain the unique elements in sorted
+order.
+
+Approach:
+Use the Two Pointers technique.
+
+One pointer (`uniqueIndex`) keeps track of the position where
+the next unique element should be placed. The other pointer
+(`currentIndex`) traverses the array.
+
+Whenever a new unique element is found, move the
+`uniqueIndex` forward and place the new element there.
+
+Why does this work?
+
+Since the array is already sorted, all duplicate elements
+appear consecutively.
+
+By comparing the current element with the last unique element,
+we can easily identify duplicates and overwrite them with the
+next unique value without using any extra space.
+
+Algorithm:
+1. Handle the empty array case.
+2. Initialize the unique element index to 0.
+3. Traverse the array from the second element.
+4. If the current element is different from the last unique
+   element:
+   - Move the unique index forward.
+   - Place the current element at the unique index.
+5. Return the total number of unique elements.
+
+Time Complexity : O(n)
+
+Reason:
+Each element is visited exactly once.
+
+Space Complexity : O(1)
+
+Reason:
+The array is modified in-place using only constant extra
+space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+
+        // Handle the empty array.
+        if (nums.empty()) {
+            return 0;
+        }
+
+        // Points to the last unique element.
+        int uniqueIndex = 0;
+
+        // Traverse the remaining elements.
+        for (int currentIndex = 1;
+             currentIndex < nums.size();
+             currentIndex++) {
+
+            // A new unique element is found.
+            if (nums[currentIndex] != nums[uniqueIndex]) {
+
+                uniqueIndex++;
+
+                nums[uniqueIndex] = nums[currentIndex];
+            }
+        }
+
+        // Number of unique elements.
+        return uniqueIndex + 1;
+    }
+};
