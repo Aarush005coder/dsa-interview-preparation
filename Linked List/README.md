@@ -13,6 +13,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 | 3 | Merge Two Sorted Lists | Easy | ✅ |
 | 4 | Merge K Sorted Lists | Hard | ✅ |
 | 5 | Swap Nodes in Pairs | Medium | ✅ |
+| 6 | Reverse Nodes in k-Group | Hard | ✅ |
 
 ---
 
@@ -35,4 +36,4 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 
 ---
 
-**Problems Solved:** **5**
+**Problems Solved:** **6**
