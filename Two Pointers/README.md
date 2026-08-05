@@ -12,6 +12,7 @@ This folder contains **Two Pointers** problems solved in **C++**. Each solution 
 | 2 | 3Sum | Medium | ✅ |
 | 3 | 3Sum Closest | Medium | ✅ |
 | 4 | Remove Duplicates from Sorted Array | Easy | ✅ |
+| 5 | Remove Element | Easy | ✅ |
 
 ---
 
@@ -53,4 +54,4 @@ This technique helps reduce time complexity and is one of the most important pat
 
 ---
 
-**Problems Solved:** **4**
+**Problems Solved:** **5**
