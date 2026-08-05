@@ -1,0 +1,90 @@
+/*
+------------------------------------------------------------
+Problem    : Find the Index of the First Occurrence in a String
+Platform   : LeetCode
+Topic      : Strings
+Difficulty : Easy
+
+Problem:
+Given two strings, `haystack` and `needle`, return the index
+of the first occurrence of `needle` in `haystack`.
+
+If `needle` does not exist in `haystack`, return -1.
+
+Approach:
+Traverse every possible starting position in `haystack`
+where `needle` can fit.
+
+For each starting position, compare the characters of
+`needle` with the corresponding characters in `haystack`.
+If all characters match, return the current index.
+
+If no complete match is found after checking all valid
+positions, return -1.
+
+Why does this work?
+
+A substring match can only begin at positions where enough
+characters remain in `haystack`.
+
+By comparing characters one by one, we verify whether
+`needle` matches completely without creating any additional
+strings.
+
+Algorithm:
+1. Handle the empty `needle` case.
+2. Traverse every valid starting position.
+3. Compare characters one by one.
+4. If every character matches, return the starting index.
+5. If no match exists, return -1.
+
+Time Complexity : O((m - n + 1) × n)
+
+Reason:
+In the worst case, each possible starting position requires
+comparing all characters of `needle`.
+
+Space Complexity : O(1)
+
+Reason:
+No additional data structures are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+
+        int haystackLength = haystack.size();
+        int needleLength = needle.size();
+
+        // An empty needle is always found at index 0.
+        if (needleLength == 0) {
+            return 0;
+        }
+
+        // Check every possible starting position.
+        for (int startIndex = 0;
+             startIndex <= haystackLength - needleLength;
+             startIndex++) {
+
+            int currentIndex = 0;
+
+            // Compare characters one by one.
+            while (currentIndex < needleLength &&
+                   haystack[startIndex + currentIndex] ==
+                   needle[currentIndex]) {
+
+                currentIndex++;
+            }
+
+            // Entire needle matched.
+            if (currentIndex == needleLength) {
+                return startIndex;
+            }
+        }
+
+        return -1;
+    }
+};
