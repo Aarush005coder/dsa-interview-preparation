@@ -1,0 +1,82 @@
+/*
+------------------------------------------------------------
+Problem    : Remove Element
+Platform   : LeetCode
+Topic      : Two Pointers
+Difficulty : Easy
+
+Problem:
+Given an integer array `nums` and an integer `val`, remove
+all occurrences of `val` in-place.
+
+Return the number of elements that are not equal to `val`.
+The first k elements of the array should contain the
+remaining elements.
+
+Approach:
+Use the Two Pointers technique.
+
+One pointer (`currentIndex`) traverses the array, while the
+other pointer (`validIndex`) keeps track of the position
+where the next valid element should be placed.
+
+Whenever an element different from `val` is found, copy it
+to `validIndex` and move `validIndex` forward.
+
+Why does this work?
+
+Every element is examined exactly once.
+
+Only the elements that should remain in the array are copied
+to the front. Since the problem does not require preserving
+the remaining positions, overwriting the array in-place is
+both correct and space-efficient.
+
+Algorithm:
+1. Initialize `validIndex` to 0.
+2. Traverse the array.
+3. If the current element is not equal to `val`:
+   - Place it at `validIndex`.
+   - Increment `validIndex`.
+4. Continue until all elements are processed.
+5. Return `validIndex`.
+
+Time Complexity : O(n)
+
+Reason:
+Each element is visited exactly once.
+
+Space Complexity : O(1)
+
+Reason:
+The array is modified in-place using only constant extra
+space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+
+        // Points to the position where the next
+        // valid element should be placed.
+        int validIndex = 0;
+
+        // Traverse the entire array.
+        for (int currentIndex = 0;
+             currentIndex < nums.size();
+             currentIndex++) {
+
+            // Keep elements that are not equal to val.
+            if (nums[currentIndex] != val) {
+
+                nums[validIndex] = nums[currentIndex];
+                validIndex++;
+            }
+        }
+
+        // Number of remaining elements.
+        return validIndex;
+    }
+};
