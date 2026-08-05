@@ -77,13 +77,13 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 |--------|-------:|
 | Arrays | 2 |
 | Linked List | 6 |
-| Strings | 3 |
+| Strings | 4 |
 | Matrix | 0 |
 | Hashing | 0 |
 | Sorting | 0 |
 | Searching | 0 |
 | Binary Search | 0 |
-| Two Pointers | 4 |
+| Two Pointers | 5 |
 | Sliding Window | 1 |
 | Prefix Sum | 0 |
 | Bit Manipulation | 0 |
