@@ -10,6 +10,7 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 |---|---------|------------|--------|
 | 1 | Two Sum | Easy | ✅ |
 | 2 | Median of Two Sorted Arrays | Hard | ✅ |
+| 3 | Next Permutation | Medium | ✅ |
 
 ---
 
