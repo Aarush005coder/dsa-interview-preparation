@@ -1,0 +1,104 @@
+/*
+------------------------------------------------------------
+Problem    : Divide Two Integers
+Platform   : LeetCode
+Topic      : Bit Manipulation
+Difficulty : Medium
+
+Problem:
+Given two integers, divide them without using the
+multiplication (*), division (/), or modulus (%) operators.
+
+Return the quotient after truncating the fractional part.
+If the result overflows the 32-bit signed integer range,
+return INT_MAX.
+
+Approach:
+Convert both numbers to their absolute values and repeatedly
+subtract the largest possible multiple of the divisor.
+
+Instead of subtracting the divisor one time at a time,
+continuously double the divisor until the next doubling would
+exceed the remaining dividend. Subtract this largest multiple
+and add its corresponding count to the quotient.
+
+Finally, determine the correct sign of the answer.
+
+Why does this work?
+
+Doubling the divisor allows us to remove large portions of the
+dividend in every iteration instead of subtracting one divisor
+at a time.
+
+This significantly reduces the number of operations while
+respecting the restriction of not using multiplication,
+division, or modulus operators.
+
+Algorithm:
+1. Handle the overflow case.
+2. Convert both numbers to positive values.
+3. While the dividend is at least the divisor:
+   - Double the divisor until it cannot be doubled further.
+   - Subtract the largest doubled value.
+   - Add its corresponding multiple to the quotient.
+4. Apply the correct sign.
+5. Return the quotient.
+
+Time Complexity : O(log² n)
+
+Reason:
+The outer loop runs O(log n) times, and each iteration may
+perform another O(log n) doubling process.
+
+Space Complexity : O(1)
+
+Reason:
+Only a constant number of variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+
+        // Handle the overflow case.
+        if (dividend == INT_MIN && divisor == -1) {
+            return INT_MAX;
+        }
+
+        if (dividend == INT_MIN && divisor == 1) {
+            return INT_MIN;
+        }
+
+        // Convert both numbers to positive values.
+        long long absoluteDividend = abs((long long)dividend);
+        long long absoluteDivisor = abs((long long)divisor);
+
+        int quotient = 0;
+
+        // Compute the quotient.
+        while (absoluteDividend >= absoluteDivisor) {
+
+            long long currentSum = absoluteDivisor;
+            long long currentCount = 1;
+
+            // Keep doubling until the next doubling exceeds
+            // the remaining dividend.
+            while (currentSum <= absoluteDividend - currentSum) {
+                currentSum += currentSum;
+                currentCount += currentCount;
+            }
+
+            absoluteDividend -= currentSum;
+            quotient += currentCount;
+        }
+
+        // Apply the correct sign.
+        if ((dividend < 0) ^ (divisor < 0)) {
+            return -quotient;
+        }
+
+        return quotient;
+    }
+};
