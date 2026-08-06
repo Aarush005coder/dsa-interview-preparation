@@ -1,0 +1,92 @@
+/*
+------------------------------------------------------------
+Problem    : Next Permutation
+Platform   : LeetCode
+Topic      : Arrays
+Difficulty : Medium
+
+Problem:
+Given an array of integers, rearrange it into the next
+lexicographically greater permutation.
+
+If no greater permutation exists, rearrange the array into
+the smallest possible order (ascending order).
+
+The modification must be performed in-place using constant
+extra space.
+
+Approach:
+Traverse the array from right to left to find the first
+element that is smaller than its next element. This element
+is called the pivot.
+
+Next, find the smallest element greater than the pivot from
+the right side and swap them.
+
+Finally, reverse the suffix after the pivot to obtain the
+smallest possible arrangement, which produces the immediate
+next lexicographical permutation.
+
+Why does this work?
+
+The suffix after the pivot is always in non-increasing order.
+
+Swapping the pivot with the next greater element increases
+the permutation by the smallest possible amount.
+
+Reversing the suffix converts it into ascending order,
+ensuring that the resulting permutation is the next
+lexicographically smallest arrangement.
+
+Algorithm:
+1. Find the first decreasing element from the right.
+2. If such an element exists:
+   - Find the next greater element from the right.
+   - Swap both elements.
+3. Reverse the suffix after the pivot.
+4. The array now represents the next permutation.
+
+Time Complexity : O(n)
+
+Reason:
+The array is traversed at most three times.
+
+Space Complexity : O(1)
+
+Reason:
+The permutation is modified in-place without using extra
+memory.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+
+        int size = nums.size();
+
+        // Find the pivot.
+        int pivot = size - 2;
+
+        while (pivot >= 0 &&
+               nums[pivot] >= nums[pivot + 1]) {
+            pivot--;
+        }
+
+        // Find the next greater element and swap.
+        if (pivot >= 0) {
+
+            int nextGreater = size - 1;
+
+            while (nums[nextGreater] <= nums[pivot]) {
+                nextGreater--;
+            }
+
+            swap(nums[pivot], nums[nextGreater]);
+        }
+
+        // Reverse the suffix.
+        reverse(nums.begin() + pivot + 1, nums.end());
+    }
+};
