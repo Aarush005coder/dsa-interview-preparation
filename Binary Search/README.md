@@ -9,6 +9,7 @@ This folder contains **Binary Search** problems solved in **C++**. Each solution
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Search in Rotated Sorted Array | Medium | ✅ |
+| 2 | Find First and Last Position of Element in Sorted Array | Medium | ✅ |
 
 ---
 
