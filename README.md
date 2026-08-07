@@ -82,7 +82,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Hashing | 0 |
 | Sorting | 0 |
 | Searching | 0 |
-| Binary Search | 0 |
+| Binary Search | 2 |
 | Two Pointers | 5 |
 | Sliding Window | 1 |
 | Prefix Sum | 0 |
