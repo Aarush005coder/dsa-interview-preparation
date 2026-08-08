@@ -1,0 +1,91 @@
+/*
+------------------------------------------------------------
+Problem    : Search Insert Position
+Platform   : LeetCode
+Topic      : Binary Search
+Difficulty : Easy
+
+Problem:
+Given a sorted array of distinct integers and a target value,
+return the index of the target if it exists.
+
+If the target does not exist, return the index where it should
+be inserted to maintain the sorted order.
+
+The solution must run in O(log n) time.
+
+Approach:
+Use Binary Search to find the target or its correct insertion
+position.
+
+If the target is found, return its index immediately.
+
+If the target is not found, Binary Search eventually makes
+`low` point to the first element greater than the target.
+Therefore, `low` is exactly the position where the target
+should be inserted.
+
+Why does this work?
+
+During Binary Search, whenever the middle element is smaller
+than the target, the insertion position must be to the right.
+
+Whenever the middle element is greater than the target, the
+insertion position can be at `mid` or somewhere to its left.
+
+When the search ends, `low` represents the first valid position
+for the target, making it the correct insertion index.
+
+Algorithm:
+1. Initialize `low` and `high`.
+2. Calculate the middle index.
+3. If the middle element equals the target, return `mid`.
+4. If the middle element is smaller, search the right half.
+5. Otherwise, search the left half.
+6. When the search ends, return `low`.
+
+Time Complexity : O(log n)
+
+Reason:
+Binary Search eliminates half of the search space in every
+iteration.
+
+Space Complexity : O(1)
+
+Reason:
+Only constant extra variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+
+        int low = 0;
+        int high = nums.size() - 1;
+
+        while (low <= high) {
+
+            int mid = low + (high - low) / 2;
+
+            // Target found.
+            if (nums[mid] == target) {
+                return mid;
+            }
+
+            // Target must be in the right half.
+            if (nums[mid] < target) {
+                low = mid + 1;
+            }
+
+            // Target can be in the left half.
+            else {
+                high = mid - 1;
+            }
+        }
+
+        // low is the correct insertion position.
+        return low;
+    }
+};
