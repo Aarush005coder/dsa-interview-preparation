@@ -1,0 +1,136 @@
+/*
+------------------------------------------------------------
+Problem    : Sudoku Solver
+Platform   : LeetCode
+Topic      : Backtracking
+Difficulty : Hard
+
+Problem:
+Solve a 9x9 Sudoku board by filling every empty cell.
+
+A valid Sudoku solution must satisfy three rules:
+1. Every row must contain digits 1-9 exactly once.
+2. Every column must contain digits 1-9 exactly once.
+3. Every 3x3 sub-box must contain digits 1-9 exactly once.
+
+Approach:
+Use Backtracking to try different digits in every empty cell.
+
+For each empty cell, try digits from '1' to '9'. Before
+placing a digit, check whether it is valid in the current
+row, column, and 3x3 sub-box.
+
+If the placement is valid, place the digit and recursively
+solve the remaining board.
+
+If the recursive call fails, remove the digit and try another
+possibility.
+
+Why does this work?
+
+Backtracking explores possible Sudoku configurations while
+rejecting invalid choices immediately.
+
+Whenever a digit violates the row, column, or sub-box rules,
+that choice is discarded without exploring the remaining
+board. If a choice eventually leads to an invalid board,
+the algorithm restores the empty cell and tries another
+digit.
+
+Algorithm:
+1. Find the next empty cell.
+2. Try every digit from '1' to '9'.
+3. Check whether the digit is valid.
+4. Place the digit if it is valid.
+5. Recursively solve the remaining board.
+6. If the choice fails, restore the cell to '.'.
+7. Continue until the board is completely filled.
+
+Time Complexity : O(9^E)
+
+Reason:
+In the worst case, each of the E empty cells can have up to
+9 possible choices.
+
+Space Complexity : O(E)
+
+Reason:
+The recursion depth can reach the number of empty cells.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Checks whether a value can be placed at board[row][col].
+    bool isSafe(
+        int row,
+        int col,
+        vector<vector<char>>& board,
+        char value
+    ) {
+
+        for (int index = 0; index < 9; index++) {
+
+            // Check the current row and column.
+            if (board[row][index] == value ||
+                board[index][col] == value) {
+
+                return false;
+            }
+
+            // Check the corresponding 3x3 sub-box.
+            int boxRow = 3 * (row / 3) + index / 3;
+            int boxCol = 3 * (col / 3) + index % 3;
+
+            if (board[boxRow][boxCol] == value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Attempts to solve the Sudoku using backtracking.
+    bool solve(vector<vector<char>>& board) {
+
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+
+                // Find an empty cell.
+                if (board[row][col] == '.') {
+
+                    // Try every possible digit.
+                    for (char value = '1'; value <= '9'; value++) {
+
+                        if (isSafe(row, col, board, value)) {
+
+                            // Make a choice.
+                            board[row][col] = value;
+
+                            // Continue solving the board.
+                            if (solve(board)) {
+                                return true;
+                            }
+
+                            // Undo the choice.
+                            board[row][col] = '.';
+                        }
+                    }
+
+                    // No valid digit works for this cell.
+                    return false;
+                }
+            }
+        }
+
+        // No empty cells remain, so the board is solved.
+        return true;
+    }
+
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        solve(board);
+    }
+};
