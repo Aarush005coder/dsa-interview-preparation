@@ -10,6 +10,7 @@ This folder contains **Binary Search** problems solved in **C++**. Each solution
 |---|---------|------------|--------|
 | 1 | Search in Rotated Sorted Array | Medium | ✅ |
 | 2 | Find First and Last Position of Element in Sorted Array | Medium | ✅ |
+| 3 | Search Insert Position | Easy | ✅ |
 
 ---
 
@@ -34,4 +35,4 @@ This folder contains **Binary Search** problems solved in **C++**. Each solution
 
 ---
 
-**Problems Solved:** **2**
+**Problems Solved:** **3**
