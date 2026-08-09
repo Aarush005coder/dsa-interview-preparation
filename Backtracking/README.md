@@ -11,6 +11,7 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 | 1 | Letter Combinations of a Phone Number | Medium | ✅ |
 | 2 | Generate Parentheses | Medium | ✅ |
 | 3 | Sudoku Solver | Hard | ✅ |
+| 4 | Combination Sum | Medium | ✅ |
 
 ---
 
