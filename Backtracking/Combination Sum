@@ -1,0 +1,134 @@
+/*
+------------------------------------------------------------
+Problem    : Combination Sum
+Platform   : LeetCode
+Topic      : Backtracking
+Difficulty : Medium
+
+Problem:
+Given an array of distinct integers and a target value, find
+all unique combinations whose elements sum to the target.
+
+Each candidate can be selected an unlimited number of times.
+
+Approach:
+Use Backtracking to build combinations incrementally.
+
+For every candidate starting from the current index, add it
+to the current combination and recursively search for the
+remaining target.
+
+The same candidate can be reused because the recursive call
+uses the current index `i` instead of `i + 1`.
+
+If the remaining target becomes zero, the current combination
+is a valid answer.
+
+After exploring a choice, remove it from the current
+combination and try the next candidate.
+
+Why does this work?
+
+Backtracking explores every possible combination while
+maintaining the current sum.
+
+Starting the loop from `start` prevents generating duplicate
+combinations in different orders.
+
+For example, [2,3] is generated, but [3,2] is not generated
+as a separate combination.
+
+Passing `i` during recursion allows the same candidate to be
+used multiple times.
+
+Algorithm:
+1. Start with an empty combination.
+2. Traverse candidates from the current index.
+3. Choose a candidate if it does not exceed the remaining target.
+4. Add the candidate to the current combination.
+5. Recursively solve using the same index.
+6. If the target becomes zero, store the combination.
+7. Remove the chosen candidate and try the next possibility.
+
+Time Complexity : O(N^(T/M))
+
+Reason:
+In the worst case, the recursion can explore many possible
+combinations. The complexity depends on the target T, the
+number of candidates N, and the smallest candidate value M.
+
+Space Complexity : O(T/M)
+
+Reason:
+The recursion depth and current combination can contain at
+most T/M elements when M is the smallest candidate.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Generates all valid combinations using backtracking.
+    void generateCombinations(
+        vector<int>& candidates,
+        int remainingTarget,
+        int startIndex,
+        vector<int>& currentCombination,
+        vector<vector<int>>& result
+    ) {
+
+        // A valid combination has been found.
+        if (remainingTarget == 0) {
+            result.push_back(currentCombination);
+            return;
+        }
+
+        // Try candidates from the current index.
+        for (int index = startIndex;
+             index < candidates.size();
+             index++) {
+
+            // Skip candidates that exceed the remaining target.
+            if (candidates[index] > remainingTarget) {
+                continue;
+            }
+
+            // Choose the current candidate.
+            currentCombination.push_back(candidates[index]);
+
+            // Pass the same index because the candidate
+            // can be reused unlimited times.
+            generateCombinations(
+                candidates,
+                remainingTarget - candidates[index],
+                index,
+                currentCombination,
+                result
+            );
+
+            // Undo the choice and try the next candidate.
+            currentCombination.pop_back();
+        }
+    }
+
+public:
+    vector<vector<int>> combinationSum(
+        vector<int>& candidates,
+        int target
+    ) {
+
+        vector<vector<int>> result;
+        vector<int> currentCombination;
+
+        generateCombinations(
+            candidates,
+            target,
+            0,
+            currentCombination,
+            result
+        );
+
+        return result;
+    }
+};
