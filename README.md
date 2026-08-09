@@ -88,7 +88,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Prefix Sum | 0 |
 | Bit Manipulation | 1 |
 | Recursion | 0 |
-| Backtracking | 3 |
+| Backtracking | 5 |
 | Stack | 1 |
 | Queue | 0 |
 | Trees | 0 |
