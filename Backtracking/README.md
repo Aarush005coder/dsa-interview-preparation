@@ -12,6 +12,7 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 | 2 | Generate Parentheses | Medium | ✅ |
 | 3 | Sudoku Solver | Hard | ✅ |
 | 4 | Combination Sum | Medium | ✅ |
+| 5 | Combination Sum II | Medium | ✅ |
 
 ---
 
@@ -37,4 +38,4 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 
 ---
 
-**Problems Solved:** **3**
+**Problems Solved:** **5**
