@@ -1,0 +1,156 @@
+/*
+------------------------------------------------------------
+Problem    : Combination Sum II
+Platform   : LeetCode
+Topic      : Backtracking
+Difficulty : Medium
+
+Problem:
+Given a collection of candidate numbers and a target value,
+find all unique combinations whose elements sum to the target.
+
+Each element can be used only once.
+
+The result must not contain duplicate combinations.
+
+Approach:
+Use Backtracking along with sorting.
+
+First, sort the candidates so that duplicate values become
+adjacent.
+
+During backtracking, start from the current index and try
+each available candidate.
+
+After choosing a candidate, recursively continue from
+`index + 1` because each element can only be used once.
+
+To avoid duplicate combinations, skip a candidate when it is
+the same as the previous candidate at the same recursion
+level.
+
+Why does this work?
+
+Sorting places duplicate values next to each other.
+
+For example:
+
+[1,1,2,5]
+
+If we are at the same recursion level and have already
+considered the first `1`, choosing the second `1` as the
+starting choice would generate duplicate combinations.
+
+Therefore:
+
+if (i > start && candidates[i] == candidates[i - 1])
+
+we skip the duplicate.
+
+However, duplicate values can still be used in the same
+combination when they occur at different recursion levels.
+
+For example, [1,1,6] is valid.
+
+Algorithm:
+1. Sort the candidates.
+2. Start backtracking from index 0.
+3. If the remaining target becomes zero, store the combination.
+4. Skip duplicate candidates at the same recursion level.
+5. Choose the current candidate.
+6. Recursively continue from `i + 1`.
+7. Remove the candidate after returning from recursion.
+8. Stop the loop when the candidate exceeds the target.
+
+Time Complexity : O(2^n)
+
+Reason:
+Each element can be either selected or skipped, giving up
+to 2^n possible subsets in the worst case.
+
+Sorting additionally takes O(n log n).
+
+Space Complexity : O(n)
+
+Reason:
+The recursion depth and current combination can contain at
+most n elements, excluding the output space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Generates all unique combinations using backtracking.
+    void backtrack(
+        vector<int>& candidates,
+        int remainingTarget,
+        int startIndex,
+        vector<int>& currentCombination,
+        vector<vector<int>>& result
+    ) {
+
+        // A valid combination has been found.
+        if (remainingTarget == 0) {
+            result.push_back(currentCombination);
+            return;
+        }
+
+        for (int index = startIndex;
+             index < candidates.size();
+             index++) {
+
+            // Skip duplicate values at the same recursion level.
+            if (index > startIndex &&
+                candidates[index] == candidates[index - 1]) {
+                continue;
+            }
+
+            // Since the array is sorted, all later values
+            // will also be greater than the remaining target.
+            if (candidates[index] > remainingTarget) {
+                break;
+            }
+
+            // Choose the current candidate.
+            currentCombination.push_back(candidates[index]);
+
+            // Move to index + 1 because each element
+            // can only be used once.
+            backtrack(
+                candidates,
+                remainingTarget - candidates[index],
+                index + 1,
+                currentCombination,
+                result
+            );
+
+            // Undo the choice.
+            currentCombination.pop_back();
+        }
+    }
+
+public:
+    vector<vector<int>> combinationSum2(
+        vector<int>& candidates,
+        int target
+    ) {
+
+        // Sorting allows duplicate values to be detected easily.
+        sort(candidates.begin(), candidates.end());
+
+        vector<vector<int>> result;
+        vector<int> currentCombination;
+
+        backtrack(
+            candidates,
+            target,
+            0,
+            currentCombination,
+            result
+        );
+
+        return result;
+    }
+};
