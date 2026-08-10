@@ -12,6 +12,7 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 | 2 | Zigzag Conversion | Medium | ✅ |
 | 3 | String to Integer (atoi) | Medium | ✅ |
 | 4 | Find the Index of the First Occurrence in a String | Easy | ✅ |
+| 5 | Multiply Strings | Medium | ✅ |
 
 ---
 
@@ -40,4 +41,4 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 
 ---
 
-**Problems Solved:** **4**
+**Problems Solved:** **5**
