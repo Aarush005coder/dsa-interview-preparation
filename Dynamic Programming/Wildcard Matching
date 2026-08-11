@@ -1,0 +1,138 @@
+/*
+------------------------------------------------------------
+Problem    : Wildcard Matching
+Platform   : LeetCode
+Topic      : Dynamic Programming
+Difficulty : Hard
+
+Problem:
+Given a string s and a pattern p, determine whether the entire
+string matches the pattern.
+
+The pattern supports:
+    '?' -> Matches exactly one character.
+    '*' -> Matches any sequence of characters, including empty.
+
+The complete string must match the complete pattern.
+
+Approach:
+Use Dynamic Programming with space optimization.
+
+Let dp[i][j] represent whether the first i characters of s
+match the first j characters of p.
+
+For a normal character or '?':
+    dp[i][j] = dp[i-1][j-1]
+
+because both the current string character and pattern
+character must be consumed.
+
+For '*', there are two possibilities:
+
+1. '*' matches zero characters:
+       dp[i][j] = dp[i][j-1]
+
+2. '*' matches the current string character:
+       dp[i][j] = dp[i-1][j]
+
+Therefore:
+
+    dp[i][j] = dp[i][j-1] || dp[i-1][j]
+
+Why does this work?
+
+A '*' is flexible because it can represent an empty sequence
+or one or more characters.
+
+If '*' matches nothing, we move only in the pattern.
+
+If '*' matches the current character, we move in the string
+while keeping '*' available to match more characters.
+
+Since each DP state only depends on the previous row and the
+current row, we do not need the complete 2D DP table.
+
+Algorithm:
+1. Initialize the empty string and empty pattern state.
+2. Mark prefixes of the pattern containing only '*' as matches.
+3. Process the string character by character.
+4. For matching characters or '?', use the diagonal state.
+5. For '*', use the current-row or previous-row state.
+6. Move the current row into the previous row.
+7. Return the final matching state.
+
+Time Complexity : O(n × m)
+
+Reason:
+Every character-pattern pair is processed once.
+
+Space Complexity : O(m)
+
+Reason:
+Only two DP rows of size m + 1 are maintained.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    bool solve(string& s, string& p) {
+
+        int n = s.length();
+        int m = p.length();
+
+        // Previous and current DP rows.
+        vector<int> prev(m + 1, false);
+        vector<int> curr(m + 1, false);
+
+        // Empty string matches an empty pattern.
+        prev[0] = true;
+
+        // An empty string can only match a pattern
+        // consisting entirely of '*'.
+        for (int j = 1; j <= m; j++) {
+
+            if (p[j - 1] == '*') {
+                prev[j] = prev[j - 1];
+            }
+        }
+
+        for (int i = 1; i <= n; i++) {
+
+            // Reset the current row before processing it.
+            fill(curr.begin(), curr.end(), false);
+
+            for (int j = 1; j <= m; j++) {
+
+                // Normal character or '?' matches one character.
+                if (s[i - 1] == p[j - 1] || p[j - 1] == '?') {
+                    curr[j] = prev[j - 1];
+                }
+
+                // '*' can match:
+                // 1. Zero characters -> curr[j - 1]
+                // 2. Current character -> prev[j]
+                else if (p[j - 1] == '*') {
+                    curr[j] = prev[j] || curr[j - 1];
+                }
+
+                // Otherwise, the characters do not match.
+                else {
+                    curr[j] = false;
+                }
+            }
+
+            // Current row becomes the previous row.
+            prev = curr;
+        }
+
+        return prev[m];
+    }
+
+public:
+
+    bool isMatch(string s, string p) {
+        return solve(s, p);
+    }
+};
