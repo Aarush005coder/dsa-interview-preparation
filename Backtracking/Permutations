@@ -1,0 +1,115 @@
+/*
+------------------------------------------------------------
+Problem    : Permutations
+Platform   : LeetCode
+Topic      : Backtracking
+Difficulty : Medium
+
+Problem:
+Given an array of distinct integers, return all possible
+permutations of the array.
+
+Approach:
+Use Backtracking with in-place swapping.
+
+At each index, choose one of the remaining elements and place
+it at the current index.
+
+After fixing the current position, recursively generate all
+permutations for the remaining positions.
+
+After the recursive call completes, undo the swap so that the
+next possible choice can be explored.
+
+Why does this work?
+
+For every position, we try every remaining element.
+
+For example, with [1,2,3]:
+
+    Choose 1
+        Choose 2 → [1,2,3]
+        Choose 3 → [1,3,2]
+
+    Choose 2
+        Choose 1 → [2,1,3]
+        Choose 3 → [2,3,1]
+
+    Choose 3
+        Choose 1 → [3,1,2]
+        Choose 2 → [3,2,1]
+
+Since all elements are distinct, every generated arrangement
+is a unique permutation.
+
+The swap-back operation restores the original state before
+trying the next choice.
+
+Algorithm:
+1. Start from index 0.
+2. Try every element from the current index onward.
+3. Swap the selected element with the current position.
+4. Recursively generate permutations for the next position.
+5. Undo the swap.
+6. When the index reaches the end, store the permutation.
+
+Time Complexity : O(n × n!)
+
+Reason:
+There are n! permutations, and storing each permutation takes
+O(n) time.
+
+Space Complexity : O(n)
+
+Reason:
+The recursion depth is O(n), excluding the output space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Generates permutations using backtracking.
+    void generatePermutations(
+        vector<int> nums,
+        vector<vector<int>>& result,
+        int index
+    ) {
+
+        // A complete permutation has been created.
+        if (index == nums.size()) {
+            result.push_back(nums);
+            return;
+        }
+
+        // Try every remaining element at the current position.
+        for (int position = index;
+             position < nums.size();
+             position++) {
+
+            // Choose an element for the current position.
+            swap(nums[index], nums[position]);
+
+            // Generate permutations for the remaining positions.
+            generatePermutations(
+                nums,
+                result,
+                index + 1
+            );
+
+            // Undo the choice.
+            swap(nums[index], nums[position]);
+        }
+    }
+
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+
+        vector<vector<int>> result;
+
+        generatePermutations(nums, result, 0);
+
+        return result;
+    }
+};
