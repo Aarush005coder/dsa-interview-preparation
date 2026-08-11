@@ -88,7 +88,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Prefix Sum | 0 |
 | Bit Manipulation | 1 |
 | Recursion | 0 |
-| Backtracking | 5 |
+| Backtracking | 6 |
 | Stack | 1 |
 | Queue | 0 |
 | Trees | 0 |
@@ -96,7 +96,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Heap | 0 |
 | Trie | 1 |
 | Graph | 0 |
-| Dynamic Programming | 0 |
+| Dynamic Programming | 1 |
 | Greedy | 0 |
 | Math | 2 |
 | Segment Tree | 0 |
