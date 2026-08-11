@@ -13,6 +13,7 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 | 3 | Sudoku Solver | Hard | ✅ |
 | 4 | Combination Sum | Medium | ✅ |
 | 5 | Combination Sum II | Medium | ✅ |
+| 6 | Permutations | Medium | ✅ |
 
 ---
 
@@ -38,4 +39,4 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 
 ---
 
-**Problems Solved:** **5**
+**Problems Solved:** **6**
