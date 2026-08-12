@@ -14,6 +14,7 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 | 4 | Combination Sum | Medium | ✅ |
 | 5 | Combination Sum II | Medium | ✅ |
 | 6 | Permutations | Medium | ✅ |
+| 7 | N-Queens | Hard | ✅ |
 
 ---
 
@@ -39,4 +40,4 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 
 ---
 
-**Problems Solved:** **6**
+**Problems Solved:** **7**
