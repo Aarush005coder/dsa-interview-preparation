@@ -87,8 +87,8 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Sliding Window | 1 |
 | Prefix Sum | 0 |
 | Bit Manipulation | 1 |
-| Recursion | 0 |
-| Backtracking | 6 |
+| Recursion | 1 |
+| Backtracking | 7 |
 | Stack | 1 |
 | Queue | 0 |
 | Trees | 0 |
