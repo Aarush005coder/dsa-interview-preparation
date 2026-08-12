@@ -1,0 +1,163 @@
+/*
+------------------------------------------------------------
+Problem    : N-Queens
+Platform   : LeetCode
+Topic      : Backtracking
+Difficulty : Hard
+
+Problem:
+Place n queens on an n x n chessboard such that no two queens
+attack each other.
+
+Return all distinct valid board configurations.
+
+Approach:
+Use Backtracking to place exactly one queen in each row.
+
+For every row, try placing a queen in each column. Before
+placing it, check whether the column, main diagonal, or
+anti-diagonal is already occupied.
+
+Three boolean arrays are used to perform these checks in O(1):
+- `columns[col]` tracks occupied columns.
+- `mainDiagonal[row - col + n - 1]` tracks main diagonals.
+- `antiDiagonal[row + col]` tracks anti-diagonals.
+
+If a position is valid, place the queen and recursively solve
+the next row.
+
+After returning from recursion, remove the queen and restore
+the state so that another position can be explored.
+
+Why does this work?
+
+Since every row receives exactly one queen, we only need to
+ensure that no two queens share the same column or diagonal.
+
+The diagonal indices provide a unique identifier for each
+diagonal:
+
+    Main diagonal     → row - col + n - 1
+    Anti-diagonal     → row + col
+
+By tracking these constraints, invalid positions can be
+rejected immediately without checking every previously placed
+queen.
+
+Backtracking explores all possible valid placements while
+undoing each choice before trying the next one.
+
+Algorithm:
+1. Create an empty n x n board.
+2. Track used columns and both diagonal directions.
+3. Start placing queens from row 0.
+4. Try every column in the current row.
+5. Skip the position if its column or diagonals are occupied.
+6. Place the queen and mark the corresponding constraints.
+7. Recursively solve the next row.
+8. Remove the queen and restore the constraints.
+9. When all n rows are filled, store the board configuration.
+
+Time Complexity : O(n!)
+
+Reason:
+In the worst case, the backtracking process explores a large
+portion of the possible queen placements. The constraint checks
+are O(1), giving an upper-bound style complexity of O(n!).
+
+Space Complexity : O(n²)
+
+Reason:
+The board requires O(n²) space to store each configuration,
+while the column and diagonal tracking arrays use O(n) space.
+The recursion depth is also O(n).
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Generates all valid N-Queens configurations.
+    void backtrack(
+        int row,
+        int n,
+        vector<string>& board,
+        vector<vector<string>>& result,
+        vector<bool>& columns,
+        vector<bool>& mainDiagonal,
+        vector<bool>& antiDiagonal
+    ) {
+
+        // All rows have been successfully filled.
+        if (row == n) {
+            result.push_back(board);
+            return;
+        }
+
+        // Try placing a queen in every column of the current row.
+        for (int col = 0; col < n; col++) {
+
+            int mainDiagonalIndex = row - col + n - 1;
+            int antiDiagonalIndex = row + col;
+
+            // Skip positions attacked by another queen.
+            if (columns[col] ||
+                mainDiagonal[mainDiagonalIndex] ||
+                antiDiagonal[antiDiagonalIndex]) {
+                continue;
+            }
+
+            // Place the queen and mark the constraints.
+            board[row][col] = 'Q';
+            columns[col] = true;
+            mainDiagonal[mainDiagonalIndex] = true;
+            antiDiagonal[antiDiagonalIndex] = true;
+
+            // Continue with the next row.
+            backtrack(
+                row + 1,
+                n,
+                board,
+                result,
+                columns,
+                mainDiagonal,
+                antiDiagonal
+            );
+
+            // Undo the placement.
+            board[row][col] = '.';
+            columns[col] = false;
+            mainDiagonal[mainDiagonalIndex] = false;
+            antiDiagonal[antiDiagonalIndex] = false;
+        }
+    }
+
+public:
+
+    vector<vector<string>> solveNQueens(int n) {
+
+        vector<vector<string>> result;
+
+        // Initially, the entire board is empty.
+        vector<string> board(n, string(n, '.'));
+
+        // Track occupied columns and diagonals.
+        vector<bool> columns(n, false);
+        vector<bool> mainDiagonal(2 * n - 1, false);
+        vector<bool> antiDiagonal(2 * n - 1, false);
+
+        // Start placing queens from the first row.
+        backtrack(
+            0,
+            n,
+            board,
+            result,
+            columns,
+            mainDiagonal,
+            antiDiagonal
+        );
+
+        return result;
+    }
+};
