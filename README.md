@@ -80,7 +80,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Strings | 5 |
 | Matrix | 0 |
 | Hashing | 0 |
-| Sorting | 0 |
+| Sorting | 1 |
 | Searching | 0 |
 | Binary Search | 3 |
 | Two Pointers | 5 |
@@ -88,7 +88,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Prefix Sum | 0 |
 | Bit Manipulation | 1 |
 | Recursion | 1 |
-| Backtracking | 7 |
+| Backtracking | 8 |
 | Stack | 1 |
 | Queue | 0 |
 | Trees | 0 |
