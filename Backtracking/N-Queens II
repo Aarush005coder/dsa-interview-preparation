@@ -1,0 +1,144 @@
+/*
+------------------------------------------------------------
+Problem    : N-Queens II
+Platform   : LeetCode
+Topic      : Backtracking
+Difficulty : Hard
+
+Problem:
+Given an integer n, return the number of distinct ways to
+place n queens on an n x n chessboard such that no two queens
+attack each other.
+
+Approach:
+Use Backtracking to place exactly one queen in each row.
+
+For every row, try each column and check whether the position
+is safe using three boolean arrays:
+- `columns[col]` tracks occupied columns.
+- `mainDiagonal[row - col + n - 1]` tracks main diagonals.
+- `antiDiagonal[row + col]` tracks anti-diagonals.
+
+If the position is safe, place the queen, mark the occupied
+column and diagonals, and recursively process the next row.
+
+After returning from recursion, undo the placement so that
+the next possible position can be explored.
+
+Unlike N-Queens I, we do not need to store the board because
+only the total number of valid configurations is required.
+
+Why does this work?
+
+Each valid solution places one queen in every row without
+sharing a column or diagonal with another queen.
+
+The tracking arrays allow us to check whether a position is
+safe in O(1) time. Backtracking explores every valid placement
+and increments the answer whenever all n rows are successfully
+filled.
+
+Algorithm:
+1. Initialize arrays for columns and both diagonal directions.
+2. Start backtracking from row 0.
+3. Try every column in the current row.
+4. Skip the position if its column or diagonals are occupied.
+5. Place the queen and mark the corresponding constraints.
+6. Recursively process the next row.
+7. Undo the placement after recursion.
+8. When all rows are filled, increment the solution count.
+9. Return the total number of solutions.
+
+Time Complexity : O(n!)
+
+Reason:
+The backtracking process explores the possible queen
+placements, with O(1) constraint checking for each position.
+
+Space Complexity : O(n)
+
+Reason:
+The column and diagonal tracking arrays require O(n) space,
+and the recursion depth is O(n).
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Counts all valid N-Queens configurations.
+    void backtrack(
+        int row,
+        int n,
+        vector<bool>& columns,
+        vector<bool>& mainDiagonal,
+        vector<bool>& antiDiagonal,
+        int& solutionCount
+    ) {
+
+        // All queens have been placed successfully.
+        if (row == n) {
+            solutionCount++;
+            return;
+        }
+
+        // Try every column in the current row.
+        for (int col = 0; col < n; col++) {
+
+            int mainDiagonalIndex = row - col + n - 1;
+            int antiDiagonalIndex = row + col;
+
+            // Skip positions attacked by another queen.
+            if (columns[col] ||
+                mainDiagonal[mainDiagonalIndex] ||
+                antiDiagonal[antiDiagonalIndex]) {
+                continue;
+            }
+
+            // Place the queen and mark the constraints.
+            columns[col] = true;
+            mainDiagonal[mainDiagonalIndex] = true;
+            antiDiagonal[antiDiagonalIndex] = true;
+
+            // Continue placing queens in the next row.
+            backtrack(
+                row + 1,
+                n,
+                columns,
+                mainDiagonal,
+                antiDiagonal,
+                solutionCount
+            );
+
+            // Undo the placement.
+            columns[col] = false;
+            mainDiagonal[mainDiagonalIndex] = false;
+            antiDiagonal[antiDiagonalIndex] = false;
+        }
+    }
+
+public:
+
+    int totalNQueens(int n) {
+
+        // Track occupied columns and diagonals.
+        vector<bool> columns(n, false);
+        vector<bool> mainDiagonal(2 * n - 1, false);
+        vector<bool> antiDiagonal(2 * n - 1, false);
+
+        int solutionCount = 0;
+
+        // Start placing queens from the first row.
+        backtrack(
+            0,
+            n,
+            columns,
+            mainDiagonal,
+            antiDiagonal,
+            solutionCount
+        );
+
+        return solutionCount;
+    }
+};
