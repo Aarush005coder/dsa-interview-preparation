@@ -1,0 +1,71 @@
+/*
+------------------------------------------------------------
+Problem    : Length of Last Word
+Platform   : LeetCode
+Topic      : Strings
+Difficulty : Easy
+
+Problem:
+Given a string containing words and spaces, return the length
+of the last word.
+
+A word is a maximal sequence of non-space characters.
+
+Approach:
+Traverse the string from the end.
+
+First, skip all trailing spaces because they do not belong
+to the last word.
+
+Then continue moving backward while the characters are not
+spaces. Count these characters until the beginning of the
+string or a space is reached.
+
+Why does this work?
+
+The last word is located at the end of the string after all
+trailing spaces are removed.
+
+By scanning backward, we can directly find the last word
+without processing unnecessary characters before it.
+
+Algorithm:
+1. Start from the last character.
+2. Skip all trailing spaces.
+3. Count characters until a space or the beginning is reached.
+4. Return the count.
+
+Time Complexity : O(n)
+
+Reason:
+In the worst case, every character in the string may be visited.
+
+Space Complexity : O(1)
+
+Reason:
+Only a constant number of variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+
+        int end = s.size() - 1;
+        int wordLength = 0;
+
+        // Skip trailing spaces.
+        while (end >= 0 && s[end] == ' ') {
+            end--;
+        }
+
+        // Count characters of the last word.
+        while (end >= 0 && s[end] != ' ') {
+            wordLength++;
+            end--;
+        }
+
+        return wordLength;
+    }
+};
