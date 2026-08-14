@@ -13,6 +13,7 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 | 3 | String to Integer (atoi) | Medium | ✅ |
 | 4 | Find the Index of the First Occurrence in a String | Easy | ✅ |
 | 5 | Multiply Strings | Medium | ✅ |
+| 6 | Length of Last Word | Easy | ✅ |
 
 ---
 
@@ -41,4 +42,4 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 
 ---
 
-**Problems Solved:** **5**
+**Problems Solved:** **6**
