@@ -1,0 +1,92 @@
+/*
+------------------------------------------------------------
+Problem    : Integer to Roman
+Platform   : LeetCode
+Topic      : Greedy
+Difficulty : Medium
+
+Problem:
+Given an integer, convert it into its corresponding Roman
+numeral.
+
+Approach:
+Store the Roman numeral values in descending order, including
+the subtractive forms such as IV, IX, XL, XC, CD, and CM.
+
+For each value, repeatedly append its corresponding Roman
+symbol while the current number is greater than or equal to
+that value.
+
+This greedily uses the largest possible Roman numeral at
+each step until the number is completely converted.
+
+Why does this work?
+
+Roman numerals are constructed from the largest decimal place
+value to the smallest.
+
+By always choosing the largest possible valid Roman numeral,
+we guarantee that the result follows the required Roman
+numeral rules.
+
+The subtractive combinations are included explicitly, so
+values such as 4, 9, 40, 90, 400, and 900 are represented
+correctly.
+
+Algorithm:
+1. Store valid Roman numeral values in descending order.
+2. Store their corresponding Roman symbols.
+3. Traverse the values from largest to smallest.
+4. While the current number is at least the current value:
+   - Append its Roman symbol.
+   - Subtract the value from the number.
+5. Return the constructed Roman numeral.
+
+Time Complexity : O(1)
+
+Reason:
+The input range is limited to 1 through 3999, so the number
+of iterations is bounded by a constant.
+
+Space Complexity : O(1)
+
+Reason:
+Only a fixed number of Roman numeral values and symbols are
+stored.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    string intToRoman(int num) {
+
+        // Roman numeral values and their corresponding symbols
+        // are stored from largest to smallest.
+        vector<int> values = {
+            1000, 900, 500, 400,
+            100, 90, 50, 40,
+            10, 9, 5, 4, 1
+        };
+
+        vector<string> symbols = {
+            "M", "CM", "D", "CD",
+            "C", "XC", "L", "XL",
+            "X", "IX", "V", "IV", "I"
+        };
+
+        string result;
+
+        // Greedily use the largest possible Roman numeral.
+        for (int index = 0; index < values.size(); index++) {
+
+            while (num >= values[index]) {
+
+                result += symbols[index];
+                num -= values[index];
+            }
+        }
+
+        return result;
+    }
+};
