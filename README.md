@@ -76,7 +76,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Topic | Solved |
 |--------|-------:|
 | Arrays | 4 |
-| Linked List | 6 |
+| Linked List | 7 |
 | Strings | 6 |
 | Matrix | 0 |
 | Hashing | 0 |
@@ -98,7 +98,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Graph | 0 |
 | Dynamic Programming | 1 |
 | Greedy | 1 |
-| Math | 2 |
+| Math | 3 |
 | Segment Tree | 0 |
 | Fenwick Tree | 0 |
 | Union Find | 0 |
