@@ -14,6 +14,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 | 4 | Merge K Sorted Lists | Hard | ✅ |
 | 5 | Swap Nodes in Pairs | Medium | ✅ |
 | 6 | Reverse Nodes in k-Group | Hard | ✅ |
+| 7 | Rotate List | Medium | ✅ |
 
 ---
 
