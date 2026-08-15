@@ -10,6 +10,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 |---|---------|------------|--------|
 | 1 | Reverse Integer | Medium | ✅ |
 | 2 | Palindrome Number | Easy | ✅ |
+| 3 | Permutation Sequence | Hard | ✅ |
 
 ---
 
