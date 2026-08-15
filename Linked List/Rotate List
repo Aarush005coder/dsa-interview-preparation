@@ -1,0 +1,112 @@
+/*
+------------------------------------------------------------
+Problem    : Rotate List
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Medium
+
+Problem:
+Given the head of a linked list, rotate the list to the right
+by k positions.
+
+Approach:
+First, find the length of the linked list and keep track of
+its last node.
+
+Since rotating the list by its length produces the original
+list, reduce k using:
+
+    k = k % length
+
+Then connect the last node to the head to form a circular
+linked list.
+
+The new tail is located at:
+
+    length - k - 1
+
+from the original head.
+
+Break the circular connection after the new tail. The node
+after it becomes the new head.
+
+Why does this work?
+
+When the list is rotated to the right by k positions, the last
+k nodes move to the front while the first length - k nodes
+move after them.
+
+By temporarily making the list circular, we can move to the
+exact position where the list must be split. Breaking the
+circle at that point produces the required rotation.
+
+Algorithm:
+1. Handle empty, single-node, and zero-rotation cases.
+2. Find the length and last node.
+3. Reduce k using k % length.
+4. Connect the last node to the head.
+5. Move to the new tail at position length - k.
+6. Set the node after the new tail as the new head.
+7. Break the circular connection.
+8. Return the new head.
+
+Time Complexity : O(n)
+
+Reason:
+The list is traversed a constant number of times.
+
+Space Complexity : O(1)
+
+Reason:
+Only a few pointers and integer variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+
+        // No rotation is needed for these cases.
+        if (head == nullptr ||
+            head->next == nullptr ||
+            k == 0) {
+            return head;
+        }
+
+        // Find the length and last node.
+        ListNode* tail = head;
+        int length = 1;
+
+        while (tail->next != nullptr) {
+            tail = tail->next;
+            length++;
+        }
+
+        // Rotating by the list length gives the same list.
+        k %= length;
+
+        // No rotation remains after reducing k.
+        if (k == 0) {
+            return head;
+        }
+
+        // Make the linked list circular.
+        tail->next = head;
+
+        // Find the new tail.
+        int stepsToNewTail = length - k;
+
+        while (stepsToNewTail--) {
+            tail = tail->next;
+        }
+
+        // The node after the new tail becomes the new head.
+        ListNode* newHead = tail->next;
+
+        // Break the circular connection.
+        tail->next = nullptr;
+
+        return newHead;
+    }
+};
