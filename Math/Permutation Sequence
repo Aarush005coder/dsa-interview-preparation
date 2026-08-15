@@ -1,0 +1,116 @@
+/*
+------------------------------------------------------------
+Problem    : Permutation Sequence
+Platform   : LeetCode
+Topic      : Math
+Difficulty : Hard
+
+Problem:
+Given two integers `n` and `k`, return the kth permutation
+sequence of the numbers from 1 to n when all permutations are
+listed in lexicographical order.
+
+Approach:
+Instead of generating all permutations, determine each digit
+directly using factorial counting.
+
+For n numbers, there are (n - 1)! permutations for every
+possible first digit.
+
+Therefore, we can determine which number belongs at each
+position by dividing k by the number of permutations contained
+in each block.
+
+After selecting a number, remove it from the available numbers
+and repeat the same process for the next position.
+
+Why does this work?
+
+All permutations are grouped into blocks based on their first
+unused number.
+
+For example, when n = 4:
+
+    1 → 6 permutations
+    2 → 6 permutations
+    3 → 6 permutations
+    4 → 6 permutations
+
+Each block contains (n - 1)! permutations.
+
+By calculating the correct block using factorials, we can
+directly identify every digit without constructing the
+permutations that come before it.
+
+Algorithm:
+1. Store numbers from 1 to n.
+2. Calculate (n - 1)!.
+3. Convert k to zero-based indexing.
+4. Find the index of the next digit using k / factorial.
+5. Add that number to the answer and remove it.
+6. Update k using k % factorial.
+7. Recalculate the factorial for the remaining positions.
+8. Repeat until all numbers are selected.
+
+Time Complexity : O(n²)
+
+Reason:
+There are n positions to determine, and removing an element
+from a vector takes O(n) in the worst case.
+
+Space Complexity : O(n)
+
+Reason:
+The available numbers are stored in a vector.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+
+        // Store all available numbers.
+        vector<int> numbers;
+
+        // Calculate (n - 1)!.
+        int factorial = 1;
+
+        for (int value = 1; value < n; value++) {
+            factorial *= value;
+            numbers.push_back(value);
+        }
+
+        numbers.push_back(n);
+
+        // Convert k to zero-based indexing.
+        k--;
+
+        string result;
+
+        while (true) {
+
+            // Determine which factorial block contains k.
+            int index = k / factorial;
+
+            // Choose the number from that block.
+            result += to_string(numbers[index]);
+
+            // Remove the chosen number.
+            numbers.erase(numbers.begin() + index);
+
+            // Stop after selecting the final number.
+            if (numbers.empty()) {
+                break;
+            }
+
+            // Move to the correct position within the block.
+            k %= factorial;
+
+            // Calculate the factorial for the next position.
+            factorial /= numbers.size();
+        }
+
+        return result;
+    }
+};
