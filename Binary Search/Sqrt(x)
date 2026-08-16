@@ -1,0 +1,101 @@
+/*
+------------------------------------------------------------
+Problem    : Sqrt(x)
+Platform   : LeetCode
+Topic      : Binary Search
+Difficulty : Easy
+
+Problem:
+Given a non-negative integer x, return the integer square
+root of x rounded down to the nearest integer.
+
+Built-in exponent or square root functions cannot be used.
+
+Approach:
+Use Binary Search to find the largest integer whose square is
+less than or equal to x.
+
+The search range starts from 1 to x / 2 for x >= 2.
+
+For every middle value:
+- If mid * mid == x, mid is the exact square root.
+- If mid * mid < x, mid can be a possible answer, so search
+  the right half for a larger value.
+- If mid * mid > x, search the left half.
+
+The variable `answer` stores the largest valid value found so far.
+
+Why does this work?
+
+The function `mid * mid` increases as `mid` increases.
+Therefore, the possible answers form a monotonic search space.
+
+Binary Search can use this property to eliminate half of the
+remaining values after every comparison.
+
+When the search ends, `answer` contains the largest integer
+whose square does not exceed x, which is exactly floor(sqrt(x)).
+
+Algorithm:
+1. Handle x = 0 and x = 1 directly.
+2. Set the search range from 1 to x / 2.
+3. Calculate the middle value.
+4. Compare mid² with x.
+5. Store mid when mid² <= x and search for a larger value.
+6. Search the left half when mid² > x.
+7. Return the largest valid value.
+
+Time Complexity : O(log x)
+
+Reason:
+Binary Search reduces the search space by half in every
+iteration.
+
+Space Complexity : O(1)
+
+Reason:
+Only a constant number of variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int mySqrt(int x) {
+
+        // Handle the smallest possible inputs.
+        if (x < 2) {
+            return x;
+        }
+
+        int left = 1;
+        int right = x / 2;
+        int answer = 0;
+
+        while (left <= right) {
+
+            int mid = left + (right - left) / 2;
+
+            // Use long long to prevent overflow when squaring mid.
+            long long square = 1LL * mid * mid;
+
+            // Exact square root found.
+            if (square == x) {
+                return mid;
+            }
+
+            // mid is a valid answer, but a larger one may exist.
+            if (square < x) {
+                answer = mid;
+                left = mid + 1;
+            }
+
+            // mid is too large.
+            else {
+                right = mid - 1;
+            }
+        }
+
+        return answer;
+    }
+};
