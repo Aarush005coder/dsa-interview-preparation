@@ -36,4 +36,4 @@ This folder contains **Binary Search** problems solved in **C++**. Each solution
 
 ---
 
-**Problems Solved:** **3**
+**Problems Solved:** **4**
