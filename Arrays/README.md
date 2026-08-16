@@ -12,6 +12,7 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 | 2 | Median of Two Sorted Arrays | Hard | ✅ |
 | 3 | Next Permutation | Medium | ✅ |
 | 4 | First Missing Positive | Hard | ✅ |
+| 5 | Plus One | Easy | ✅ |
 
 ---
 
