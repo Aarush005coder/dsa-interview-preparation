@@ -1,0 +1,161 @@
+/*
+------------------------------------------------------------
+Problem    : Edit Distance
+Platform   : LeetCode
+Topic      : Dynamic Programming
+Difficulty : Medium
+
+Problem:
+Given two strings `word1` and `word2`, find the minimum number
+of operations required to convert `word1` into `word2`.
+
+Allowed operations:
+- Insert a character
+- Delete a character
+- Replace a character
+
+Approach:
+Use Bottom-Up Dynamic Programming with space optimization.
+
+Define:
+
+    dp[i][j] = minimum operations required to convert
+               word1[i...] into word2[j...]
+
+If the current characters are equal:
+
+    dp[i][j] = dp[i + 1][j + 1]
+
+No operation is needed because both characters already match.
+
+If the characters are different, we have three choices:
+
+1. Insert:
+       1 + dp[i][j + 1]
+
+2. Delete:
+       1 + dp[i + 1][j]
+
+3. Replace:
+       1 + dp[i + 1][j + 1]
+
+Therefore:
+
+    dp[i][j] = 1 + min(insert, delete, replace)
+
+Base cases:
+- If word1 is exhausted, all remaining characters of word2
+  must be inserted.
+- If word2 is exhausted, all remaining characters of word1
+  must be deleted.
+
+Since each state depends only on the next row and the current
+row, we store only two rows instead of the complete 2D table.
+
+Why does this work?
+
+At every pair of positions, if the characters match, the
+optimal solution can skip both characters.
+
+If they do not match, every valid conversion must perform
+one of the three allowed operations: insert, delete, or replace.
+
+By taking the minimum among these three possibilities, we
+guarantee the minimum number of operations.
+
+Algorithm:
+1. Define the DP state for suffixes of both strings.
+2. Initialize the base cases for an exhausted string.
+3. Traverse both strings from right to left.
+4. If characters match, use the diagonal DP state.
+5. Otherwise, compute insert, delete, and replace costs.
+6. Store the minimum cost in the current DP row.
+7. Move the current row to the next row.
+8. Return the DP value for the two complete strings.
+
+Time Complexity : O(n × m)
+
+Reason:
+Every pair of positions from the two strings is processed once.
+
+Space Complexity : O(m)
+
+Reason:
+Only two arrays of length `m + 1` are maintained.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+    int solve(string& word1, string& word2) {
+
+        int n = word1.length();
+        int m = word2.length();
+
+        // nextRow represents dp[i + 1][j].
+        vector<int> nextRow(m + 1, 0);
+
+        // currentRow represents dp[i][j].
+        vector<int> currentRow(m + 1, 0);
+
+        // If word1 is exhausted, all remaining characters
+        // of word2 must be inserted.
+        for (int j = 0; j <= m; j++) {
+            nextRow[j] = m - j;
+        }
+
+        for (int i = n - 1; i >= 0; i--) {
+
+            // If word2 is exhausted, all remaining characters
+            // of word1 must be deleted.
+            currentRow[m] = n - i;
+
+            for (int j = m - 1; j >= 0; j--) {
+
+                // Matching characters require no operation.
+                if (word1[i] == word2[j]) {
+                    currentRow[j] = nextRow[j + 1];
+                }
+                else {
+
+                    // Insert word2[j].
+                    int insertOperation = 1 + currentRow[j + 1];
+
+                    // Delete word1[i].
+                    int deleteOperation = 1 + nextRow[j];
+
+                    // Replace word1[i] with word2[j].
+                    int replaceOperation = 1 + nextRow[j + 1];
+
+                    currentRow[j] = min(
+                        insertOperation,
+                        min(deleteOperation, replaceOperation)
+                    );
+                }
+            }
+
+            // Current row becomes the next row for
+            // the following iteration.
+            nextRow = currentRow;
+        }
+
+        return nextRow[0];
+    }
+
+public:
+    int minDistance(string word1, string word2) {
+
+        // If word1 is empty, insert all characters of word2.
+        if (word1.empty()) {
+            return word2.length();
+        }
+
+        // If word2 is empty, delete all characters of word1.
+        if (word2.empty()) {
+            return word1.length();
+        }
+
+        return solve(word1, word2);
+    }
+};
