@@ -1,0 +1,106 @@
+/*
+------------------------------------------------------------
+Problem    : Climbing Stairs
+Platform   : LeetCode
+Topic      : Dynamic Programming
+Difficulty : Easy
+
+Problem:
+You are climbing a staircase with `n` steps. At each move,
+you can climb either 1 step or 2 steps.
+
+Return the number of distinct ways to reach the top.
+
+Approach:
+Use Bottom-Up Dynamic Programming with space optimization.
+
+Define:
+
+    dp[i] = number of distinct ways to reach step i
+
+To reach step `i`, there are only two possibilities:
+- Come from step `i - 1` using 1 step.
+- Come from step `i - 2` using 2 steps.
+
+Therefore, the DP transition is:
+
+    dp[i] = dp[i - 1] + dp[i - 2]
+
+The base cases are:
+
+    dp[1] = 1
+    dp[2] = 2
+
+Since `dp[i]` depends only on the previous two states,
+we do not need to store the complete DP array.
+
+Instead, we maintain only:
+- `previousTwo` → dp[i - 2]
+- `previousOne` → dp[i - 1]
+
+Why does this work?
+
+Every way of reaching step `i` must end with either a
+1-step move or a 2-step move.
+
+The ways ending with a 1-step move are exactly the ways
+to reach `i - 1`, while the ways ending with a 2-step move
+are exactly the ways to reach `i - 2`.
+
+These two sets of ways are independent, so adding them gives
+the total number of ways to reach step `i`.
+
+Algorithm:
+1. Handle the base cases n = 1 and n = 2.
+2. Initialize the previous two DP states.
+3. For every step from 3 to n:
+   - Calculate the current DP state.
+   - Shift the previous states forward.
+4. Return the final DP state.
+
+Time Complexity : O(n)
+
+Reason:
+Each DP state from 3 to n is calculated exactly once.
+
+Space Complexity : O(1)
+
+Reason:
+Only the previous two DP states are stored instead of the
+complete DP array.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int climbStairs(int n) {
+
+        // Base cases:
+        // dp[1] = 1 and dp[2] = 2.
+        if (n <= 2) {
+            return n;
+        }
+
+        // previousTwo represents dp[i - 2].
+        int previousTwo = 1;
+
+        // previousOne represents dp[i - 1].
+        int previousOne = 2;
+
+        // Build the DP states from 3 to n.
+        for (int step = 3; step <= n; step++) {
+
+            // DP transition:
+            // dp[i] = dp[i - 1] + dp[i - 2].
+            int currentWays = previousOne + previousTwo;
+
+            // Move the DP states forward.
+            previousTwo = previousOne;
+            previousOne = currentWays;
+        }
+
+        // previousOne represents dp[n].
+        return previousOne;
+    }
+};
