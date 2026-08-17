@@ -9,6 +9,7 @@ This folder contains **Dynamic Programming** problems solved in **C++** as part 
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Wildcard Matching | Hard | ✅ |
+| 2 | Climbing Stairs | Easy | ✅ |
 
 ---
 
@@ -93,6 +94,4 @@ When approaching a Dynamic Programming problem:
 
 ---
 
-## 📈 Progress
-
-**Problems Solved:** **1**
+**Problems Solved:** **2**
