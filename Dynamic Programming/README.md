@@ -10,6 +10,7 @@ This folder contains **Dynamic Programming** problems solved in **C++** as part 
 |---|---------|------------|--------|
 | 1 | Wildcard Matching | Hard | ✅ |
 | 2 | Climbing Stairs | Easy | ✅ |
+| 3 | Edit Distance | Medium | ✅ |
 
 ---
 
@@ -94,4 +95,4 @@ When approaching a Dynamic Programming problem:
 
 ---
 
-**Problems Solved:** **2**
+**Problems Solved:** **3**
