@@ -1,0 +1,134 @@
+/*
+------------------------------------------------------------
+Problem    : Set Matrix Zeroes
+Platform   : LeetCode
+Topic      : Matrix
+Difficulty : Medium
+
+Problem:
+Given an m x n matrix, if an element is 0, set its entire
+row and column to 0.
+
+The modification must be performed in-place.
+
+Approach:
+Use the first row and first column of the matrix as marker
+storage.
+
+Whenever a zero is found at matrix[i][j], mark:
+
+    matrix[i][0] = 0
+    matrix[0][j] = 0
+
+These markers tell us which rows and columns must eventually
+be set to zero.
+
+However, the first row and first column are also being used
+as markers, so we separately store whether they originally
+contained a zero.
+
+After marking all rows and columns, update the inner matrix
+using the stored markers. Finally, process the first row and
+first column using the separate flags.
+
+Why does this work?
+
+The first row and first column provide enough space to store
+the zero information without using an additional matrix.
+
+We first record all required changes before modifying the
+matrix values. This prevents newly created zeroes from being
+mistaken for original zeroes.
+
+The separate flags are necessary because the first row and
+first column themselves are being used as marker storage.
+
+Algorithm:
+1. Check whether the first column originally contains zero.
+2. Check whether the first row originally contains zero.
+3. Use the first row and first column to mark zero rows/columns.
+4. Update the inner matrix based on these markers.
+5. If the first column originally contained zero, set it to zero.
+6. If the first row originally contained zero, set it to zero.
+
+Time Complexity : O(m × n)
+
+Reason:
+The matrix is traversed a constant number of times.
+
+Space Complexity : O(1)
+
+Reason:
+The first row and first column are reused as marker storage,
+so no additional arrays are required.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+
+        int rows = matrix.size();
+        int columns = matrix[0].size();
+
+        // Tracks whether the first column originally contained zero.
+        bool firstColumnZero = false;
+
+        // Tracks whether the first row originally contained zero.
+        bool firstRowZero = false;
+
+        // Check the first column.
+        for (int row = 0; row < rows; row++) {
+            if (matrix[row][0] == 0) {
+                firstColumnZero = true;
+                break;
+            }
+        }
+
+        // Check the first row.
+        for (int column = 0; column < columns; column++) {
+            if (matrix[0][column] == 0) {
+                firstRowZero = true;
+                break;
+            }
+        }
+
+        // Use the first row and first column as markers.
+        for (int row = 1; row < rows; row++) {
+            for (int column = 1; column < columns; column++) {
+
+                if (matrix[row][column] == 0) {
+                    matrix[row][0] = 0;
+                    matrix[0][column] = 0;
+                }
+            }
+        }
+
+        // Set marked rows and columns to zero.
+        for (int row = 1; row < rows; row++) {
+            for (int column = 1; column < columns; column++) {
+
+                if (matrix[row][0] == 0 ||
+                    matrix[0][column] == 0) {
+
+                    matrix[row][column] = 0;
+                }
+            }
+        }
+
+        // Set the first column to zero if required.
+        if (firstColumnZero) {
+            for (int row = 0; row < rows; row++) {
+                matrix[row][0] = 0;
+            }
+        }
+
+        // Set the first row to zero if required.
+        if (firstRowZero) {
+            for (int column = 0; column < columns; column++) {
+                matrix[0][column] = 0;
+            }
+        }
+    }
+};
