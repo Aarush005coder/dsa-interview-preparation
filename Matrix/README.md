@@ -9,6 +9,7 @@ This folder contains **Matrix** problems solved in **C++** as part of my DSA pre
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Set Matrix Zeroes | Medium | ✅ |
+| 2 | Search a 2D Matrix | Medium | ✅ |
 
 ---
 
@@ -33,4 +34,4 @@ This folder contains **Matrix** problems solved in **C++** as part of my DSA pre
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
