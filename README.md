@@ -169,4 +169,8 @@ Each solution includes:
 
 ---
 
+**Total Problems Solved:** **50**
+
+---
+
 ⭐ If you find this repository helpful, feel free to star it.
