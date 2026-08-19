@@ -13,6 +13,7 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 | 3 | Next Permutation | Medium | ✅ |
 | 4 | First Missing Positive | Hard | ✅ |
 | 5 | Plus One | Easy | ✅ |
+| 6 | Sort Colors | Medium | ✅ |
 
 ---
 
@@ -37,4 +38,4 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **5**
+**Problems Solved:** **6**
