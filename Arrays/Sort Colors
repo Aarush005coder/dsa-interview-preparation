@@ -1,0 +1,211 @@
+/*
+------------------------------------------------------------
+Problem    : Sort Colors
+Platform   : LeetCode
+Topic      : Arrays
+Difficulty : Medium
+
+Problem:
+Given an array nums containing only 0, 1, and 2, sort the
+array in-place so that:
+
+    0s come first
+    1s come second
+    2s come last
+
+The solution must be implemented without using the library's
+sort function.
+
+Approach:
+Use the Dutch National Flag Algorithm with three pointers:
+
+    start -> position where the next 0 should be placed
+    mid   -> current element being examined
+    end   -> position where the next 2 should be placed
+
+The array is divided into four regions:
+
+    [0 ... start-1]     -> all 0s
+    [start ... mid-1]   -> all 1s
+    [mid ... end]       -> unknown elements
+    [end+1 ... n-1]     -> all 2s
+
+We examine nums[mid].
+
+Case 1: nums[mid] == 0
+
+A 0 belongs at the beginning.
+
+Swap nums[mid] with nums[start], then move both
+start and mid forward.
+
+    swap(nums[start++], nums[mid++]);
+
+Case 2: nums[mid] == 1
+
+A 1 is already in its correct middle region.
+
+Simply move mid forward.
+
+    mid++;
+
+Case 3: nums[mid] == 2
+
+A 2 belongs at the end.
+
+Swap nums[mid] with nums[end] and move end backward.
+
+    swap(nums[mid], nums[end--]);
+
+Important:
+When nums[mid] == 2, we do NOT increment mid.
+
+Why?
+
+Because the element coming from nums[end] is still
+unprocessed. It could be 0, 1, or 2.
+
+So we must examine nums[mid] again.
+
+Example:
+
+    nums = [2, 0, 2, 1, 1, 0]
+
+Initially:
+
+    start = 0
+    mid   = 0
+    end   = 5
+
+Step 1:
+nums[mid] = 2
+
+Swap nums[mid] and nums[end]:
+
+    [0, 0, 2, 1, 1, 2]
+     ^
+    mid
+
+end decreases:
+
+    start = 0
+    mid   = 0
+    end   = 4
+
+We keep mid at 0 because the newly received 0
+has not been processed yet.
+
+Step 2:
+nums[mid] = 0
+
+Swap nums[start] and nums[mid].
+
+    [0, 0, 2, 1, 1, 2]
+
+Move start and mid:
+
+    start = 1
+    mid   = 1
+
+Step 3:
+nums[mid] = 0
+
+Move the 0 to the beginning.
+
+    [0, 0, 2, 1, 1, 2]
+
+    start = 2
+    mid   = 2
+
+Step 4:
+nums[mid] = 2
+
+Swap with nums[end]:
+
+    [0, 0, 1, 1, 2, 2]
+
+    end = 3
+
+mid remains 2.
+
+Step 5:
+nums[mid] = 1
+
+1 is already in the correct region.
+
+    mid = 3
+
+Step 6:
+nums[mid] = 1
+
+Move mid:
+
+    mid = 4
+
+Now:
+
+    mid > end
+
+So the algorithm stops.
+
+Final array:
+
+    [0, 0, 1, 1, 2, 2]
+
+Algorithm:
+1. Initialize start = 0, mid = 0, and end = n - 1.
+2. Continue while mid <= end.
+3. If nums[mid] == 0:
+      Swap nums[start] and nums[mid].
+      Increment start and mid.
+4. If nums[mid] == 1:
+      Increment mid.
+5. If nums[mid] == 2:
+      Swap nums[mid] and nums[end].
+      Decrement end.
+      Do not increment mid.
+6. Stop when mid > end.
+
+Time Complexity : O(n)
+
+Reason:
+Every element is processed a constant number of times.
+Each successful swap moves an element into its correct
+region.
+
+Space Complexity : O(1)
+
+Reason:
+The sorting is performed in-place and only three pointers
+are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+
+        int start = 0;
+        int mid = 0;
+        int end = nums.size() - 1;
+
+        while (mid <= end) {
+
+            // 0 belongs to the beginning
+            if (nums[mid] == 0) {
+                swap(nums[start++], nums[mid++]);
+            }
+
+            // 1 belongs in the middle
+            else if (nums[mid] == 1) {
+                mid++;
+            }
+
+            // 2 belongs at the end
+            else {
+                swap(nums[mid], nums[end--]);
+            }
+        }
+    }
+};
