@@ -1,0 +1,220 @@
+/*
+------------------------------------------------------------
+Problem    : Word Search
+Platform   : LeetCode
+Topic      : Matrix
+Difficulty : Medium
+
+Problem:
+Given an m x n grid of characters and a string word, return
+true if the word exists in the grid.
+
+The word can be constructed using sequentially adjacent
+cells.
+
+A cell can be connected to another cell only if it is:
+- Horizontally adjacent
+- Vertically adjacent
+
+The same cell cannot be used more than once in the same path.
+
+Example:
+
+    board = [
+        ['A','B','C','E'],
+        ['S','F','C','S'],
+        ['A','D','E','E']
+    ]
+
+    word = "ABCCED"
+
+Output:
+
+    true
+
+Approach:
+Use Depth First Search (DFS) with Backtracking.
+
+We try every cell as a possible starting point.
+
+For each cell:
+1. Check whether the current character matches word[index].
+2. If it matches, temporarily mark the cell as visited.
+3. Explore all four possible directions:
+      Down
+      Up
+      Right
+      Left
+4. If any direction successfully finds the remaining word,
+   return true.
+5. Restore the original character before returning.
+
+Why do we mark the cell?
+
+The same cell cannot be used more than once in the same path.
+
+For example, when processing:
+
+    A -> B -> C -> C -> E -> D
+
+we must make sure that we do not use a previously visited
+cell again.
+
+We temporarily replace the character with '#'.
+
+After exploring the path, we restore the original character.
+This is the backtracking step.
+
+Base Case:
+
+    if(index == word.size())
+
+This means that every character of the word has been matched,
+so we return true.
+
+Boundary / Invalid Case:
+
+If:
+- i or j is outside the board
+- current cell does not match word[index]
+
+then this path cannot work, so return false.
+
+Example:
+
+    word = "ABCCED"
+
+Starting from 'A':
+
+    A
+    ↓
+    B
+    ↓
+    C
+    ↓
+    C
+    ↓
+    E
+    ↓
+    D
+
+The complete word is found, so return true.
+
+Backtracking:
+
+Suppose we reach a wrong path:
+
+    A -> B -> C -> B
+
+There is no valid next cell for the required character.
+
+We return to the previous cell and try another direction.
+
+This process continues until:
+- The complete word is found, or
+- Every possible path has been explored.
+
+Algorithm:
+1. Traverse every cell in the board.
+2. If the cell can be the starting point of the word,
+   start DFS.
+3. Match the current character.
+4. Mark the current cell as visited.
+5. Explore the four neighboring cells.
+6. Restore the cell after the recursive calls.
+7. Return true if any path finds the complete word.
+8. Otherwise return false.
+
+Time Complexity : O(m * n * 4^L)
+
+Where:
+    m = number of rows
+    n = number of columns
+    L = length of the word
+
+For every starting cell, DFS can explore up to four
+directions at each step.
+
+A tighter bound is often written as:
+
+    O(m * n * 3^L)
+
+because after the first move, we cannot immediately move
+back to the cell we just visited.
+
+Space Complexity : O(L)
+
+Reason:
+The maximum recursion depth is equal to the length of
+the word.
+
+The board itself is modified temporarily, so no separate
+visited matrix is required.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    bool dfs(
+        vector<vector<char>>& board,
+        string& word,
+        int i,
+        int j,
+        int index
+    ) {
+
+        // All characters have been matched
+        if (index == word.size()) {
+            return true;
+        }
+
+        // Invalid position or character mismatch
+        if (
+            i < 0 ||
+            j < 0 ||
+            i >= board.size() ||
+            j >= board[0].size() ||
+            board[i][j] != word[index]
+        ) {
+            return false;
+        }
+
+        // Mark current cell as visited
+        char temp = board[i][j];
+        board[i][j] = '#';
+
+        // Explore all four directions
+        bool found =
+            dfs(board, word, i + 1, j, index + 1) || // Down
+            dfs(board, word, i - 1, j, index + 1) || // Up
+            dfs(board, word, i, j + 1, index + 1) || // Right
+            dfs(board, word, i, j - 1, index + 1);   // Left
+
+        // Backtrack: restore original character
+        board[i][j] = temp;
+
+        return found;
+    }
+
+public:
+
+    bool exist(vector<vector<char>>& board, string word) {
+
+        int m = board.size();
+        int n = board[0].size();
+
+        // Try every cell as a starting point
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+
+                if (dfs(board, word, i, j, 0)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+};
