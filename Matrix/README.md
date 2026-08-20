@@ -10,6 +10,7 @@ This folder contains **Matrix** problems solved in **C++** as part of my DSA pre
 |---|---------|------------|--------|
 | 1 | Set Matrix Zeroes | Medium | ✅ |
 | 2 | Search a 2D Matrix | Medium | ✅ |
+| 3 | Word Search | Medium | ✅ |
 
 ---
 
@@ -34,4 +35,4 @@ This folder contains **Matrix** problems solved in **C++** as part of my DSA pre
 
 ---
 
-**Problems Solved:** **2**
+**Problems Solved:** **3**
