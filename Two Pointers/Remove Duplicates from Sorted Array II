@@ -1,0 +1,190 @@
+/*
+------------------------------------------------------------
+Problem    : Remove Duplicates from Sorted Array II
+Platform   : LeetCode
+Topic      : Two Pointers
+Difficulty : Medium
+
+Problem:
+Given a sorted array nums, remove duplicates in-place such
+that each unique element appears at most twice.
+
+The relative order of the elements must remain unchanged.
+
+Return k, where the first k elements of nums contain the
+result after removing the extra duplicates.
+
+Example:
+
+    nums = [1,1,1,2,2,3]
+
+Output:
+
+    k = 5
+
+    nums = [1,1,2,2,3,_]
+
+Only the first k elements are considered.
+
+Approach:
+Use the Two Pointer technique.
+
+Since the array is already sorted, equal elements are placed
+next to each other.
+
+We allow every number to appear at most twice.
+
+The first two elements can always be kept:
+
+    nums[0]
+    nums[1]
+
+So we start the writing pointer at index 2.
+
+Use two pointers:
+
+    i -> scans the original array
+    j -> position where the next valid element should be placed
+
+For every nums[i], compare it with:
+
+    nums[j - 2]
+
+Why j - 2?
+
+We want to make sure that the same number does not appear
+more than twice.
+
+If:
+
+    nums[i] != nums[j - 2]
+
+then nums[i] can safely be added.
+
+If:
+
+    nums[i] == nums[j - 2]
+
+then adding it would create at least three copies of the
+same number, so we skip it.
+
+Example:
+
+    nums = [1,1,1,2,2,3]
+
+Initially:
+
+    j = 2
+
+First two elements are already valid:
+
+    [1,1,_,_,_,_]
+
+Now i = 2:
+
+    nums[i]     = 1
+    nums[j-2]   = 1
+
+They are equal, so skip the third 1.
+
+Next i = 3:
+
+    nums[i]     = 2
+    nums[j-2]   = 1
+
+Different, so keep 2:
+
+    [1,1,2,_,_,_]
+
+    j = 3
+
+Next i = 4:
+
+    nums[i]     = 2
+    nums[j-2]   = 1
+
+Different, so keep 2:
+
+    [1,1,2,2,_,_]
+
+    j = 4
+
+Next i = 5:
+
+    nums[i]     = 3
+    nums[j-2]   = 2
+
+Different, so keep 3:
+
+    [1,1,2,2,3,_]
+
+    j = 5
+
+Return:
+
+    5
+
+Why does this work?
+
+Because the array is sorted.
+
+If nums[i] is equal to nums[j-2], then the previous two
+valid positions already contain the same value.
+
+Adding nums[i] would create three consecutive copies.
+
+Therefore, we skip it.
+
+Otherwise, the current value can safely be written at nums[j].
+
+Algorithm:
+1. If the array contains at most two elements, return its size.
+2. Set j = 2.
+3. Start scanning from i = 2.
+4. If nums[i] != nums[j - 2]:
+      nums[j] = nums[i]
+      increment j
+5. Otherwise, skip nums[i].
+6. Return j.
+
+Time Complexity : O(n)
+
+Reason:
+We traverse the array only once.
+
+Space Complexity : O(1)
+
+Reason:
+The array is modified in-place using only constant extra
+variables.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+
+        // If there are at most two elements,
+        // no duplicates need to be removed.
+        if (nums.size() <= 2) {
+            return nums.size();
+        }
+
+        // First two elements are always allowed.
+        int j = 2;
+
+        // Scan remaining elements.
+        for (int i = 2; i < nums.size(); i++) {
+
+            // Allow the current element only if it does not
+            // create three consecutive copies.
+            if (nums[i] != nums[j - 2]) {
+                nums[j] = nums[i];
+                j++;
+            }
+        }
+
+        return j;
+    }
+};
