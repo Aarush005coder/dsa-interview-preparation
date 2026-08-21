@@ -15,6 +15,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 | 5 | Swap Nodes in Pairs | Medium | ✅ |
 | 6 | Reverse Nodes in k-Group | Hard | ✅ |
 | 7 | Rotate List | Medium | ✅ |
+| 8 | Remove Duplicates from Sorted List | Easy | ✅ |
 
 ---
 
@@ -37,4 +38,4 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 
 ---
 
-**Problems Solved:** **6**
+**Problems Solved:** **8**
