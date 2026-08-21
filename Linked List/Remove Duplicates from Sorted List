@@ -1,0 +1,167 @@
+/*
+------------------------------------------------------------
+Problem    : Remove Duplicates from Sorted List
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Easy
+
+Problem:
+Given the head of a sorted linked list, remove all duplicate
+elements so that each element appears only once.
+
+The linked list must remain sorted.
+
+Example:
+
+    Input:
+
+    [1,1,2]
+
+    Output:
+
+    [1,2]
+
+Approach:
+Since the linked list is already sorted, duplicate values
+will always appear next to each other.
+
+We use a pointer `curr` to traverse the linked list.
+
+For every node, compare its value with the value of the
+next node.
+
+Case 1:
+    curr->val == curr->next->val
+
+The two nodes contain the same value.
+
+We remove the duplicate node by changing the next pointer:
+
+    curr->next = curr->next->next;
+
+We do NOT move curr forward here.
+
+Why?
+
+There may be more than two consecutive duplicates.
+
+Example:
+
+    [1,1,1,1,2]
+
+After removing one duplicate:
+
+    [1,1,1,2]
+
+We still need to check the next node against the current
+node.
+
+Case 2:
+    curr->val != curr->next->val
+
+The values are different, so the current node is already
+correct.
+
+Move curr to the next node:
+
+    curr = curr->next;
+
+Example:
+
+    head = [1,1,2,3,3]
+
+Start:
+
+    curr -> 1
+             |
+             1 -> 2 -> 3 -> 3
+
+First comparison:
+
+    1 == 1
+
+Remove the second 1:
+
+    1 -> 2 -> 3 -> 3
+
+curr remains at the first 1.
+
+Next comparison:
+
+    1 != 2
+
+Move curr:
+
+    1 -> 2 -> 3 -> 3
+         ^
+        curr
+
+Then:
+
+    2 != 3
+
+Move curr again.
+
+At 3:
+
+    3 == 3
+
+Remove the duplicate:
+
+    1 -> 2 -> 3
+
+Final linked list:
+
+    [1,2,3]
+
+Important:
+We do not need to allocate any new nodes or use an extra
+data structure.
+
+We simply modify the `next` pointers of the existing nodes.
+
+Algorithm:
+1. Set curr = head.
+2. Traverse while curr and curr->next exist.
+3. If curr and curr->next contain the same value:
+      Skip the duplicate node.
+4. Otherwise:
+      Move curr to the next node.
+5. Return head.
+
+Time Complexity : O(n)
+
+Reason:
+Each node is visited at most a constant number of times.
+
+Space Complexity : O(1)
+
+Reason:
+Only one pointer is used and the linked list is modified
+in-place.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+
+        ListNode* curr = head;
+
+        while (curr != nullptr && curr->next != nullptr) {
+
+            // Duplicate found
+            if (curr->val == curr->next->val) {
+                curr->next = curr->next->next;
+            }
+
+            // Move forward only when values are different
+            else {
+                curr = curr->next;
+            }
+        }
+
+        return head;
+    }
+};
