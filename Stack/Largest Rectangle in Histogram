@@ -1,0 +1,246 @@
+/*
+------------------------------------------------------------
+Problem    : Largest Rectangle in Histogram
+Platform   : LeetCode
+Topic      : Stack
+Difficulty : Hard
+
+Problem:
+Given an array of integers `heights` representing the heights
+of bars in a histogram, where each bar has width 1, find the
+largest rectangular area that can be formed.
+
+Example:
+
+    heights = [2,1,5,6,2,3]
+
+Output:
+
+    10
+
+The largest rectangle is formed by heights 5 and 6:
+
+    Minimum height = 5
+    Width = 2
+
+    Area = 5 * 2 = 10
+
+Approach:
+Use a Monotonic Increasing Stack.
+
+For every bar, we need to find:
+
+    1. Previous Smaller Element (PSE)
+    2. Next Smaller Element (NSE)
+
+These two boundaries tell us how far the current bar can
+extend while maintaining its height.
+
+For a bar at index i:
+
+    height = heights[i]
+
+    left boundary  = previous smaller element
+    right boundary = next smaller element
+
+Therefore:
+
+    width = right boundary - left boundary - 1
+
+    area = height * width
+
+Example:
+
+    heights = [2,1,5,6,2,3]
+
+For height 5 at index 2:
+
+    Previous smaller = index 1
+    Next smaller     = index 4
+
+Therefore:
+
+    width = 4 - 1 - 1
+          = 2
+
+    area = 5 * 2
+         = 10
+
+Finding Next Smaller Element:
+Traverse from right to left.
+
+Maintain a monotonic increasing stack of indices.
+
+For the current height:
+- Remove all bars from the stack that are greater than
+  or equal to the current height.
+- The remaining top element is the next smaller element.
+- Push the current index.
+
+If there is no smaller element on the right:
+
+    next[i] = -1
+
+Later, we replace -1 with n because the rectangle can extend
+until the end of the histogram.
+
+Finding Previous Smaller Element:
+Traverse from left to right using the same idea.
+
+For the current height:
+- Remove elements greater than or equal to the current height.
+- The remaining top element is the previous smaller element.
+- Push the current index.
+
+If there is no smaller element on the left:
+
+    prev[i] = -1
+
+Why use >= instead of >?
+
+Suppose:
+
+    heights = [2,2]
+
+If we only remove strictly greater values, equal-height bars
+would incorrectly restrict each other.
+
+Using >= ensures that equal heights are handled correctly and
+the rectangle can extend across all equal-height bars.
+
+Example:
+
+    heights = [2,2]
+
+For each bar, the width should be 2.
+
+Algorithm:
+1. Find the next smaller element for every bar.
+2. Find the previous smaller element for every bar.
+3. For every index i:
+      - Set next[i] = n if no smaller element exists.
+      - Calculate width:
+            next[i] - prev[i] - 1
+      - Calculate area:
+            heights[i] * width
+4. Return the maximum area.
+
+Example:
+
+    heights = [2,1,5,6,2,3]
+
+Previous smaller:
+
+    [-1,-1,1,2,1,4]
+
+Next smaller:
+
+    [1,-1,4,4,-1,-1]
+
+For height 5 at index 2:
+
+    width = 4 - 1 - 1
+          = 2
+
+    area = 5 * 2
+         = 10
+
+Maximum area = 10.
+
+Time Complexity : O(n)
+
+Reason:
+Each index is pushed into and popped from the stack at most
+once for both the previous and next smaller element passes.
+
+Space Complexity : O(n)
+
+Reason:
+We store the previous and next smaller indices and use a
+stack containing at most n elements.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Find index of Next Smaller Element for every bar
+    vector<int> nextSmallerElement(vector<int>& heights, int n) {
+
+        stack<int> st;
+        vector<int> next(n);
+
+        st.push(-1);
+
+        for (int i = n - 1; i >= 0; i--) {
+
+            // Remove bars that cannot be the smaller element
+            while (st.top() != -1 &&
+                   heights[st.top()] >= heights[i]) {
+                st.pop();
+            }
+
+            next[i] = st.top();
+
+            st.push(i);
+        }
+
+        return next;
+    }
+
+    // Find index of Previous Smaller Element for every bar
+    vector<int> prevSmallerElement(vector<int>& heights, int n) {
+
+        stack<int> st;
+        vector<int> prev(n);
+
+        st.push(-1);
+
+        for (int i = 0; i < n; i++) {
+
+            // Remove bars that cannot be the smaller element
+            while (st.top() != -1 &&
+                   heights[st.top()] >= heights[i]) {
+                st.pop();
+            }
+
+            prev[i] = st.top();
+
+            st.push(i);
+        }
+
+        return prev;
+    }
+
+public:
+
+    int largestRectangleArea(vector<int>& heights) {
+
+        int n = heights.size();
+
+        vector<int> next = nextSmallerElement(heights, n);
+        vector<int> prev = prevSmallerElement(heights, n);
+
+        int maxArea = 0;
+
+        for (int i = 0; i < n; i++) {
+
+            // If there is no smaller element on the right,
+            // the rectangle can extend until the end.
+            if (next[i] == -1) {
+                next[i] = n;
+            }
+
+            // Width between previous and next smaller elements
+            int width = next[i] - prev[i] - 1;
+
+            // Area of rectangle using heights[i] as minimum height
+            int area = heights[i] * width;
+
+            maxArea = max(maxArea, area);
+        }
+
+        return maxArea;
+    }
+};
