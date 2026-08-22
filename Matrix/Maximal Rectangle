@@ -1,0 +1,278 @@
+/*
+------------------------------------------------------------
+Problem    : Maximal Rectangle
+Platform   : LeetCode
+Topic      : Matrix
+Difficulty : Hard
+
+Problem:
+Given a binary matrix containing only '0' and '1', find the
+largest rectangle containing only '1's and return its area.
+
+Example:
+
+    matrix =
+    [
+        ["1","0","1","0","0"],
+        ["1","0","1","1","1"],
+        ["1","1","1","1","1"],
+        ["1","0","0","1","0"]
+    ]
+
+Output:
+
+    6
+
+Approach:
+Reduce the problem to the "Largest Rectangle in Histogram"
+problem.
+
+For every row, maintain a histogram where:
+
+    hist[j] = number of consecutive 1s ending at the current row
+
+For example, after processing:
+
+    ["1","0","1","1","1"]
+
+the histogram becomes:
+
+    [1,0,1,1,1]
+
+For the next row:
+
+    ["1","1","1","1","1"]
+
+the histogram becomes:
+
+    [2,1,2,2,2]
+
+Every row creates a histogram.
+
+Therefore, for each row:
+1. Update the histogram.
+2. Find the largest rectangle in that histogram.
+3. Update the global maximum.
+
+Largest Rectangle in Histogram:
+For every bar, find:
+- Previous Smaller Element (PSE)
+- Next Smaller Element (NSE)
+
+Then:
+
+    width = next[i] - prev[i] - 1
+
+    area = height[i] * width
+
+We use a monotonic increasing stack to find both boundaries
+in O(n).
+
+Example:
+
+    histogram = [2,1,5,6,2,3]
+
+The largest rectangle is formed using heights 5 and 6:
+
+    height = 5
+    width  = 2
+
+    area = 5 * 2 = 10
+
+Why does the histogram approach work?
+
+Consider each row as the bottom of a rectangle.
+
+For every column:
+- If matrix[i][j] == '1', increase hist[j].
+- If matrix[i][j] == '0', reset hist[j] to 0.
+
+This makes hist[j] represent the number of consecutive 1s
+above the current cell.
+
+Therefore, finding the largest rectangle of 1s ending at a
+specific row is exactly the same as finding the largest
+rectangle in the corresponding histogram.
+
+Example:
+
+    Matrix:
+
+    1 0 1 1 1
+    1 1 1 1 1
+    1 1 1 1 1
+
+Histograms:
+
+    Row 1:
+    1 0 1 1 1
+
+    Row 2:
+    2 1 2 2 2
+
+    Row 3:
+    3 2 3 3 3
+
+For the final row:
+
+    [3,2,3,3,3]
+
+The rectangle of height 2 and width 4 gives:
+
+    area = 2 * 4
+         = 8
+
+Algorithm:
+1. Create a histogram of size equal to the number of columns.
+2. Initially fill it with zeros.
+3. Process the matrix row by row.
+4. For every cell:
+      - If it is '1', increment hist[j].
+      - Otherwise, set hist[j] = 0.
+5. Find the largest rectangle in the current histogram.
+6. Update the maximum area.
+7. Return the maximum area.
+
+Important:
+The matrix is assumed to contain at least one row and one
+column, as guaranteed by the problem constraints.
+
+Time Complexity : O(rows * cols)
+
+Reason:
+For every row, updating the histogram takes O(cols).
+
+Finding the largest rectangle also takes O(cols), because
+each index is pushed and popped from the monotonic stack
+at most once.
+
+Therefore:
+
+    O(rows * cols) + O(rows * cols)
+    = O(rows * cols)
+
+Space Complexity : O(cols)
+
+Reason:
+We use:
+- The histogram array of size cols.
+- Monotonic stacks and boundary arrays of size cols.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    // Find Next Smaller Element
+    vector<int> nextSmaller(vector<int>& arr) {
+
+        int n = arr.size();
+
+        vector<int> ans(n);
+        stack<int> st;
+
+        st.push(-1);
+
+        for (int i = n - 1; i >= 0; i--) {
+
+            while (st.top() != -1 &&
+                   arr[st.top()] >= arr[i]) {
+                st.pop();
+            }
+
+            // No smaller element on the right
+            if (st.top() == -1) {
+                ans[i] = n;
+            }
+            else {
+                ans[i] = st.top();
+            }
+
+            st.push(i);
+        }
+
+        return ans;
+    }
+
+    // Find Previous Smaller Element
+    vector<int> prevSmaller(vector<int>& arr) {
+
+        int n = arr.size();
+
+        vector<int> ans(n);
+        stack<int> st;
+
+        st.push(-1);
+
+        for (int i = 0; i < n; i++) {
+
+            while (st.top() != -1 &&
+                   arr[st.top()] >= arr[i]) {
+                st.pop();
+            }
+
+            ans[i] = st.top();
+
+            st.push(i);
+        }
+
+        return ans;
+    }
+
+    // Largest Rectangle in Histogram
+    int largest(vector<int>& arr) {
+
+        int n = arr.size();
+
+        vector<int> prev = prevSmaller(arr);
+        vector<int> next = nextSmaller(arr);
+
+        int maxArea = 0;
+
+        for (int i = 0; i < n; i++) {
+
+            int height = arr[i];
+
+            // Width between previous and next smaller elements
+            int width = next[i] - prev[i] - 1;
+
+            int area = height * width;
+
+            maxArea = max(maxArea, area);
+        }
+
+        return maxArea;
+    }
+
+    int maximalRectangle(vector<vector<char>>& matrix) {
+
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+
+        // Histogram representing consecutive 1s
+        // for every column.
+        vector<int> hist(cols, 0);
+
+        int maxArea = 0;
+
+        for (int i = 0; i < rows; i++) {
+
+            // Update histogram for current row
+            for (int j = 0; j < cols; j++) {
+
+                if (matrix[i][j] == '1') {
+                    hist[j]++;
+                }
+                else {
+                    hist[j] = 0;
+                }
+            }
+
+            // Solve largest rectangle for this row
+            maxArea = max(maxArea, largest(hist));
+        }
+
+        return maxArea;
+    }
+};
