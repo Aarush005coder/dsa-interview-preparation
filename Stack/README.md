@@ -9,6 +9,7 @@ This folder contains **Stack** problems solved in **C++**. Each solution include
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Valid Parentheses | Easy | ✅ |
+| 2 | Largest Rectangle in Histogram | Hard | ✅ |
 
 ---
 
@@ -35,4 +36,4 @@ This folder contains **Stack** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
