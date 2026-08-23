@@ -14,6 +14,7 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 | 4 | First Missing Positive | Hard | ✅ |
 | 5 | Plus One | Easy | ✅ |
 | 6 | Sort Colors | Medium | ✅ |
+| 7 | Merge Sorted Array | Easy | ✅ |
 
 ---
 
@@ -38,4 +39,4 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **6**
+**Problems Solved:** **7**
