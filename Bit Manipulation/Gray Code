@@ -1,0 +1,156 @@
+/*
+------------------------------------------------------------
+Problem    : Gray Code
+Platform   : LeetCode
+Topic      : Bit Manipulation
+Difficulty : Medium
+
+Problem:
+Given an integer n, return any valid n-bit Gray code sequence.
+
+A Gray code sequence must satisfy:
+
+- It contains exactly 2^n integers.
+- Every integer lies in the range [0, 2^n - 1].
+- The first number is 0.
+- Every number appears only once.
+- Adjacent numbers differ by exactly one bit.
+- The first and last numbers also differ by exactly one bit.
+
+Example:
+
+    n = 2
+
+Binary representation:
+
+    00
+    01
+    11
+    10
+
+Therefore:
+
+    [0,1,3,2]
+
+Approach:
+Use the standard Gray Code formula:
+
+    gray(i) = i ^ (i >> 1)
+
+where:
+    i       = current binary number
+    i >> 1  = i shifted one position to the right
+    ^       = bitwise XOR
+
+For every integer i from 0 to 2^n - 1, calculate:
+
+    i ^ (i >> 1)
+
+and store the result.
+
+Why does this work?
+
+The Gray Code transformation converts normal binary numbers
+into Gray Code numbers such that consecutive values differ
+by exactly one bit.
+
+Example for n = 2:
+
+    i       Binary      i >> 1      Gray Code
+    ------------------------------------------------
+    0        00           00            00 -> 0
+    1        01           00            01 -> 1
+    2        10           01            11 -> 3
+    3        11           01            10 -> 2
+
+Therefore:
+
+    [0,1,3,2]
+
+Check adjacent values:
+
+    0 = 00
+    1 = 01
+
+Only one bit changes.
+
+    1 = 01
+    3 = 11
+
+Only one bit changes.
+
+    3 = 11
+    2 = 10
+
+Only one bit changes.
+
+The first and last values:
+
+    2 = 10
+    0 = 00
+
+also differ by exactly one bit.
+
+Why does XOR with (i >> 1) produce Gray Code?
+
+The Gray Code representation can be generated directly
+from binary using:
+
+    G = B XOR (B >> 1)
+
+The most significant bit remains the same, while every
+following bit is determined by whether two adjacent binary
+bits are different.
+
+Algorithm:
+1. Calculate total numbers:
+
+       total = 2^n
+
+2. For every i from 0 to total - 1:
+3. Calculate:
+
+       gray = i ^ (i >> 1)
+
+4. Add gray to the answer.
+5. Return the sequence.
+
+Time Complexity : O(2^n)
+
+Reason:
+There are exactly 2^n Gray Code values to generate, and
+each value takes constant time to calculate.
+
+Space Complexity : O(2^n)
+
+Reason:
+The output contains 2^n integers.
+
+Auxiliary Space : O(1)
+
+Only constant extra variables are used apart from the
+output vector.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    vector<int> grayCode(int n) {
+
+        vector<int> ans;
+
+        // Total number of n-bit values
+        int total = 1 << n;
+
+        for (int i = 0; i < total; i++) {
+
+            // Convert binary number to Gray Code
+            int grayCode = i ^ (i >> 1);
+
+            ans.push_back(grayCode);
+        }
+
+        return ans;
+    }
+};
