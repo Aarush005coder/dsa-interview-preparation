@@ -1,0 +1,263 @@
+/*
+------------------------------------------------------------
+Problem    : Restore IP Addresses
+Platform   : LeetCode
+Topic      : Backtracking
+Difficulty : Medium
+
+Problem:
+Given a string containing only digits, return all possible
+valid IP addresses that can be formed by inserting dots.
+
+A valid IP address must contain exactly 4 parts.
+
+Each part:
+- Must be between 0 and 255.
+- Cannot contain leading zeros.
+- Must contain at least 1 digit.
+- Can contain at most 3 digits.
+
+Example:
+
+    s = "25525511135"
+
+Output:
+
+    ["255.255.11.135",
+     "255.255.111.35"]
+
+Approach:
+Use Backtracking.
+
+An IP address contains exactly 4 parts, so at every step
+we choose 1, 2, or 3 digits for the current part.
+
+For every chosen part:
+1. Check whether it is valid.
+2. Add it to the current IP address.
+3. Recursively build the next part.
+4. Backtrack and try another possible length.
+
+Example:
+
+    s = "25525511135"
+
+We can choose:
+
+    "255"
+       ↓
+    "255"
+       ↓
+    "11"
+       ↓
+    "135"
+
+which gives:
+
+    255.255.11.135
+
+Another valid choice is:
+
+    "255"
+       ↓
+    "255"
+       ↓
+    "111"
+       ↓
+    "35"
+
+which gives:
+
+    255.255.111.35
+
+Validity Rules:
+
+1. Leading Zero:
+
+    "0"      -> valid
+    "00"     -> invalid
+    "011"    -> invalid
+
+Therefore:
+
+    if (part.size() > 1 && part[0] == '0')
+        return false;
+
+2. Value must be <= 255:
+
+    "255" -> valid
+    "256" -> invalid
+
+Since every part contains at most 3 digits, we can
+convert it to an integer and check:
+
+    0 <= value <= 255
+
+Backtracking State:
+
+    idx
+        Current position in the string.
+
+    parts
+        Number of IP parts created so far.
+
+    curr
+        IP address constructed so far.
+
+Base Case:
+
+If:
+
+    parts == 4 && idx == s.size()
+
+then all 4 parts have been created and every digit has been
+used.
+
+Therefore, we have found a valid IP address.
+
+The trailing dot is removed before storing the result.
+
+Invalid State:
+
+If:
+
+    parts >= 4
+
+but there are still digits remaining, this path cannot
+produce a valid IP address.
+
+Pruning:
+A valid IP address has exactly 4 parts.
+
+Therefore:
+- We cannot create more than 4 parts.
+- Each part can contain at most 3 digits.
+
+We only try lengths 1, 2, and 3.
+
+Algorithm:
+1. Start backtracking from index 0 with 0 parts.
+2. Try taking 1, 2, or 3 digits.
+3. Check whether the selected part is valid.
+4. Recursively process the remaining string.
+5. Stop when 4 parts have been created.
+6. Store the address only when all digits are used.
+
+Example:
+
+    s = "101023"
+
+Possible valid addresses:
+
+    1.0.10.23
+    1.0.102.3
+    10.10.2.3
+    10.1.0.23
+    10.1.02.3 -> invalid
+
+The last one is rejected because "02" has a leading zero.
+
+Time Complexity : O(3^4)
+
+Reason:
+There are exactly 4 IP parts and each part can have at most
+3 possible lengths.
+
+Therefore, the number of possible partitions is bounded by
+3^4, which is constant.
+
+More generally, considering string validation and copying:
+
+    O(3^4 * n)
+
+where n is the length of the string.
+
+Space Complexity : O(1)
+
+Auxiliary recursion depth is at most 4, since an IP address
+contains exactly 4 parts.
+
+The output itself requires O(number of valid IP addresses)
+space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    vector<string> ans;
+
+    // Check whether an IP part is valid
+    bool isValid(string& part) {
+
+        // Leading zero is not allowed
+        if (part.size() > 1 && part[0] == '0') {
+            return false;
+        }
+
+        int num = stoi(part);
+
+        return num >= 0 && num <= 255;
+    }
+
+    void backtrack(
+        string& s,
+        int idx,
+        int parts,
+        string curr
+    ) {
+
+        // Exactly 4 parts and all digits are used
+        if (parts == 4 && idx == s.size()) {
+
+            // Remove the extra '.'
+            curr.pop_back();
+
+            ans.push_back(curr);
+
+            return;
+        }
+
+        // More than 4 parts is invalid
+        if (parts >= 4) {
+            return;
+        }
+
+        // Try taking 1, 2, or 3 digits
+        for (int len = 1; len <= 3; len++) {
+
+            // Not enough characters remaining
+            if (idx + len > s.size()) {
+                break;
+            }
+
+            string part = s.substr(idx, len);
+
+            // Skip invalid IP parts
+            if (!isValid(part)) {
+                continue;
+            }
+
+            // Choose current part and explore
+            backtrack(
+                s,
+                idx + len,
+                parts + 1,
+                curr + part + "."
+            );
+        }
+    }
+
+    vector<string> restoreIpAddresses(string s) {
+
+        // An IP address must contain between 4 and 12 digits
+        if (s.size() < 4 || s.size() > 12) {
+            return {};
+        }
+
+        backtrack(s, 0, 0, "");
+
+        return ans;
+    }
+};
