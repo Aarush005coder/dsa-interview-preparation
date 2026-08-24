@@ -16,6 +16,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 | 6 | Reverse Nodes in k-Group | Hard | ✅ |
 | 7 | Rotate List | Medium | ✅ |
 | 8 | Remove Duplicates from Sorted List | Easy | ✅ |
+| 9 | Reverse Linked List II | Medium | ✅ |
 
 ---
 
@@ -38,4 +39,4 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 
 ---
 
-**Problems Solved:** **8**
+**Problems Solved:** **9**
