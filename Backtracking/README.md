@@ -18,6 +18,7 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 | 8 | N-Queens II | Hard | ✅ |
 | 9 | Combinations | Medium | ✅ |
 | 10 | Subsets | Medium | ✅ |
+| 11 | Restore IP Addresses | Medium | ✅ |
 
 ---
 
@@ -43,4 +44,4 @@ This folder contains **Backtracking** problems solved in **C++**. Each solution 
 
 ---
 
-**Problems Solved:** **10**
+**Problems Solved:** **11**
