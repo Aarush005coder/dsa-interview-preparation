@@ -1,0 +1,179 @@
+/*
+------------------------------------------------------------
+Problem    : Reverse Linked List II
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Medium
+
+Problem:
+Given the head of a singly linked list and two positions
+left and right, reverse the nodes between positions left
+and right.
+
+The nodes outside this range must remain unchanged.
+
+Example:
+
+    Input:
+        head = [1,2,3,4,5]
+        left = 2
+        right = 4
+
+    Output:
+        [1,4,3,2,5]
+
+Approach:
+Use a dummy node and reverse only the required portion of
+the linked list.
+
+A dummy node is useful because the reversal may begin at
+position 1, in which case there is no actual node before the
+reversed section.
+
+We use:
+
+    prev
+        Points to the node immediately before the section
+        that needs to be reversed.
+
+    curr
+        Points to the first node of the section.
+
+    prevNode
+        Used to reverse the links inside the section.
+
+    last
+        Stores the original first node of the section.
+        After reversal, this becomes the last node of the
+        reversed section.
+
+Step-by-step:
+
+    head = [1,2,3,4,5]
+    left = 2
+    right = 4
+
+First move prev to the node before position left:
+
+    dummy -> 1 -> 2 -> 3 -> 4 -> 5
+             ^
+            prev
+
+Now:
+
+    curr = 2
+    last = 2
+
+Reverse the section [2,3,4]:
+
+Before:
+
+    1 -> 2 -> 3 -> 4 -> 5
+
+After reversing:
+
+    1 -> 4 -> 3 -> 2    5
+
+Finally reconnect the reversed section:
+
+    prev->next = prevNode
+
+and connect the original first node of the section
+(now the last node) to the remaining list:
+
+    last->next = curr
+
+Final:
+
+    1 -> 4 -> 3 -> 2 -> 5
+
+Why do we need a dummy node?
+
+Consider:
+
+    head = [1,2,3]
+    left = 1
+    right = 2
+
+The reversal starts from the head.
+
+Without a dummy node, there is no node before the reversed
+section to reconnect the list.
+
+The dummy node gives us:
+
+    dummy -> 1 -> 2 -> 3
+
+which makes the same logic work even when left = 1.
+
+Algorithm:
+1. Create a dummy node before head.
+2. Move `prev` to the node immediately before `left`.
+3. Store the first node of the section in `last`.
+4. Reverse exactly `right - left + 1` nodes.
+5. Connect `prev` to the new first node of the reversed section.
+6. Connect `last` to the node after the reversed section.
+7. Return `dummy->next`.
+
+Time Complexity : O(n)
+
+Reason:
+We traverse the list to reach `left` and reverse the
+required portion once.
+
+Space Complexity : O(1)
+
+Reason:
+Only a constant number of pointers are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+
+        // No reversal needed
+        if (!head || left == right) {
+            return head;
+        }
+
+        // Dummy node handles the case when left == 1
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+
+        // Move prev to the node before position left
+        ListNode* prev = dummy;
+
+        for (int i = 0; i < left - 1; i++) {
+            prev = prev->next;
+        }
+
+        // First node of the section being reversed
+        ListNode* last = prev->next;
+
+        ListNode* curr = last;
+        ListNode* prevNode = nullptr;
+
+        // Reverse nodes from left to right
+        for (int i = 0; i < right - left + 1; i++) {
+
+            ListNode* nextNode = curr->next;
+
+            curr->next = prevNode;
+
+            prevNode = curr;
+            curr = nextNode;
+        }
+
+        // Connect the node before the reversed section
+        // to the new first node of the reversed section
+        prev->next = prevNode;
+
+        // Connect the original first node (now the last node)
+        // to the remaining part of the list
+        last->next = curr;
+
+        return dummy->next;
+    }
+};
