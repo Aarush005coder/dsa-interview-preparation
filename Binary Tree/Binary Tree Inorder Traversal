@@ -1,0 +1,152 @@
+/*
+------------------------------------------------------------
+Problem    : Binary Tree Inorder Traversal
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Easy
+
+Problem:
+Given the root of a binary tree, return the inorder traversal
+of its nodes' values.
+
+Inorder traversal visits nodes in the following order:
+
+    Left -> Root -> Right
+
+Example:
+
+    Input:
+
+          1
+           \
+            2
+           /
+          3
+
+Inorder traversal:
+
+    Left subtree -> Root -> Right subtree
+
+    3 -> 1 -> 2
+
+Output:
+
+    [1,3,2]
+
+Approach:
+Use Recursive Depth First Search (DFS).
+
+For every node:
+
+1. Traverse its left subtree.
+2. Store the current node's value.
+3. Traverse its right subtree.
+
+This follows the exact inorder traversal pattern:
+
+    inorder(left)
+    visit(root)
+    inorder(right)
+
+Base Case:
+If the current node is nullptr, there is nothing to traverse,
+so simply return.
+
+Example:
+
+    root = [1,null,2,3]
+
+Tree:
+
+        1
+         \
+          2
+         /
+        3
+
+Start from 1:
+
+    inorder(1)
+
+First traverse left:
+    nullptr -> return
+
+Visit 1:
+    result = [1]
+
+Traverse right:
+    inorder(2)
+
+For node 2:
+    left -> node 3
+    visit 3
+    right -> nullptr
+
+Result:
+
+    [1,3,2]
+
+Algorithm:
+1. Create an empty result vector.
+2. Call inorder traversal starting from root.
+3. If node is nullptr, return.
+4. Recursively traverse the left subtree.
+5. Add node->val to result.
+6. Recursively traverse the right subtree.
+7. Return the result vector.
+
+Time Complexity : O(n)
+
+Reason:
+Every node in the tree is visited exactly once.
+
+Space Complexity : O(h)
+
+Reason:
+The recursion stack can contain at most h nodes, where h
+is the height of the binary tree.
+
+For a balanced tree:
+
+    O(log n)
+
+For a skewed tree:
+
+    O(n)
+
+The output vector requires O(n) additional space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    void inorder(TreeNode* node, vector<int>& result) {
+
+        // Base case
+        if (node == nullptr) {
+            return;
+        }
+
+        // Traverse left subtree
+        inorder(node->left, result);
+
+        // Visit current node
+        result.push_back(node->val);
+
+        // Traverse right subtree
+        inorder(node->right, result);
+    }
+
+public:
+
+    vector<int> inorderTraversal(TreeNode* root) {
+
+        vector<int> result;
+
+        inorder(root, result);
+
+        return result;
+    }
+};
