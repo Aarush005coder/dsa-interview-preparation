@@ -9,6 +9,7 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 | # | Problem | Difficulty | Status | 
 |---|---------|------------|--------| 
 | 1 | Binary Tree Inorder Traversal | Easy | ✅ |
+| 2 | Validate Binary Search Tree | Medium | ✅ |
 
 ---
 
@@ -33,4 +34,4 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
