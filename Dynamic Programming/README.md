@@ -11,6 +11,7 @@ This folder contains **Dynamic Programming** problems solved in **C++** as part 
 | 1 | Wildcard Matching | Hard | ✅ |
 | 2 | Climbing Stairs | Easy | ✅ |
 | 3 | Edit Distance | Medium | ✅ |
+| 4 | Interleaving String | Medium | ✅ |
 
 ---
 
@@ -95,4 +96,4 @@ When approaching a Dynamic Programming problem:
 
 ---
 
-**Problems Solved:** **3**
+**Problems Solved:** **4**
