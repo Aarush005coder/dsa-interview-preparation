@@ -1,0 +1,221 @@
+/*
+------------------------------------------------------------
+Problem    : Validate Binary Search Tree
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Medium
+
+Problem:
+Given the root of a binary tree, determine whether it is a
+valid Binary Search Tree (BST).
+
+A valid BST must satisfy:
+
+- Every node in the left subtree is strictly smaller than
+  the current node.
+- Every node in the right subtree is strictly greater than
+  the current node.
+- Both left and right subtrees must also be valid BSTs.
+
+Example 1:
+
+    root = [2,1,3]
+
+          2
+         / \
+        1   3
+
+    Output: true
+
+Example 2:
+
+    root = [5,1,4,null,null,3,6]
+
+          5
+         / \
+        1   4
+           / \
+          3   6
+
+    Output: false
+
+Why?
+
+The right subtree of 5 must contain values greater than 5,
+but node 4 is less than 5.
+
+Approach:
+Use Recursion with a Valid Range.
+
+For every node, maintain two boundaries:
+
+    min -> smallest value the node is allowed to have
+    max -> largest value the node is allowed to have
+
+Initially, the root can contain any valid integer:
+
+    min = LONG_MIN
+    max = LONG_MAX
+
+For a node with value x:
+
+    min < x < max
+
+must always be true.
+
+When moving to the left subtree:
+
+    min < value < x
+
+So the new range becomes:
+
+    [min, x)
+
+When moving to the right subtree:
+
+    x < value < max
+
+So the new range becomes:
+
+    (x, max]
+
+Example:
+
+          5
+         / \
+        3   7
+           /
+          6
+
+For root 5:
+
+    range = (-∞, +∞)
+
+For node 3:
+
+    range = (-∞, 5)
+
+For node 7:
+
+    range = (5, +∞)
+
+For node 6:
+
+    range = (5, 7)
+
+Since:
+
+    5 < 6 < 7
+
+the node is valid.
+
+Important:
+We cannot simply compare a node only with its immediate
+parent.
+
+For example:
+
+          5
+         / \
+        1   7
+           /
+          4
+
+Node 4 is smaller than its parent 7, which looks correct.
+
+But node 4 is inside the right subtree of 5, so it must
+also be greater than 5.
+
+Since:
+
+    4 < 5
+
+the tree is invalid.
+
+The min/max range approach correctly detects this.
+
+Why use `long` instead of `int`?
+
+The node values can be equal to `INT_MIN` or `INT_MAX`.
+
+Using:
+
+    LONG_MIN
+    LONG_MAX
+
+as initial boundaries avoids conflicts with valid integer
+node values.
+
+Strict Inequality:
+The problem requires:
+
+    left < root < right
+
+Therefore, we must reject:
+
+    root->val <= min
+    root->val >= max
+
+Duplicate values are not allowed in a BST.
+
+Algorithm:
+1. Start DFS from the root with range
+       (LONG_MIN, LONG_MAX).
+2. If the node is null, return true.
+3. If node->val is outside the allowed range, return false.
+4. Validate the left subtree with:
+       (min, node->val)
+5. Validate the right subtree with:
+       (node->val, max)
+6. Return true only if both subtrees are valid.
+
+Time Complexity : O(n)
+
+Reason:
+Every node is visited exactly once.
+
+Space Complexity : O(h)
+
+Reason:
+The recursion stack depends on the height `h` of the tree.
+
+For a balanced tree:
+
+    O(log n)
+
+For a skewed tree:
+
+    O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    bool isSolve(TreeNode* root, long minValue, long maxValue) {
+
+        // Empty tree is a valid BST
+        if (root == nullptr) {
+            return true;
+        }
+
+        // Current node must lie strictly inside the range
+        if (root->val <= minValue || root->val >= maxValue) {
+            return false;
+        }
+
+        // Left subtree:
+        // values must be smaller than root->val
+        //
+        // Right subtree:
+        // values must be greater than root->val
+        return isSolve(root->left, minValue, root->val) &&
+               isSolve(root->right, root->val, maxValue);
+    }
+
+    bool isValidBST(TreeNode* root) {
+
+        return isSolve(root, LONG_MIN, LONG_MAX);
+    }
+};
