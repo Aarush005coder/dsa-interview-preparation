@@ -1,0 +1,218 @@
+/*
+------------------------------------------------------------
+Problem    : Interleaving String
+Platform   : LeetCode
+Topic      : Dynamic Programming
+Difficulty : Medium
+
+Problem:
+Given three strings s1, s2, and s3, determine whether s3
+can be formed by interleaving s1 and s2.
+
+The characters of s1 and s2 must remain in their original
+relative order.
+
+Example:
+
+    s1 = "aabcc"
+    s2 = "dbbca"
+    s3 = "aadbbcbcac"
+
+Output:
+
+    true
+
+One possible interleaving is:
+
+    "aa" + "dbbc" + "bc" + "a" + "c"
+
+    = "aadbbcbcac"
+
+Approach:
+Use Dynamic Programming.
+
+Define:
+
+    dp[i][j] = true
+
+if the first i characters of s1 and the first j characters
+of s2 can form the first i + j characters of s3.
+
+In other words:
+
+    dp[i][j]
+
+means:
+
+    s1[0 ... i-1] + s2[0 ... j-1]
+
+can be interleaved to create:
+
+    s3[0 ... i+j-1]
+
+Base Case:
+
+    dp[0][0] = true
+
+Because two empty strings can form an empty string.
+
+Transition:
+At position (i, j), the next character of s3 is:
+
+    s3[i + j - 1]
+
+There are two possible ways to reach this state.
+
+1. Take the character from s1.
+
+If:
+
+    i > 0
+    AND
+    s1[i - 1] == s3[i + j - 1]
+
+then if dp[i-1][j] is true, we can form dp[i][j].
+
+So:
+
+    dp[i][j] = dp[i][j] || dp[i-1][j]
+
+2. Take the character from s2.
+
+If:
+
+    j > 0
+    AND
+    s2[j - 1] == s3[i + j - 1]
+
+then if dp[i][j-1] is true, we can form dp[i][j].
+
+So:
+
+    dp[i][j] = dp[i][j] || dp[i][j-1]
+
+Example:
+
+    s1 = "ab"
+    s2 = "cd"
+    s3 = "acbd"
+
+DP state:
+
+    dp[i][j]
+
+At dp[1][1]:
+
+    s1[0] = 'a'
+    s2[0] = 'c'
+    s3[1] = 'c'
+
+We can reach this state by taking 'a' from s1 and then
+'c' from s2.
+
+Therefore:
+
+    dp[1][1] = true
+
+Eventually:
+
+    dp[2][2] = true
+
+so s3 is a valid interleaving.
+
+Important:
+The lengths must satisfy:
+
+    s1.length() + s2.length() == s3.length()
+
+If not, forming s3 is impossible.
+
+Algorithm:
+1. Let n = s1.length() and m = s2.length().
+2. If n + m != s3.length(), return false.
+3. Create a DP table of size (n + 1) x (m + 1).
+4. Set dp[0][0] = true.
+5. For every i and j:
+      - Check whether the current character can come from s1.
+      - Check whether the current character can come from s2.
+6. Return dp[n][m].
+
+Why does this work?
+
+Every character in s3 must come from either s1 or s2.
+
+For every position, we try both possibilities whenever the
+character matches.
+
+The DP table stores whether a particular combination of
+characters from s1 and s2 can successfully form the
+corresponding prefix of s3.
+
+Time Complexity : O(n * m)
+
+Reason:
+There are (n + 1) * (m + 1) DP states, and each state takes
+O(1) time.
+
+Space Complexity : O(n * m)
+
+Reason:
+We store the complete 2D DP table.
+
+Space Optimization:
+Since dp[i][j] depends only on the current row and previous
+row, the solution can also be optimized to O(m) space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+
+        int n = s1.length();
+        int m = s2.length();
+
+        // Total length must match
+        if (n + m != s3.length()) {
+            return false;
+        }
+
+        vector<vector<bool>> dp(
+            n + 1,
+            vector<bool>(m + 1, false)
+        );
+
+        // Empty strings form an empty string
+        dp[0][0] = true;
+
+        for (int i = 0; i <= n; i++) {
+
+            for (int j = 0; j <= m; j++) {
+
+                // Current position in s3
+                int k = i + j;
+
+                // Take character from s1
+                if (
+                    i > 0 &&
+                    s1[i - 1] == s3[k - 1]
+                ) {
+                    dp[i][j] =
+                        dp[i][j] || dp[i - 1][j];
+                }
+
+                // Take character from s2
+                if (
+                    j > 0 &&
+                    s2[j - 1] == s3[k - 1]
+                ) {
+                    dp[i][j] =
+                        dp[i][j] || dp[i][j - 1];
+                }
+            }
+        }
+
+        return dp[n][m];
+    }
+};
