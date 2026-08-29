@@ -1,0 +1,153 @@
+/*
+------------------------------------------------------------
+Problem    : Same Tree
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Easy
+
+Problem:
+Given the roots of two binary trees p and q, determine whether
+the two trees are the same.
+
+Two binary trees are considered the same if:
+- They have the same structure.
+- Corresponding nodes contain the same values.
+
+Example:
+
+    p = [1,2,3]
+    q = [1,2,3]
+
+Both trees have the same structure and node values.
+
+Output:
+
+    true
+
+Approach:
+Use Recursion / Depth First Search (DFS).
+
+For every pair of corresponding nodes, check three conditions:
+
+1. Both nodes are nullptr.
+   -> The corresponding subtrees are empty, so they are same.
+
+2. Only one node is nullptr.
+   -> The structures are different, so return false.
+
+3. Both nodes exist but their values are different.
+   -> The trees are different, so return false.
+
+If all three checks pass, recursively compare:
+- Left subtree of p with left subtree of q.
+- Right subtree of p with right subtree of q.
+
+Therefore:
+
+    same tree =
+        same left subtree
+        AND
+        same right subtree
+
+Example:
+
+    p:              q:
+
+        1               1
+       / \             / \
+      2   3           2   3
+
+Compare roots:
+
+    1 == 1
+
+Compare left subtrees:
+
+    2 == 2
+
+Compare right subtrees:
+
+    3 == 3
+
+All corresponding nodes match, so return true.
+
+Example of different structure:
+
+    p:              q:
+
+        1               1
+       /                 \
+      2                   2
+
+Root values are equal, but:
+
+    p->left  exists
+    q->left  is nullptr
+
+Therefore, the trees are not the same.
+
+Why do we compare both left and right subtrees?
+
+A binary tree's identity depends on both:
+- Node values
+- Tree structure
+
+So matching only the values is not enough.
+
+Algorithm:
+1. If both nodes are nullptr, return true.
+2. If one of the nodes is nullptr, return false.
+3. If their values are different, return false.
+4. Recursively compare the left subtrees.
+5. Recursively compare the right subtrees.
+6. Return true only if both subtree comparisons are true.
+
+Time Complexity : O(n)
+
+Reason:
+In the worst case, every node of both trees is visited once.
+
+More precisely, the complexity depends on the number of
+corresponding nodes that need to be checked.
+
+Space Complexity : O(h)
+
+Reason:
+The recursion stack depends on the height of the tree.
+
+For a balanced tree:
+
+    O(log n)
+
+For a skewed tree:
+
+    O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+
+        // Both nodes are empty
+        if (p == nullptr && q == nullptr) {
+            return true;
+        }
+
+        // Only one node is empty
+        if (p == nullptr || q == nullptr) {
+            return false;
+        }
+
+        // Values are different
+        if (p->val != q->val) {
+            return false;
+        }
+
+        // Compare both subtrees
+        return isSameTree(p->left, q->left) &&
+               isSameTree(p->right, q->right);
+    }
+};
