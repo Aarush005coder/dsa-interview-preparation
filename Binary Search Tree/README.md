@@ -9,6 +9,7 @@ This folder contains Binary Search Tree (BST) problems solved in C++. Each solut
 | # | Problem | Difficulty | Status | 
 |---|---------|------------|--------| 
 | 1 | Unique Binary Search Trees | Medium | ✅ |
+| 2 | Recover Binary Search Tree | Medium | ✅ |
 
 ---
 
@@ -34,4 +35,4 @@ This folder contains Binary Search Tree (BST) problems solved in C++. Each solut
 
 --- 
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
