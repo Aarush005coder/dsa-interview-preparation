@@ -1,0 +1,173 @@
+/*
+------------------------------------------------------------
+Problem    : Symmetric Tree
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Easy
+
+Problem:
+Given the root of a binary tree, determine whether the tree
+is symmetric around its center.
+
+A binary tree is symmetric if its left subtree is a mirror
+reflection of its right subtree.
+
+Example:
+
+    root = [1,2,2,3,4,4,3]
+
+            1
+           / \
+          2   2
+         / \ / \
+        3  4 4  3
+
+Output:
+
+    true
+
+Approach:
+Use Recursion to compare two subtrees as mirrors.
+
+Instead of checking whether the left and right subtrees are
+identical, we check whether they are mirror images.
+
+For two nodes `left` and `right`, the following conditions
+must hold:
+
+1. Both are nullptr:
+       The corresponding positions are empty.
+       Return true.
+
+2. Only one is nullptr:
+       The tree structures are different.
+       Return false.
+
+3. Their values are different:
+       The tree cannot be symmetric.
+       Return false.
+
+4. Compare their children in mirror order:
+
+       left->left  with right->right
+       left->right with right->left
+
+Therefore:
+
+    mirror(left, right) =
+        mirror(left->left, right->right)
+        AND
+        mirror(left->right, right->left)
+
+Example:
+
+            1
+           / \
+          2   2
+         / \ / \
+        3  4 4  3
+
+Compare the two nodes with value 2:
+
+    left  = 2
+    right = 2
+
+Their outer children:
+
+    left->left  = 3
+    right->right = 3
+
+Match.
+
+Their inner children:
+
+    left->right = 4
+    right->left = 4
+
+Match.
+
+So the two subtrees are mirrors.
+
+Why not use `isSameTree`?
+
+For a symmetric tree, corresponding nodes are not compared
+in the same direction.
+
+For example:
+
+    left->left  must match right->right
+    left->right must match right->left
+
+This is different from checking two trees for equality, where:
+
+    left->left  matches right->left
+    left->right matches right->right
+
+Algorithm:
+1. If the root is nullptr, return true.
+2. Compare the root's left and right subtrees as mirrors.
+3. If both nodes are null, return true.
+4. If only one is null, return false.
+5. If their values differ, return false.
+6. Recursively compare:
+       left->left  with right->right
+       left->right with right->left
+7. Return the result.
+
+Time Complexity : O(n)
+
+Reason:
+In the worst case, every node is visited once.
+
+Space Complexity : O(h)
+
+Reason:
+The recursion stack depends on the height `h` of the tree.
+
+For a balanced tree:
+
+    O(log n)
+
+For a skewed tree:
+
+    O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    bool isPossible(TreeNode* left, TreeNode* right) {
+
+        // Both nodes are empty
+        if (left == nullptr && right == nullptr) {
+            return true;
+        }
+
+        // Only one node is empty
+        if (left == nullptr || right == nullptr) {
+            return false;
+        }
+
+        // Values must be equal
+        if (left->val != right->val) {
+            return false;
+        }
+
+        // Compare in mirror order
+        return isPossible(left->left, right->right) &&
+               isPossible(left->right, right->left);
+    }
+
+    bool isSymmetric(TreeNode* root) {
+
+        // Empty tree is symmetric
+        if (root == nullptr) {
+            return true;
+        }
+
+        // Compare left and right subtrees as mirrors
+        return isPossible(root->left, root->right);
+    }
+};
