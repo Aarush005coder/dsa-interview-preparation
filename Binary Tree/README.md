@@ -11,6 +11,7 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 | 1 | Binary Tree Inorder Traversal | Easy | ✅ |
 | 2 | Validate Binary Search Tree | Medium | ✅ |
 | 3 | Same Tree | Easy | ✅ |
+| 4 | Symmetric Tree | Easy | ✅ |
 
 ---
 
@@ -35,4 +36,4 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 
 ---
 
-**Problems Solved:** **3**
+**Problems Solved:** **4**
