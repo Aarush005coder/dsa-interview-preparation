@@ -1,0 +1,222 @@
+/*
+------------------------------------------------------------
+Problem    : Binary Tree Level Order Traversal
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Medium
+
+Problem:
+Given the root of a binary tree, return the level order
+traversal of its nodes' values.
+
+Level order traversal means visiting the tree:
+- Level by level
+- From left to right within each level
+
+Example:
+
+    root = [3,9,20,null,null,15,7]
+
+            3
+           / \
+          9   20
+             /  \
+            15   7
+
+Output:
+
+    [[3], [9,20], [15,7]]
+
+Approach:
+Use Breadth First Search (BFS) with a Queue.
+
+A queue follows FIFO:
+
+    First In -> First Out
+
+This is perfect for level order traversal because nodes are
+processed in the same order in which they are discovered.
+
+We first push the root into the queue.
+
+For every level:
+1. Store the current queue size.
+2. Process exactly that many nodes.
+3. Add each node's value to the current level.
+4. Push its left child into the queue if it exists.
+5. Push its right child into the queue if it exists.
+6. Add the current level to the result.
+
+Why do we store `q.size()`?
+
+The queue contains nodes from the current level and the
+next level.
+
+For example:
+
+    Queue:
+        [9, 20]
+
+Both nodes belong to the same level.
+
+If we store:
+
+    int level = q.size();
+
+then we process exactly those nodes.
+
+While processing them, their children:
+
+    15, 7
+
+are added to the queue for the next level.
+
+Example:
+
+    Tree:
+
+            3
+           / \
+          9   20
+             /  \
+            15   7
+
+Initially:
+
+    Queue = [3]
+
+Level 1:
+    level = 1
+
+Process:
+    3
+
+Add children:
+
+    Queue = [9,20]
+
+Current level:
+
+    [3]
+
+Level 2:
+    level = 2
+
+Process:
+    9
+    20
+
+Add children of 20:
+
+    Queue = [15,7]
+
+Current level:
+
+    [9,20]
+
+Level 3:
+    level = 2
+
+Process:
+    15
+    7
+
+Current level:
+
+    [15,7]
+
+Final result:
+
+    [[3],[9,20],[15,7]]
+
+Algorithm:
+1. Create an empty result vector.
+2. If root is nullptr, return the empty result.
+3. Create a queue and push root.
+4. While the queue is not empty:
+      - Store the current queue size.
+      - Create a vector for the current level.
+      - Process exactly that many nodes.
+      - Add each node's value to the current level.
+      - Push left and right children if they exist.
+      - Add the current level to the result.
+5. Return the result.
+
+Why BFS instead of DFS?
+
+Level order traversal naturally follows the order:
+
+    Level 1
+    Level 2
+    Level 3
+    ...
+
+BFS with a queue processes nodes level by level directly.
+
+Time Complexity : O(n)
+
+Reason:
+Every node is inserted into and removed from the queue exactly
+once.
+
+Space Complexity : O(n)
+
+Reason:
+In the worst case, the queue can contain O(n) nodes.
+
+The result itself also requires O(n) space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    vector<vector<int>> levelOrder(TreeNode* root) {
+
+        vector<vector<int>> result;
+
+        // Empty tree
+        if (root == nullptr) {
+            return result;
+        }
+
+        queue<TreeNode*> q;
+
+        // Start BFS from the root
+        q.push(root);
+
+        while (!q.empty()) {
+
+            // Number of nodes in the current level
+            int level = q.size();
+
+            vector<int> currentLevel;
+
+            for (int i = 0; i < level; i++) {
+
+                // Get the front node
+                TreeNode* node = q.front();
+                q.pop();
+
+                // Add current node's value
+                currentLevel.push_back(node->val);
+
+                // Add left child
+                if (node->left != nullptr) {
+                    q.push(node->left);
+                }
+
+                // Add right child
+                if (node->right != nullptr) {
+                    q.push(node->right);
+                }
+            }
+
+            // Store the current level
+            result.push_back(currentLevel);
+        }
+
+        return result;
+    }
+};
