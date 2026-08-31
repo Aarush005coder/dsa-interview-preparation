@@ -1,0 +1,234 @@
+/*
+------------------------------------------------------------
+Problem    : Binary Tree Zigzag Level Order Traversal
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Medium
+
+Problem:
+Given the root of a binary tree, return its zigzag level order
+traversal.
+
+Zigzag traversal means:
+- First level -> Left to Right
+- Second level -> Right to Left
+- Third level -> Left to Right
+- Fourth level -> Right to Left
+- Continue alternating between the two directions.
+
+Example:
+
+    root = [3,9,20,null,null,15,7]
+
+            3
+           / \
+          9   20
+             /  \
+            15   7
+
+Normal level order:
+
+    [3]
+    [9,20]
+    [15,7]
+
+Zigzag level order:
+
+    [3]
+    [20,9]
+    [15,7]
+
+Approach:
+Use Breadth First Search (BFS) with a Queue.
+
+The queue is used to process the tree level by level.
+
+For every level:
+1. Store the number of nodes in the current level.
+2. Create a vector of that exact size.
+3. Process every node in the current level.
+4. Decide where to place the node's value based on the
+   current traversal direction.
+
+We use a boolean variable:
+
+    leftToRight
+
+If it is true:
+    Store the value at index i.
+
+If it is false:
+    Store the value at index:
+
+        levelSize - 1 - i
+
+This allows us to reverse the values of every alternate
+level without actually reversing the vector.
+
+Example:
+
+    Level = [9,20]
+
+When leftToRight = false:
+
+    i = 0 -> index = 2 - 1 - 0 = 1
+    i = 1 -> index = 2 - 1 - 1 = 0
+
+So the level becomes:
+
+    [20,9]
+
+Important:
+The queue always stores children in the normal order:
+
+    left child
+    right child
+
+We do NOT change the queue order.
+
+Only the position where values are stored changes.
+
+Example:
+
+    Tree:
+
+            3
+           / \
+          9   20
+             /  \
+            15   7
+
+First level:
+    leftToRight = true
+
+    [3]
+
+Toggle direction.
+
+Second level:
+    leftToRight = false
+
+Queue contains:
+
+    [9,20]
+
+Values are placed at reversed positions:
+
+    [20,9]
+
+Toggle direction again.
+
+Third level:
+    leftToRight = true
+
+Queue contains:
+
+    [15,7]
+
+Values are placed normally:
+
+    [15,7]
+
+Final result:
+
+    [[3],[20,9],[15,7]]
+
+Why don't we use `reverse()`?
+
+We could collect every level normally and then reverse every
+alternate level.
+
+However, using:
+
+    level[index] = node->val;
+
+allows us to place elements directly in the required order
+without an additional reverse operation.
+
+Algorithm:
+1. If root is nullptr, return an empty result.
+2. Push root into a queue.
+3. Set `leftToRight = true`.
+4. While the queue is not empty:
+      - Get the current level size.
+      - Create a vector of that size.
+      - Process all nodes of the current level.
+      - Calculate the correct index depending on the direction.
+      - Add child nodes to the queue.
+      - Add the completed level to the result.
+      - Toggle `leftToRight`.
+5. Return the result.
+
+Time Complexity : O(n)
+
+Reason:
+Every node is inserted into and removed from the queue exactly
+once.
+
+Space Complexity : O(n)
+
+Reason:
+The queue and temporary level vector can together require
+O(n) space in the worst case.
+
+The output also requires O(n) space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+
+        vector<vector<int>> result;
+
+        // Empty tree
+        if (root == nullptr) {
+            return result;
+        }
+
+        queue<TreeNode*> q;
+        q.push(root);
+
+        // First level is traversed left to right
+        bool leftToRight = true;
+
+        while (!q.empty()) {
+
+            // Number of nodes in the current level
+            int levelSize = q.size();
+
+            vector<int> level(levelSize);
+
+            for (int i = 0; i < levelSize; i++) {
+
+                TreeNode* node = q.front();
+                q.pop();
+
+                // Decide the position based on direction
+                int index = leftToRight
+                    ? i
+                    : levelSize - 1 - i;
+
+                level[index] = node->val;
+
+                // Add children for the next level
+                if (node->left != nullptr) {
+                    q.push(node->left);
+                }
+
+                if (node->right != nullptr) {
+                    q.push(node->right);
+                }
+            }
+
+            result.push_back(move(level));
+
+            // Change direction for the next level
+            leftToRight = !leftToRight;
+        }
+
+        return result;
+    }
+};
