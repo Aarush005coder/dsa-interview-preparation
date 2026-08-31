@@ -92,7 +92,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Stack | 2 |
 | Queue | 0 |
 | Trees | 0 |
-| Binary Tree | 5 |
+| Binary Tree | 7 |
 | Binary Search Tree | 2 |
 | Heap | 0 |
 | Trie | 1 |
@@ -170,7 +170,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **70**
+**Total Problems Solved:** **72**
 
 ---
 
