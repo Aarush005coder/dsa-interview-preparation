@@ -1,0 +1,319 @@
+/*
+------------------------------------------------------------
+Problem    : Construct Binary Tree from Inorder and Postorder Traversal
+Platform   : LeetCode
+Topic      : Hash Map
+Difficulty : Medium
+
+Problem:
+Given the inorder and postorder traversal of the same binary
+tree, construct and return the original binary tree.
+
+Inorder traversal:
+
+    Left -> Root -> Right
+
+Postorder traversal:
+
+    Left -> Right -> Root
+
+Example:
+
+    inorder   = [9,3,15,20,7]
+    postorder  = [9,15,7,20,3]
+
+Constructed tree:
+
+            3
+           / \
+          9   20
+             /  \
+            15   7
+
+Approach:
+Use Recursion with a Hash Map.
+
+The key observation is:
+
+In postorder traversal, the last element is always the root
+of the current subtree.
+
+For:
+
+    postorder = [9,15,7,20,3]
+
+the last element is:
+
+    3
+
+So 3 is the root.
+
+Now find 3 in the inorder traversal:
+
+    inorder = [9,3,15,20,7]
+               ^
+               3
+
+Everything to the left of 3 belongs to the left subtree:
+
+    [9]
+
+Everything to the right of 3 belongs to the right subtree:
+
+    [15,20,7]
+
+Important:
+Unlike preorder + inorder construction, we process the
+RIGHT subtree first.
+
+Why?
+
+Because we are traversing postorder backwards.
+
+Normal postorder:
+
+    Left -> Right -> Root
+
+When processed from right to left:
+
+    Root -> Right -> Left
+
+Therefore, after selecting the root, we must build:
+
+    Right subtree first
+    Left subtree second
+
+Hash Map:
+To quickly find the root's position in inorder, store:
+
+    map[value] = index
+
+Example:
+
+    map[9]  = 0
+    map[3]  = 1
+    map[15] = 2
+    map[20] = 3
+    map[7]  = 4
+
+This gives O(1) average lookup time.
+
+Pointer:
+
+    postIndex
+
+Points to the current root in postorder.
+
+Initially:
+
+    postIndex = n - 1
+
+because the last element of postorder is the root.
+
+Recursive Process:
+
+1. If:
+
+       left > right
+
+   there are no nodes in this subtree, so return nullptr.
+
+2. Take:
+
+       postorder[postIndex]
+
+   as the root and decrement `postIndex`.
+
+3. Find the root position in inorder:
+
+       pos = map[rootValue]
+
+4. Build the RIGHT subtree using:
+
+       [pos + 1, right]
+
+5. Build the LEFT subtree using:
+
+       [left, pos - 1]
+
+6. Return the root.
+
+Example:
+
+    inorder  = [9,3,15,20,7]
+    postorder = [9,15,7,20,3]
+
+Start:
+
+    postIndex = 4
+
+Root:
+
+    postorder[4] = 3
+
+In inorder:
+
+    position of 3 = 1
+
+So:
+
+    Left subtree:
+        inorder[0 ... 0]
+        -> [9]
+
+    Right subtree:
+        inorder[2 ... 4]
+        -> [15,20,7]
+
+Next root from postorder backwards:
+
+    20
+
+So 20 becomes the root of the right subtree.
+
+For 20:
+
+    Left subtree  -> [15]
+    Right subtree -> [7]
+
+Final tree:
+
+            3
+           / \
+          9   20
+             /  \
+            15   7
+
+Why do we build the right subtree first?
+
+Suppose:
+
+    postorder = [9,15,7,20,3]
+
+Starting from the end:
+
+    3 -> 20 -> 7 -> 15 -> 9
+
+After taking 3, the next available root is 20, which belongs
+to the RIGHT subtree of 3.
+
+Therefore, if we build the left subtree first, the nodes would
+be assigned incorrectly.
+
+Algorithm:
+1. Store every inorder value and its index in a hash map.
+2. Set `postIndex = n - 1`.
+3. Recursively build the tree.
+4. Take the current postorder element as the root.
+5. Find its position in inorder.
+6. Build the right subtree first.
+7. Build the left subtree.
+8. Return the constructed root.
+
+Why does this work?
+
+Postorder tells us:
+
+    WHO is the root.
+
+Inorder tells us:
+
+    WHERE the root divides the left and right subtrees.
+
+Processing postorder from the end gives us the root first,
+followed by the right subtree and then the left subtree.
+
+Time Complexity : O(n)
+
+Reason:
+- Building the hash map takes O(n).
+- Every node is created exactly once.
+- Hash map lookup takes O(1) average time.
+
+Therefore:
+
+    O(n)
+
+Space Complexity : O(n)
+
+Reason:
+- Hash map stores n elements.
+- Recursion stack can use O(h) space.
+- In the worst case, h = n.
+
+Therefore the overall auxiliary space is:
+
+    O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int postIndex;
+
+    unordered_map<int, int> in;
+
+    TreeNode* build(
+        vector<int>& inorder,
+        vector<int>& postorder,
+        int left,
+        int right
+    ) {
+
+        // No nodes in this subtree
+        if (left > right) {
+            return nullptr;
+        }
+
+        // Last element of postorder is the root
+        int rootVal = postorder[postIndex--];
+
+        TreeNode* root = new TreeNode(rootVal);
+
+        // Find root position in inorder
+        int pos = in[rootVal];
+
+        // Build right subtree first
+        root->right = build(
+            inorder,
+            postorder,
+            pos + 1,
+            right
+        );
+
+        // Build left subtree
+        root->left = build(
+            inorder,
+            postorder,
+            left,
+            pos - 1
+        );
+
+        return root;
+    }
+
+    TreeNode* buildTree(
+        vector<int>& inorder,
+        vector<int>& postorder
+    ) {
+
+        int n = inorder.size();
+
+        // Start from the last element of postorder
+        postIndex = n - 1;
+
+        // Store inorder value -> index
+        for (int i = 0; i < n; i++) {
+            in[inorder[i]] = i;
+        }
+
+        return build(
+            inorder,
+            postorder,
+            0,
+            n - 1
+        );
+    }
+};
