@@ -43,7 +43,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 * Arrays
 * Strings
 * Matrix
-* Hashing
+* Hash Map
 * Sorting
 * Searching
 * Binary Search
@@ -79,7 +79,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Linked List | 9 |
 | Strings | 6 |
 | Matrix | 4 |
-| Hashing | 0 |
+| Hash Map | 2 |
 | Sorting | 1 |
 | Searching | 0 |
 | Binary Search | 4 |
@@ -118,7 +118,7 @@ dsa-interview-preparation
 ├── Arrays/
 ├── Strings/
 ├── Matrix/
-├── Hashing/
+├── Hash Map/
 ├── Sorting/
 ├── Searching/
 ├── Binary Search/
@@ -170,7 +170,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **72**
+**Total Problems Solved:** **74**
 
 ---
 
