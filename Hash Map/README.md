@@ -9,6 +9,7 @@ This folder contains **Hash Map** problems solved in **C++**. Each solution incl
 | # | Problem | Difficulty | Status |
 | - | ------- | ---------- | ------ |
 | 1 | Construct Binary Tree from Preorder and Inorder Traversal | Medium | ✅ |
+| 2 | Construct Binary Tree from Inorder and Postorder Traversal | Medium | ✅ |
 
 ---
 
@@ -36,4 +37,4 @@ This folder contains **Hash Map** problems solved in **C++**. Each solution incl
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
