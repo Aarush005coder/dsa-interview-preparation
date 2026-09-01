@@ -1,0 +1,283 @@
+/*
+------------------------------------------------------------
+Problem    : Construct Binary Tree from Preorder and Inorder Traversal
+Platform   : LeetCode
+Topic      : Hash Map
+Difficulty : Medium
+
+Problem:
+Given the preorder and inorder traversal of the same binary
+tree, construct and return the original binary tree.
+
+Preorder traversal:
+
+    Root -> Left -> Right
+
+Inorder traversal:
+
+    Left -> Root -> Right
+
+Example:
+
+    preorder = [3,9,20,15,7]
+    inorder  = [9,3,15,20,7]
+
+Constructed tree:
+
+            3
+           / \
+          9   20
+             /  \
+            15   7
+
+Approach:
+Use Recursion.
+
+The key observation is:
+
+In preorder traversal, the first element is always the root
+of the current subtree.
+
+For:
+
+    preorder = [3,9,20,15,7]
+
+the first element is:
+
+    3
+
+So 3 is the root.
+
+Now find 3 in the inorder traversal:
+
+    inorder = [9,3,15,20,7]
+               ^
+               3
+
+Everything to the left of 3 belongs to the left subtree:
+
+    [9]
+
+Everything to the right of 3 belongs to the right subtree:
+
+    [15,20,7]
+
+Then recursively construct both subtrees.
+
+Important Observation:
+We need to quickly find the position of the root in the
+inorder array.
+
+For this, use an unordered_map:
+
+    in[value] = index
+
+Example:
+
+    in[9]  = 0
+    in[3]  = 1
+    in[15] = 2
+    in[20] = 3
+    in[7]  = 4
+
+This allows us to find the root's position in O(1) average
+time instead of searching the inorder array every time.
+
+Pointers / Variables:
+
+    pre
+        Keeps track of the current index in preorder.
+
+    left
+        Starting index of the current subtree in inorder.
+
+    right
+        Ending index of the current subtree in inorder.
+
+Recursive Process:
+
+1. If:
+
+       left > right
+
+   there are no nodes in this subtree, so return nullptr.
+
+2. Take:
+
+       preorder[pre]
+
+   as the root value and increment `pre`.
+
+3. Create a new TreeNode.
+
+4. Find the root position in inorder:
+
+       mid = in[root_data]
+
+5. Everything before `mid` belongs to the left subtree.
+
+6. Everything after `mid` belongs to the right subtree.
+
+7. Recursively build both subtrees.
+
+Example:
+
+    preorder = [3,9,20,15,7]
+    inorder  = [9,3,15,20,7]
+
+First root:
+
+    preorder[0] = 3
+
+Inorder position:
+
+    index of 3 = 1
+
+So:
+
+    Left subtree:
+        inorder[0 ... 0]
+        -> [9]
+
+    Right subtree:
+        inorder[2 ... 4]
+        -> [15,20,7]
+
+Next preorder element is 9, so it becomes the left child.
+
+Then 20 becomes the root of the right subtree.
+
+For 20:
+
+    inorder = [15,20,7]
+
+Position of 20 = 3
+
+Therefore:
+
+    Left subtree  -> [15]
+    Right subtree -> [7]
+
+Final tree:
+
+            3
+           / \
+          9   20
+             /  \
+            15   7
+
+Algorithm:
+1. Store the index of every value in the inorder array.
+2. Start `pre = 0`.
+3. Recursively build the tree using inorder boundaries.
+4. The current preorder element is always the subtree root.
+5. Find its index in inorder.
+6. Recursively construct:
+       - Left subtree from [left, mid - 1]
+       - Right subtree from [mid + 1, right]
+7. Return the constructed root.
+
+Why does this work?
+
+Preorder tells us:
+
+    WHO is the root.
+
+Inorder tells us:
+
+    WHERE the root divides the left and right subtrees.
+
+Together, they uniquely determine the binary tree when all
+values are unique.
+
+Time Complexity : O(n)
+
+Reason:
+- Building the hash map takes O(n).
+- Every node is created and processed exactly once.
+- Hash map lookup takes O(1) average time.
+
+Therefore:
+
+    O(n)
+
+Space Complexity : O(n)
+
+Reason:
+- Hash map stores n elements.
+- Recursion stack can use O(h) space.
+- In the worst case, h = n.
+
+Therefore the overall auxiliary space is:
+
+    O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    unordered_map<int, int> in;
+
+    // Pointer to the current element in preorder
+    int pre = 0;
+
+    TreeNode* sol(
+        vector<int>& preorder,
+        vector<int>& inorder,
+        int left,
+        int right
+    ) {
+
+        // No elements in this subtree
+        if (left > right) {
+            return nullptr;
+        }
+
+        // First element of preorder is the root
+        int rootData = preorder[pre++];
+
+        TreeNode* root = new TreeNode(rootData);
+
+        // Find root position in inorder
+        int mid = in[rootData];
+
+        // Build left subtree
+        root->left = sol(
+            preorder,
+            inorder,
+            left,
+            mid - 1
+        );
+
+        // Build right subtree
+        root->right = sol(
+            preorder,
+            inorder,
+            mid + 1,
+            right
+        );
+
+        return root;
+    }
+
+    TreeNode* buildTree(
+        vector<int>& preorder,
+        vector<int>& inorder
+    ) {
+
+        // Store inorder value -> index
+        for (int i = 0; i < inorder.size(); i++) {
+            in[inorder[i]] = i;
+        }
+
+        // Build tree using the complete inorder range
+        return sol(
+            preorder,
+            inorder,
+            0,
+            inorder.size() - 1
+        );
+    }
+};
