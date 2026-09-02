@@ -10,6 +10,7 @@ This folder contains Binary Search Tree (BST) problems solved in C++. Each solut
 |---|---------|------------|--------| 
 | 1 | Unique Binary Search Trees | Medium | ✅ |
 | 2 | Recover Binary Search Tree | Medium | ✅ |
+| 3 | Convert Sorted Array to Binary Search Tree | Easy | ✅ |
 
 ---
 
@@ -35,4 +36,4 @@ This folder contains Binary Search Tree (BST) problems solved in C++. Each solut
 
 --- 
 
-**Problems Solved:** **2**
+**Problems Solved:** **3**
