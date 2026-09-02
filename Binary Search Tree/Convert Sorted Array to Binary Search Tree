@@ -1,0 +1,204 @@
+/*
+------------------------------------------------------------
+Problem    : Convert Sorted Array to Binary Search Tree
+Platform   : LeetCode
+Topic      : Binary Search Tree
+Difficulty : Easy
+
+Problem:
+Given a sorted array in ascending order, convert it into a
+height-balanced Binary Search Tree (BST).
+
+A height-balanced BST is a tree where the heights of the left
+and right subtrees of every node differ by at most 1.
+
+Example:
+
+    nums = [-10,-3,0,5,9]
+
+One valid BST:
+
+            0
+           / \
+         -3   9
+         /   /
+       -10   5
+
+Output:
+
+    [0,-3,9,-10,null,5]
+
+Another valid height-balanced BST may also be accepted.
+
+Approach:
+Use Recursion and choose the middle element as the root.
+
+Because the array is sorted, the middle element divides the
+array into two parts:
+
+    Left side  -> values smaller than root
+    Right side -> values greater than root
+
+Therefore, the middle element can be selected as the root of
+the BST.
+
+For every recursive call:
+
+1. Find the middle index.
+2. Create a node using nums[mid].
+3. Recursively build the left subtree from:
+       left ... mid - 1
+4. Recursively build the right subtree from:
+       mid + 1 ... right
+
+Why choose the middle element?
+
+Choosing the middle keeps the number of elements on the left
+and right as balanced as possible.
+
+Example:
+
+    nums = [-10,-3,0,5,9]
+
+Middle element:
+
+    0
+
+Left part:
+
+    [-10,-3]
+
+Right part:
+
+    [5,9]
+
+Then choose the middle element of each part:
+
+    Left subtree root  -> -3
+    Right subtree root -> 9
+
+This produces a height-balanced BST.
+
+Base Case:
+
+    if (left > right)
+
+there are no elements left in this range, so return nullptr.
+
+Example:
+
+    nums = [-10,-3,0,5,9]
+
+First call:
+
+    left = 0
+    right = 4
+
+    mid = 0 + (4 - 0) / 2
+        = 2
+
+    root = nums[2]
+         = 0
+
+Then:
+
+    Left subtree:
+        indices [0,1]
+
+    Right subtree:
+        indices [3,4]
+
+The process continues recursively until every element is
+placed into the tree.
+
+Why is the resulting tree a BST?
+
+Because the input array is sorted.
+
+For every chosen middle element:
+
+    all elements on the left < nums[mid]
+    all elements on the right > nums[mid]
+
+So the BST property is automatically satisfied.
+
+Why is the tree height-balanced?
+
+At every step, we divide the array approximately in half.
+
+Therefore, the sizes of the left and right subtrees remain
+as balanced as possible.
+
+Algorithm:
+1. If left > right, return nullptr.
+2. Find the middle index.
+3. Create a new tree node using nums[mid].
+4. Build the left subtree recursively.
+5. Build the right subtree recursively.
+6. Return the root.
+
+Time Complexity : O(n)
+
+Reason:
+Every element of the array is used exactly once to create
+one tree node.
+
+Space Complexity : O(log n)
+
+Reason:
+The recursion depth is the height of the balanced BST.
+
+Since the tree is height-balanced:
+
+    height = O(log n)
+
+The output tree itself requires O(n) space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    TreeNode* sortedArrayToBSTHelper(
+        const vector<int>& nums,
+        int left,
+        int right
+    ) {
+
+        // No elements available
+        if (left > right) {
+            return nullptr;
+        }
+
+        // Choose the middle element as root
+        int mid = left + (right - left) / 2;
+
+        TreeNode* root = new TreeNode(nums[mid]);
+
+        // Build left subtree
+        root->left = sortedArrayToBSTHelper(
+            nums,
+            left,
+            mid - 1
+        );
+
+        // Build right subtree
+        root->right = sortedArrayToBSTHelper(
+            nums,
+            mid + 1,
+            right
+        );
+
+        return root;
+    }
+
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+
+        return sortedArrayToBSTHelper(
+            nums,
+            0,
+            nums.size() - 1
+        );
+    }
+};
