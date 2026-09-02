@@ -15,6 +15,7 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 | 5 | Binary Tree Level Order Traversal | Medium | ✅ |
 | 6 | Binary Tree Zigzag Level Order Traversal | Medium | ✅ |
 | 7 | Maximum Depth of Binary Tree | Easy | ✅ |
+| 8 | Balanced Binary Tree | Easy | ✅ |
 
 ---
 
@@ -39,4 +40,4 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 
 ---
 
-**Problems Solved:** **7**
+**Problems Solved:** **8**
