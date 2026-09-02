@@ -1,0 +1,226 @@
+/*
+------------------------------------------------------------
+Problem    : Balanced Binary Tree
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Easy
+
+Problem:
+Given a binary tree, determine whether it is height-balanced.
+
+A binary tree is height-balanced if, for every node, the
+difference between the heights of its left and right subtrees
+is at most 1.
+
+In other words:
+
+    |height(left) - height(right)| <= 1
+
+for every node in the tree.
+
+Example:
+
+    root = [3,9,20,null,null,15,7]
+
+            3
+           / \
+          9   20
+             /  \
+            15   7
+
+Height of left subtree:
+
+    1
+
+Height of right subtree:
+
+    2
+
+Difference:
+
+    |1 - 2| = 1
+
+Therefore, the tree is balanced.
+
+Output:
+
+    true
+
+Approach:
+Use Bottom-Up Recursion (Postorder Traversal).
+
+For every node, we need two pieces of information:
+
+    1. Height of the subtree.
+    2. Whether the subtree is balanced.
+
+Instead of calculating these separately, we return:
+
+    height of subtree
+
+if the subtree is balanced.
+
+If the subtree is not balanced, return:
+
+    -1
+
+This allows us to detect an unbalanced subtree immediately
+and avoid unnecessary calculations.
+
+Recursive Process:
+
+For every node:
+
+1. Calculate the height of the left subtree.
+2. If the left subtree is unbalanced, return -1 immediately.
+3. Calculate the height of the right subtree.
+4. If the right subtree is unbalanced, return -1 immediately.
+5. Check the difference between the left and right heights.
+6. If the difference is greater than 1, return -1.
+7. Otherwise, return the height of the current subtree.
+
+Height Formula:
+
+    height = max(leftHeight, rightHeight) + 1
+
+Base Case:
+
+    if (root == nullptr)
+
+An empty tree has height:
+
+    0
+
+and is considered balanced.
+
+Why return -1?
+
+Suppose a subtree is already unbalanced.
+
+There is no need to calculate its exact height because the
+entire tree containing that subtree will also be unbalanced.
+
+So:
+
+    -1 = subtree is unbalanced
+
+Any value >= 0 represents the actual height of a balanced
+subtree.
+
+Example:
+
+            1
+           /
+          2
+         /
+        3
+       /
+      4
+
+For node 4:
+
+    height = 1
+
+For node 3:
+
+    left height  = 1
+    right height = 0
+
+    difference = 1
+
+    height = 2
+
+For node 2:
+
+    left height  = 2
+    right height = 0
+
+    difference = 2
+
+Therefore:
+
+    return -1
+
+The imbalance is propagated to the root.
+
+Why is this approach better than calculating height separately?
+
+A naive approach may repeatedly calculate subtree heights,
+which can result in O(n^2) time for a skewed tree.
+
+This bottom-up approach calculates the height of each node
+only once.
+
+Algorithm:
+1. Call `check(root)`.
+2. If the node is nullptr, return 0.
+3. Recursively calculate the left subtree height.
+4. If it returns -1, return -1.
+5. Recursively calculate the right subtree height.
+6. If it returns -1, return -1.
+7. If the height difference is greater than 1, return -1.
+8. Otherwise, return the current subtree height.
+9. `isBalanced()` returns true if `check(root)` is not -1.
+
+Time Complexity : O(n)
+
+Reason:
+Every node is visited exactly once.
+
+Space Complexity : O(h)
+
+Reason:
+The recursion stack depends on the height of the tree.
+
+For a balanced tree:
+
+    O(log n)
+
+For a skewed tree:
+
+    O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int check(TreeNode* root) {
+
+        // Empty tree has height 0
+        if (root == nullptr) {
+            return 0;
+        }
+
+        // Check left subtree
+        int leftHeight = check(root->left);
+
+        // Left subtree is unbalanced
+        if (leftHeight == -1) {
+            return -1;
+        }
+
+        // Check right subtree
+        int rightHeight = check(root->right);
+
+        // Right subtree is unbalanced
+        if (rightHeight == -1) {
+            return -1;
+        }
+
+        // Current node is unbalanced
+        if (abs(leftHeight - rightHeight) > 1) {
+            return -1;
+        }
+
+        // Return height of current subtree
+        return max(leftHeight, rightHeight) + 1;
+    }
+
+    bool isBalanced(TreeNode* root) {
+
+        // -1 means the tree is not balanced
+        return check(root) != -1;
+    }
+};
