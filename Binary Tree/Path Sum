@@ -1,0 +1,172 @@
+/*
+------------------------------------------------------------
+Problem    : Path Sum
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Easy
+
+Problem:
+Given the root of a binary tree and an integer targetSum,
+determine whether the tree has a root-to-leaf path such that
+the sum of all node values along that path is equal to
+targetSum.
+
+A valid path must:
+- Start at the root.
+- End at a leaf.
+- Contain only connected parent-child nodes.
+
+Example:
+
+    root = [5,4,8,11,null,13,4,7,2,null,null,null,1]
+    targetSum = 22
+
+The path:
+
+    5 -> 4 -> 11 -> 2
+
+has sum:
+
+    5 + 4 + 11 + 2 = 22
+
+Therefore:
+
+    Output = true
+
+Approach:
+Use Recursive Depth First Search (DFS).
+
+Instead of maintaining the current sum, we can keep track
+of the remaining sum required to reach targetSum.
+
+At every node:
+
+    remainingSum = targetSum - root->val
+
+Then recursively search the left and right subtrees using
+this remaining sum.
+
+Base Case 1:
+If the node is nullptr, there is no path.
+
+    return false;
+
+Base Case 2:
+If the current node is a leaf, check whether its value is
+exactly equal to the remaining target sum.
+
+    return root->val == targetSum;
+
+This is important because the problem requires a
+root-to-LEAF path.
+
+Example:
+
+            5
+           / \
+          4   8
+         /
+        11
+
+Suppose:
+
+    targetSum = 22
+
+At node 5:
+
+    remaining = 22 - 5
+              = 17
+
+At node 4:
+
+    remaining = 17 - 4
+              = 13
+
+At node 11:
+
+    remaining = 13 - 11
+              = 2
+
+If we reach leaf 2:
+
+    2 == remaining
+
+Therefore, a valid path exists.
+
+Why do we check the leaf separately?
+
+Consider:
+
+        5
+       /
+      4
+
+with:
+
+    targetSum = 5
+
+At node 5:
+
+    remaining = 0
+
+But node 5 is not a leaf, so this cannot be considered a
+valid path unless the path ends at a leaf.
+
+Therefore, we only return true when the current node is a
+leaf and its value matches the remaining sum.
+
+Algorithm:
+1. If root is nullptr, return false.
+2. If root is a leaf:
+      - Return whether root->val == targetSum.
+3. Subtract root->val from targetSum.
+4. Recursively check the left subtree.
+5. Recursively check the right subtree.
+6. Return true if either subtree contains a valid path.
+
+Time Complexity : O(n)
+
+Reason:
+In the worst case, every node is visited once.
+
+Space Complexity : O(h)
+
+Reason:
+The recursion stack depends on the height `h` of the tree.
+
+For a balanced tree:
+
+    O(log n)
+
+For a skewed tree:
+
+    O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    bool hasPathSum(TreeNode* root, int targetSum) {
+
+        // Empty tree has no root-to-leaf path
+        if (root == nullptr) {
+            return false;
+        }
+
+        // Check only at a leaf node
+        if (root->left == nullptr &&
+            root->right == nullptr) {
+
+            return root->val == targetSum;
+        }
+
+        // Remaining sum after taking current node
+        int remainingSum = targetSum - root->val;
+
+        // Check both subtrees
+        return hasPathSum(root->left, remainingSum) ||
+               hasPathSum(root->right, remainingSum);
+    }
+};
