@@ -1,0 +1,228 @@
+/*
+------------------------------------------------------------
+Problem    : Flatten Binary Tree to Linked List
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Medium
+
+Problem:
+Given the root of a binary tree, flatten the tree into a
+linked list using the same TreeNode structure.
+
+The resulting linked list must satisfy:
+
+- The `right` pointer points to the next node.
+- Every `left` pointer must be nullptr.
+- The nodes must appear in the same order as a preorder
+  traversal.
+
+Preorder traversal:
+
+    Root -> Left -> Right
+
+Example:
+
+    Input:
+
+            1
+           / \
+          2   5
+         / \   \
+        3   4   6
+
+Preorder traversal:
+
+    [1,2,3,4,5,6]
+
+Flattened tree:
+
+    1
+     \
+      2
+       \
+        3
+         \
+          4
+           \
+            5
+             \
+              6
+
+Output:
+
+    [1,null,2,null,3,null,4,null,5,null,6]
+
+Approach:
+Use Reverse Preorder Traversal.
+
+Normal preorder traversal is:
+
+    Left -> Root -> Right
+
+But to flatten the tree efficiently, we process nodes in
+reverse preorder:
+
+    Right -> Left -> Root
+
+We maintain a pointer:
+
+    prev
+
+which always points to the node that should come immediately
+after the current node in the flattened list.
+
+For every node:
+1. Flatten the right subtree.
+2. Flatten the left subtree.
+3. Connect the current node's right pointer to `prev`.
+4. Set the current node's left pointer to nullptr.
+5. Update `prev` to the current node.
+
+Why do we process the RIGHT subtree first?
+
+Consider:
+
+            1
+           / \
+          2   5
+
+Preorder should be:
+
+    1 -> 2 -> 5
+
+When processing in reverse preorder:
+
+    5 -> 2 -> 1
+
+So when we reach node 1, `prev` already points to the
+correct next node in the flattened list.
+
+Example:
+
+    Tree:
+
+            1
+           / \
+          2   5
+         / \
+        3   4
+
+Reverse preorder:
+
+    4 -> 3 -> 2 -> 5 -> 1
+
+Start with:
+
+    prev = nullptr
+
+Process 4:
+
+    4 -> nullptr
+
+    prev = 4
+
+Process 3:
+
+    3 -> 4
+
+    prev = 3
+
+Process 2:
+
+    2 -> 3
+
+    prev = 2
+
+Eventually:
+
+    1 -> 2 -> 3 -> 4 -> 5
+
+This gives exactly the preorder sequence.
+
+Important:
+We must store the correct subtree information before
+modifying pointers.
+
+The recursive order:
+
+    flatten(root->right);
+    flatten(root->left);
+
+ensures both subtrees are processed before reconnecting
+the current node.
+
+Alternative Approach:
+The problem can also be solved by:
+- Finding the rightmost node of the left subtree.
+- Moving the original right subtree after it.
+- Making the left subtree the right subtree.
+- Repeating this process.
+
+That approach can be done iteratively with O(1) extra space.
+
+The recursive reverse-preorder solution is simpler and uses
+O(h) recursion stack space.
+
+Algorithm:
+1. If root is nullptr, return.
+2. Recursively flatten the right subtree.
+3. Recursively flatten the left subtree.
+4. Set:
+       root->right = prev
+5. Set:
+       root->left = nullptr
+6. Update:
+       prev = root
+
+Time Complexity : O(n)
+
+Reason:
+Every node is visited exactly once.
+
+Space Complexity : O(h)
+
+Reason:
+The recursion stack depends on the height of the tree.
+
+For a balanced tree:
+
+    O(log n)
+
+For a skewed tree:
+
+    O(n)
+
+No extra linked-list nodes are created.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    // Points to the previously processed node
+    TreeNode* prev = nullptr;
+
+    void flatten(TreeNode* root) {
+
+        // Base case
+        if (root == nullptr) {
+            return;
+        }
+
+        // Process right subtree first
+        flatten(root->right);
+
+        // Process left subtree
+        flatten(root->left);
+
+        // Connect current node to the previously processed node
+        root->right = prev;
+
+        // Left pointer must always be nullptr
+        root->left = nullptr;
+
+        // Current node becomes the previous node
+        prev = root;
+    }
+};
