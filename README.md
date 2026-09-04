@@ -58,6 +58,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 * Queue
 * Trees
 * Binary Search Tree
+* Binary Tree
 * Heap
 * Trie
 * Graph
@@ -130,6 +131,8 @@ dsa-interview-preparation
 ├── Backtracking/
 ├── Linked List/
 ├── Stack/
+├── Binary Search Tree/
+├── Binary Tree/
 ├── Queue/
 ├── Trees/
 ├── BST/
