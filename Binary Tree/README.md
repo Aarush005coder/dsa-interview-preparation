@@ -19,6 +19,7 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 | 9 | Minimum Depth of Binary Tree | Easy | ✅ |
 | 10 | Path Sum | Easy | ✅ |
 | 11 | Flatten Binary Tree to Linked List | Medium | ✅ |
+| 12 | Populating Next Right Pointers in Each Node | Medium | ✅ |
 
 ---
 
@@ -43,4 +44,4 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 
 ---
 
-**Problems Solved:** **11**
+**Problems Solved:** **12**
