@@ -1,0 +1,220 @@
+/*
+------------------------------------------------------------
+Problem    : Populating Next Right Pointers in Each Node
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Medium
+
+Problem:
+Given a perfect binary tree, populate each `next` pointer so
+that it points to the next node on the same level.
+
+If a node is the last node of its level, its `next` pointer
+should be:
+
+    nullptr
+
+A perfect binary tree means:
+- Every internal node has exactly two children.
+- All leaf nodes are at the same level.
+
+Example:
+
+            1
+           / \
+          2   3
+         / \ / \
+        4  5 6  7
+
+After connecting next pointers:
+
+    Level 1:
+        1 -> nullptr
+
+    Level 2:
+        2 -> 3 -> nullptr
+
+    Level 3:
+        4 -> 5 -> 6 -> 7 -> nullptr
+
+Serialized output:
+
+    [1,#,2,3,#,4,5,6,7,#]
+
+Approach:
+Use Breadth First Search (BFS) with a Queue.
+
+BFS naturally processes nodes level by level.
+
+For each level:
+1. Store the number of nodes in that level.
+2. Maintain a pointer `prev` to the previously processed node.
+3. For every current node:
+      - Connect `prev->next` to the current node.
+      - Move `prev` to the current node.
+      - Add the current node's children to the queue.
+4. After processing the entire level, set the last node's
+   `next` pointer to nullptr.
+
+Example:
+
+    Tree:
+
+            1
+           / \
+          2   3
+         / \ / \
+        4  5 6  7
+
+Initially:
+
+    Queue = [1]
+
+Level 1:
+
+    prev = nullptr
+
+    Process 1
+
+    No previous node exists.
+
+    After the level:
+
+        1 -> nullptr
+
+    Queue = [2,3]
+
+Level 2:
+
+    Process 2:
+        prev = 2
+
+    Process 3:
+        2->next = 3
+
+    After the level:
+
+        2 -> 3 -> nullptr
+
+    Queue = [4,5,6,7]
+
+Level 3:
+
+    Process 4:
+        prev = 4
+
+    Process 5:
+        4->next = 5
+
+    Process 6:
+        5->next = 6
+
+    Process 7:
+        6->next = 7
+
+    After the level:
+
+        4 -> 5 -> 6 -> 7 -> nullptr
+
+Why do we use `levelSize`?
+
+The queue contains nodes from multiple levels as we process
+the children.
+
+By storing:
+
+    int levelSize = q.size();
+
+we ensure that exactly the nodes belonging to the current
+level are processed before moving to the next level.
+
+Important:
+Since this problem guarantees a perfect binary tree, every
+internal node has both left and right children.
+
+However, checking for nullptr before pushing children keeps
+the code safe and general.
+
+Algorithm:
+1. If root is nullptr, return nullptr.
+2. Push root into a queue.
+3. While the queue is not empty:
+      - Store the current level size.
+      - Set `prev = nullptr`.
+      - Process every node of the current level.
+      - Connect each node to the next node using `prev->next`.
+      - Push left and right children into the queue.
+      - Set the last node's `next` to nullptr.
+4. Return root.
+
+Time Complexity : O(n)
+
+Reason:
+Every node is processed exactly once.
+
+Space Complexity : O(n)
+
+Reason:
+The queue can contain O(n) nodes in the worst case.
+
+Note:
+Because the tree is perfect, this solution can be further
+optimized to O(1) extra space by connecting nodes level by
+level without using a queue.
+
+The BFS solution is easier to understand and implement.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    Node* connect(Node* root) {
+
+        // Empty tree
+        if (root == nullptr) {
+            return nullptr;
+        }
+
+        queue<Node*> q;
+
+        // Start BFS from the root
+        q.push(root);
+
+        while (!q.empty()) {
+
+            // Number of nodes in the current level
+            int levelSize = q.size();
+
+            Node* prev = nullptr;
+
+            for (int i = 0; i < levelSize; i++) {
+
+                Node* node = q.front();
+                q.pop();
+
+                // Connect previous node to current node
+                if (prev != nullptr) {
+                    prev->next = node;
+                }
+
+                prev = node;
+
+                // Add children for the next level
+                if (node->left != nullptr) {
+                    q.push(node->left);
+                }
+
+                if (node->right != nullptr) {
+                    q.push(node->right);
+                }
+            }
+
+            // Last node of every level points to nullptr
+            prev->next = nullptr;
+        }
+
+        return root;
+    }
+};
