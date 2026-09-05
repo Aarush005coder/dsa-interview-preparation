@@ -1,0 +1,305 @@
+/*
+------------------------------------------------------------
+Problem    : 4Sum
+Platform   : LeetCode
+Topic      : Arrays
+Difficulty : Medium
+
+Problem:
+Given an integer array `nums` and an integer `target`, find
+all unique quadruplets:
+
+    [nums[a], nums[b], nums[c], nums[d]]
+
+such that:
+
+    nums[a] + nums[b] + nums[c] + nums[d] == target
+
+All four indices must be distinct.
+
+The result must not contain duplicate quadruplets.
+
+Example:
+
+    nums = [1,0,-1,0,-2,2]
+    target = 0
+
+Output:
+
+    [
+        [-2,-1,1,2],
+        [-2,0,0,2],
+        [-1,0,0,1]
+    ]
+
+Approach:
+Use Sorting + Two Pointers.
+
+First, sort the array.
+
+After sorting, we fix the first two elements using two
+loops:
+
+    i -> first element
+    j -> second element
+
+Then use two pointers for the remaining two elements:
+
+    left  -> j + 1
+    right -> n - 1
+
+For every combination:
+
+    nums[i] + nums[j] + nums[left] + nums[right]
+
+we compare the sum with `target`.
+
+Cases:
+
+1. sum == target
+
+We found a valid quadruplet.
+
+Add it to the result.
+
+Then skip duplicate values for both `left` and `right`
+to avoid generating the same quadruplet again.
+
+Finally:
+
+    left++
+    right--
+
+2. sum < target
+
+We need a larger sum.
+
+Since the array is sorted:
+
+    left++
+
+3. sum > target
+
+We need a smaller sum.
+
+Therefore:
+
+    right--
+
+Duplicate Handling:
+Because the answer must contain only unique quadruplets,
+duplicates must be skipped at every level.
+
+For the first pointer:
+
+    if (i > 0 && nums[i] == nums[i-1])
+        continue;
+
+For the second pointer:
+
+    if (j > i + 1 && nums[j] == nums[j-1])
+        continue;
+
+After finding a valid quadruplet, also skip duplicate values
+for `left` and `right`.
+
+Example:
+
+    nums = [2,2,2,2,2]
+    target = 8
+
+Only one unique quadruplet exists:
+
+    [2,2,2,2]
+
+Without duplicate skipping, the same quadruplet would be
+added multiple times.
+
+Why use `long long`?
+
+The values in the array can be large enough that adding four
+integers can overflow a normal `int`.
+
+Therefore:
+
+    long long sum =
+        (long long)nums[i]
+        + nums[j]
+        + nums[left]
+        + nums[right];
+
+This makes the sum calculation safe.
+
+Example Walkthrough:
+
+    nums = [1,0,-1,0,-2,2]
+    target = 0
+
+After sorting:
+
+    [-2,-1,0,0,1,2]
+
+Choose:
+
+    i = 0 -> -2
+    j = 1 -> -1
+
+Now:
+
+    left = 2
+    right = 5
+
+Try:
+
+    -2 + -1 + 0 + 2 = -1
+
+Sum is too small:
+
+    left++
+
+Try again:
+
+    -2 + -1 + 0 + 1 = -2
+
+Still too small.
+
+Continue until a valid quadruplet is found.
+
+Eventually:
+
+    [-2,-1,1,2]
+
+is found.
+
+The same process finds:
+
+    [-2,0,0,2]
+    [-1,0,0,1]
+
+Algorithm:
+1. Sort the array.
+2. Fix the first element using `i`.
+3. Skip duplicate values for `i`.
+4. Fix the second element using `j`.
+5. Skip duplicate values for `j`.
+6. Use `left` and `right` to find the remaining two values.
+7. Compare the four-element sum with `target`.
+8. Skip duplicates after finding a valid quadruplet.
+9. Return the result.
+
+Time Complexity : O(n^3)
+
+Reason:
+- Sorting takes O(n log n).
+- The first pointer takes O(n).
+- The second pointer takes O(n).
+- The two-pointer scan takes O(n).
+
+Therefore:
+
+    O(n log n) + O(n^3)
+    = O(n^3)
+
+Space Complexity : O(1) auxiliary space
+
+Reason:
+Apart from the output, only a constant number of variables
+and pointers are used.
+
+The output itself can contain O(n^3) quadruplets in the
+worst case.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+
+        vector<vector<int>> ans;
+
+        int n = nums.size();
+
+        // Sorting allows us to use two pointers
+        // and easily skip duplicates.
+        sort(nums.begin(), nums.end());
+
+        // Fix the first element
+        for (int i = 0; i < n - 3; i++) {
+
+            // Skip duplicate first elements
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            // Fix the second element
+            for (int j = i + 1; j < n - 2; j++) {
+
+                // Skip duplicate second elements
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+
+                int left = j + 1;
+                int right = n - 1;
+
+                // Two-pointer search for the remaining
+                // two elements.
+                while (left < right) {
+
+                    long long sum =
+                        (long long)nums[i] +
+                        nums[j] +
+                        nums[left] +
+                        nums[right];
+
+                    if (sum == target) {
+
+                        // Valid quadruplet found
+                        ans.push_back({
+                            nums[i],
+                            nums[j],
+                            nums[left],
+                            nums[right]
+                        });
+
+                        // Skip duplicate left values
+                        while (
+                            left < right &&
+                            nums[left] == nums[left + 1]
+                        ) {
+                            left++;
+                        }
+
+                        // Skip duplicate right values
+                        while (
+                            left < right &&
+                            nums[right] == nums[right - 1]
+                        ) {
+                            right--;
+                        }
+
+                        // Move to the next pair
+                        left++;
+                        right--;
+                    }
+
+                    else if (sum < target) {
+
+                        // Need a larger sum
+                        left++;
+                    }
+
+                    else {
+
+                        // Need a smaller sum
+                        right--;
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
+};
