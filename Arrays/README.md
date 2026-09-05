@@ -15,6 +15,7 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 | 5 | Plus One | Easy | ✅ |
 | 6 | Sort Colors | Medium | ✅ |
 | 7 | Merge Sorted Array | Easy | ✅ |
+| 8 | Pascal's Triangle | Easy | ✅ |
 
 ---
 
@@ -39,4 +40,4 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **7**
+**Problems Solved:** **8**
