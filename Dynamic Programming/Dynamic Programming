@@ -1,0 +1,197 @@
+/*
+------------------------------------------------------------
+Problem    : Distinct Subsequences
+Platform   : LeetCode
+Topic      : Dynamic Programming
+Difficulty : Hard
+
+Problem:
+Given two strings `s` and `t`, return the number of distinct
+subsequences of `s` which are equal to `t`.
+
+A subsequence is formed by deleting zero or more characters
+from a string without changing the relative order of the
+remaining characters.
+
+Example:
+
+    s = "rabbbit"
+    t = "rabbit"
+
+Output:
+
+    3
+
+There are 3 different ways to select characters from `s`
+to form `t`.
+
+Approach:
+Use Dynamic Programming with 1D space optimization.
+
+Let:
+
+    dp[j] = number of ways to form t[j...]
+             using the portion of s processed so far.
+
+We process `s` from right to left.
+
+Initially, before processing any character of `s`:
+
+    dp[n] = 1
+
+where n = t.length().
+
+Why?
+
+An empty string `t[n...]` can always be formed in exactly
+one way: choose nothing.
+
+For every character `s[i]`, compare it with characters of `t`.
+
+If:
+
+    s[i] == t[j]
+
+then we have two choices:
+
+1. Use `s[i]` to match `t[j]`.
+   Number of ways:
+
+       dp[j + 1]
+
+2. Skip `s[i]`.
+   Number of ways:
+
+       dp[j]
+
+Therefore:
+
+    dp[j] = dp[j] + dp[j + 1]
+
+If:
+
+    s[i] != t[j]
+
+then `s[i]` cannot match `t[j]`, so we simply keep:
+
+    dp[j]
+
+Why do we process t from left to right here?
+
+Since the outer loop processes `s` from right to left,
+the 1D DP state `dp[j + 1]` still represents the state
+corresponding to the next character of `t`.
+
+Therefore, updating `dp[j]` from left to right is safe for
+this particular state definition.
+
+Example:
+
+    s = "babgbag"
+    t = "bag"
+
+We process `s` from right to left and update the number of
+ways to form the suffixes of `t`.
+
+Whenever the characters match, we add:
+
+    use current character
+    +
+    skip current character
+
+This counts every valid subsequence separately.
+
+Important:
+We use `unsigned long long` internally to provide more room
+during intermediate calculations, even though the problem
+guarantees that the final answer fits in a 32-bit signed
+integer.
+
+Example:
+
+    s = "rabbbit"
+    t = "rabbit"
+
+The repeated 'b' characters create multiple ways to select
+the required number of characters.
+
+The DP automatically counts all these different choices.
+
+Algorithm:
+1. Let m = s.length() and n = t.length().
+2. If m < n, return 0 because `t` cannot be formed.
+3. Create a 1D DP array of size n + 1.
+4. Set:
+       dp[n] = 1
+5. Process `s` from right to left.
+6. For every character of `t`:
+      - If characters match:
+            dp[j] = dp[j] + dp[j + 1]
+7. Return dp[0].
+
+Why does this work?
+
+For every character of `s`, we decide whether to:
+- Use it in the subsequence.
+- Skip it.
+
+If the characters match, both choices are possible.
+
+If they do not match, only skipping is possible.
+
+Thus, all distinct subsequences are counted without changing
+the order of characters.
+
+Time Complexity : O(m * n)
+
+Reason:
+For each character of `s`, we scan all characters of `t`.
+
+Space Complexity : O(n)
+
+Reason:
+Only one DP array of size `n + 1` is maintained.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int numDistinct(string s, string t) {
+
+        int m = s.length();
+        int n = t.length();
+
+        // t cannot be formed if it is longer than s
+        if (m < n) {
+            return 0;
+        }
+
+        // dp[j] = number of ways to form t[j...]
+        vector<unsigned long long> dp(n + 1, 0);
+
+        // Empty target can always be formed in one way
+        dp[n] = 1;
+
+        // Process s from right to left
+        for (int i = m - 1; i >= 0; i--) {
+
+            char sChar = s[i];
+
+            // Compare against characters of t
+            for (int j = 0; j < n; j++) {
+
+                if (sChar == t[j]) {
+
+                    // Two choices:
+                    // 1. Use s[i] to match t[j]
+                    // 2. Skip s[i]
+                    dp[j] = dp[j] + dp[j + 1];
+                }
+            }
+        }
+
+        return dp[0];
+    }
+};
