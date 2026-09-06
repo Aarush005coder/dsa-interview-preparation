@@ -1,0 +1,194 @@
+/*
+------------------------------------------------------------
+Problem    : Best Time to Buy and Sell Stock
+Platform   : LeetCode
+Topic      : Greedy
+Difficulty : Easy
+
+Problem:
+Given an array `prices` where `prices[i]` represents the
+stock price on the ith day, find the maximum profit that can
+be achieved by:
+
+    1. Buying the stock on one day.
+    2. Selling it on a different day in the future.
+
+Only one transaction is allowed.
+
+If no profitable transaction is possible, return 0.
+
+Example:
+
+    prices = [7,1,5,3,6,4]
+
+Buy at:
+
+    price = 1
+
+Sell at:
+
+    price = 6
+
+Profit:
+
+    6 - 1 = 5
+
+Output:
+
+    5
+
+Approach:
+Use a Greedy approach with one pass through the array.
+
+At every day, maintain:
+
+    mini
+        The minimum stock price seen so far.
+
+    profit
+        The maximum profit found so far.
+
+For the current price:
+
+    currentProfit = prices[i] - mini
+
+This represents the profit we would get if we bought at the
+lowest price seen so far and sold today.
+
+Then update:
+
+    profit = max(profit, currentProfit)
+
+Finally, update the minimum price:
+
+    mini = min(mini, prices[i])
+
+Why does this work?
+
+For every possible selling day, we only need the cheapest
+price that appeared before that day.
+
+Since buying must happen before selling, `mini` always contains
+a valid previous buying price.
+
+Example:
+
+    prices = [7,1,5,3,6,4]
+
+Initially:
+
+    mini = 7
+    profit = 0
+
+Price = 1:
+
+    profit = 1 - 7 = -6
+    mini = 1
+
+Price = 5:
+
+    profit = 5 - 1 = 4
+
+Price = 3:
+
+    profit = 3 - 1 = 2
+    maximum remains 4
+
+Price = 6:
+
+    profit = 6 - 1 = 5
+
+Price = 4:
+
+    profit = 4 - 1 = 3
+    maximum remains 5
+
+Final:
+
+    profit = 5
+
+Why don't we consider buying and selling on the same day?
+
+We initialize the loop from index 1, while `mini` is taken
+from index 0.
+
+Therefore, the current selling day is always after the
+buying day.
+
+What happens when prices are decreasing?
+
+Example:
+
+    prices = [7,6,4,3,1]
+
+There is no profitable transaction.
+
+Every calculated profit is negative:
+
+    6 - 7 = -1
+    4 - 6 = -2
+    3 - 4 = -1
+    1 - 3 = -2
+
+Since `profit` starts at 0:
+
+    maximum profit = 0
+
+Algorithm:
+1. Set `mini = prices[0]`.
+2. Set `profit = 0`.
+3. Traverse the array from index 1.
+4. Calculate the profit from selling on the current day.
+5. Update the maximum profit.
+6. Update the minimum price seen so far.
+7. Return the maximum profit.
+
+Why is this greedy?
+
+At every point, we make the best local choice:
+
+    Keep the smallest buying price seen so far.
+
+This is sufficient to produce the globally maximum profit.
+
+Time Complexity : O(n)
+
+Reason:
+The array is traversed exactly once.
+
+Space Complexity : O(1)
+
+Reason:
+Only two variables are used regardless of the input size.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int maxProfit(vector<int>& prices) {
+
+        int n = prices.size();
+
+        // Minimum price seen so far
+        int mini = prices[0];
+
+        // Maximum profit found so far
+        int profit = 0;
+
+        for (int i = 1; i < n; i++) {
+
+            // Profit if we sell today
+            int currentProfit = prices[i] - mini;
+
+            // Update maximum profit
+            profit = max(profit, currentProfit);
+
+            // Update minimum buying price
+            mini = min(mini, prices[i]);
+        }
+
+        return profit;
+    }
+};
