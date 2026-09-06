@@ -12,6 +12,7 @@ This folder contains **Dynamic Programming** problems solved in **C++** as part 
 | 2 | Climbing Stairs | Easy | ✅ |
 | 3 | Edit Distance | Medium | ✅ |
 | 4 | Interleaving String | Medium | ✅ |
+| 5 | Distinct Subsequences | Hard | ✅ |
 
 ---
 
@@ -96,4 +97,4 @@ When approaching a Dynamic Programming problem:
 
 ---
 
-**Problems Solved:** **4**
+**Problems Solved:** **5**
