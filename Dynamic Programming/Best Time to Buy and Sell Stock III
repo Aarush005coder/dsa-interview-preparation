@@ -1,0 +1,301 @@
+/*
+------------------------------------------------------------
+Problem    : Best Time to Buy and Sell Stock III
+Platform   : LeetCode
+Topic      : Dynamic Programming
+Difficulty : Hard
+
+Problem:
+Given an array `prices`, find the maximum profit that can be
+achieved using at most two transactions.
+
+A transaction consists of:
+
+    Buy -> Sell
+
+Important:
+- At most two transactions are allowed.
+- We must sell before buying again.
+- Multiple transactions cannot overlap.
+
+Example:
+
+    prices = [3,3,5,0,0,3,1,4]
+
+Optimal transactions:
+
+    Buy  at 0
+    Sell at 3
+    Profit = 3
+
+    Buy  at 1
+    Sell at 4
+    Profit = 3
+
+Total Profit:
+
+    3 + 3 = 6
+
+Output:
+
+    6
+
+Approach:
+Use Dynamic Programming with three states:
+
+    index
+        Current day.
+
+    buy
+        1 -> We are allowed to buy.
+        0 -> We are holding a stock and can sell.
+
+    limit
+        Number of transactions remaining.
+
+Define:
+
+    dp[index][buy][limit]
+
+as the maximum profit that can be obtained starting from
+`index` when:
+- `buy` tells whether we can buy or need to sell.
+- `limit` tells how many transactions are still available.
+
+State Transitions:
+
+1. When `buy == 1`
+
+We are not holding a stock, so we have two choices.
+
+Choice A: Buy
+
+    Buy = -prices[index] + next[0][limit]
+
+We spend money to buy the stock, so the price is subtracted.
+
+After buying:
+
+    buy = 0
+
+The transaction limit does NOT decrease yet.
+
+Why?
+
+A transaction is considered complete only after selling.
+
+Choice B: Skip
+
+    Skip = next[1][limit]
+
+Therefore:
+
+    curr[1][limit] =
+        max(Buy, Skip)
+
+2. When `buy == 0`
+
+We currently hold a stock and have two choices.
+
+Choice A: Sell
+
+    Sell = prices[index] + next[1][limit - 1]
+
+After selling:
+- We receive the current stock price.
+- One transaction is completed.
+- Therefore, `limit` decreases by 1.
+
+Choice B: Hold
+
+    Hold = next[0][limit]
+
+Therefore:
+
+    curr[0][limit] =
+        max(Sell, Hold)
+
+Why does the transaction count decrease on SELL?
+
+A transaction consists of:
+
+    Buy + Sell
+
+If we decrease the count while buying, we would be treating
+an unfinished transaction as completed.
+
+The transaction is completed only when the stock is sold.
+
+Base Case:
+
+When there are no days left:
+
+    index == n
+
+there is no more profit to make.
+
+So all DP values are initialized to 0.
+
+When:
+
+    limit == 0
+
+no transactions remain, so no further profit can be made.
+
+Example:
+
+    prices = [3,3,5,0,0,3,1,4]
+
+At the start:
+
+    buy = 1
+    limit = 2
+
+which means:
+
+    We can buy a stock
+    We can complete at most 2 transactions
+
+The DP explores all possible choices of:
+- Buy
+- Skip
+- Sell
+- Hold
+
+and stores only the best possible profit for every state.
+
+Space Optimization:
+A full 3D DP table is not necessary.
+
+Each state at the current index depends only on the states
+from the next index.
+
+Therefore, we use:
+
+    curr
+    next
+
+arrays.
+
+After processing one day:
+
+    next = curr
+
+This reduces the DP space significantly.
+
+Algorithm:
+1. Let n = prices.size().
+2. Create `curr` and `next` DP tables of size 2 x 3.
+3. Process days from right to left.
+4. For each `buy` state:
+      - Try buying/skipping or selling/holding.
+5. For each transaction limit from 1 to 2:
+      - Calculate the maximum profit.
+6. Move `curr` into `next`.
+7. Return:
+
+       next[1][2]
+
+because initially:
+- We are allowed to buy.
+- We have 2 transactions available.
+
+Time Complexity : O(n)
+
+Reason:
+There are:
+    n indices
+    2 buy states
+    2 transaction limits
+
+So:
+
+    O(n * 2 * 2)
+    = O(n)
+
+Space Complexity : O(1)
+
+Reason:
+Only two 2 x 3 DP tables are maintained.
+
+The space is constant regardless of n.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int solve(vector<int>& prices) {
+
+        int n = prices.size();
+
+        // curr[buy][limit]
+        // next[buy][limit]
+        vector<vector<int>> curr(
+            2,
+            vector<int>(3, 0)
+        );
+
+        vector<vector<int>> next(
+            2,
+            vector<int>(3, 0)
+        );
+
+        // Process prices from right to left
+        for (int index = n - 1; index >= 0; index--) {
+
+            for (int buy = 0; buy <= 1; buy++) {
+
+                for (int limit = 1; limit <= 2; limit++) {
+
+                    int profit = 0;
+
+                    if (buy) {
+
+                        // Option 1: Buy the stock
+                        int Buy =
+                            -prices[index] +
+                            next[0][limit];
+
+                        // Option 2: Skip buying
+                        int Skip =
+                            next[1][limit];
+
+                        profit = max(Buy, Skip);
+                    }
+
+                    else {
+
+                        // Option 1: Sell the stock
+                        // One transaction is completed.
+                        int Sell =
+                            prices[index] +
+                            next[1][limit - 1];
+
+                        // Option 2: Continue holding
+                        int Hold =
+                            next[0][limit];
+
+                        profit = max(Sell, Hold);
+                    }
+
+                    curr[buy][limit] = profit;
+                }
+            }
+
+            // Current row becomes the next row
+            next = curr;
+        }
+
+        // Initially:
+        // buy = 1
+        // limit = 2
+        return next[1][2];
+    }
+
+    int maxProfit(vector<int>& prices) {
+
+        return solve(prices);
+    }
+};
