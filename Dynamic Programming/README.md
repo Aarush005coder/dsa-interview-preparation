@@ -13,6 +13,7 @@ This folder contains **Dynamic Programming** problems solved in **C++** as part 
 | 3 | Edit Distance | Medium | ✅ |
 | 4 | Interleaving String | Medium | ✅ |
 | 5 | Distinct Subsequences | Hard | ✅ |
+| 6 | Best Time to Buy and Sell Stock III | Hard | ✅ |
 
 ---
 
@@ -97,4 +98,4 @@ When approaching a Dynamic Programming problem:
 
 ---
 
-**Problems Solved:** **5**
+**Problems Solved:** **6**
