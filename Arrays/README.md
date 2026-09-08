@@ -17,6 +17,7 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 | 7 | Merge Sorted Array | Easy | ✅ |
 | 8 | Pascal's Triangle | Easy | ✅ |
 | 9 | 4Sum | Medium | ✅ |
+| 10 | Longest Consecutive Sequence | Medium | ✅ |
 
 ---
 
@@ -41,4 +42,4 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **9**
+**Problems Solved:** **10**
