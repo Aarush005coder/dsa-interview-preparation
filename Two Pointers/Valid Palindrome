@@ -1,0 +1,208 @@
+/*
+------------------------------------------------------------
+Problem    : Valid Palindrome
+Platform   : LeetCode
+Topic      : Two Pointers
+Difficulty : Easy
+
+Problem:
+Given a string `s`, determine whether it is a palindrome after:
+
+    1. Converting all uppercase letters to lowercase.
+    2. Removing all non-alphanumeric characters.
+
+Alphanumeric characters include:
+- Lowercase letters: a-z
+- Uppercase letters: A-Z
+- Digits: 0-9
+
+A palindrome reads the same from left to right and right
+to left.
+
+Example:
+
+    s = "A man, a plan, a canal: Panama"
+
+After removing non-alphanumeric characters and converting
+to lowercase:
+
+    "amanaplanacanalpanama"
+
+This is a palindrome.
+
+Output:
+
+    true
+
+Approach:
+Use the Two Pointer technique.
+
+Maintain two pointers:
+
+    left  -> starts from the beginning
+    right -> starts from the end
+
+We move both pointers toward the center.
+
+For every step:
+
+1. Skip characters from the left that are not alphanumeric.
+2. Skip characters from the right that are not alphanumeric.
+3. Convert both characters to lowercase.
+4. Compare them.
+5. If they are different, return false.
+6. Otherwise, move both pointers inward.
+
+We do not need to create a separate cleaned string.
+
+This makes the solution more memory efficient.
+
+Example:
+
+    s = "A man, a plan, a canal: Panama"
+
+Pointers initially:
+
+    A ---------------- a
+    ^                    ^
+
+`A` and `a` are both alphanumeric and equal after
+lowercase conversion.
+
+Move inward.
+
+Eventually every corresponding pair matches.
+
+Therefore:
+
+    return true
+
+Ignoring Non-Alphanumeric Characters:
+
+For example:
+
+    "race a car"
+
+The relevant characters are:
+
+    "raceacar"
+
+Compare from both ends:
+
+    r == r
+    a == a
+    c == c
+    e != a
+
+Therefore:
+
+    return false
+
+Why use `isalnum()`?
+
+The C++ function:
+
+    isalnum(c)
+
+checks whether a character is an alphanumeric character.
+
+Why use `tolower()`?
+
+The C++ function:
+
+    tolower(c)
+
+converts an uppercase letter to lowercase so that:
+
+    'A' == 'a'
+
+can be treated as equal.
+
+Important:
+The problem ignores spaces, punctuation, and other
+non-alphanumeric characters.
+
+For example:
+
+    "A man, a plan..."
+
+The comma, spaces, and other punctuation are ignored.
+
+Edge Cases:
+
+1. Empty string:
+
+       s = ""
+
+   There are no characters to compare, so it is a palindrome.
+
+2. Only punctuation:
+
+       s = ".,!"
+
+   After removing non-alphanumeric characters, nothing
+   remains, so it is considered a palindrome.
+
+3. Single character:
+
+       s = "a"
+
+   A single character is always a palindrome.
+
+Algorithm:
+1. Initialize `left = 0` and `right = s.size() - 1`.
+2. While `left < right`:
+      - Skip non-alphanumeric characters from the left.
+      - Skip non-alphanumeric characters from the right.
+      - Compare lowercase versions of both characters.
+      - If they differ, return false.
+      - Move both pointers.
+3. Return true.
+
+Time Complexity : O(n)
+
+Reason:
+Each character is processed at most once as the two pointers
+move toward each other.
+
+Space Complexity : O(1)
+
+Reason:
+No additional string or array is created.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    bool isPalindrome(string s) {
+
+        int left = 0;
+        int right = s.size() - 1;
+
+        while (left < right) {
+
+            // Skip non-alphanumeric characters from left
+            while (left < right && !isalnum(s[left])) {
+                left++;
+            }
+
+            // Skip non-alphanumeric characters from right
+            while (left < right && !isalnum(s[right])) {
+                right--;
+            }
+
+            // Compare characters ignoring case
+            if (tolower(s[left]) != tolower(s[right])) {
+                return false;
+            }
+
+            // Move both pointers inward
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+};
