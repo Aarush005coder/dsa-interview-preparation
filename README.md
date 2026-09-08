@@ -80,7 +80,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Linked List | 9 |
 | Strings | 6 |
 | Matrix | 4 |
-| Hash Map | 2 |
+| Hash Map | 3 |
 | Sorting | 1 |
 | Searching | 0 |
 | Binary Search | 4 |
@@ -173,7 +173,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **90**
+**Total Problems Solved:** **91**
 
 ---
 
