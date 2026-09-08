@@ -1,0 +1,187 @@
+/*
+------------------------------------------------------------
+Problem    : Roman to Integer
+Platform   : LeetCode
+Topic      : Hash Map
+Difficulty : Easy
+
+Problem:
+Given a Roman numeral string, convert it into its integer value.
+
+Roman numerals use seven symbols:
+
+    I = 1
+    V = 5
+    X = 10
+    L = 50
+    C = 100
+    D = 500
+    M = 1000
+
+Normally, Roman numerals are written from largest to smallest
+value from left to right.
+
+However, there are special subtraction cases:
+
+    IV = 4
+    IX = 9
+    XL = 40
+    XC = 90
+    CD = 400
+    CM = 900
+
+Example:
+
+    s = "III"
+
+    I + I + I
+    = 1 + 1 + 1
+    = 3
+
+Output:
+
+    3
+
+Example:
+
+    s = "LVIII"
+
+    L + V + I + I + I
+    = 50 + 5 + 1 + 1 + 1
+    = 58
+
+Approach:
+Use a Hash Map to store the value of every Roman symbol.
+
+Traverse the string from left to right.
+
+For every character, compare its value with the value of
+the next character.
+
+There are two cases:
+
+1. Current value < next value
+
+    In this case, the current value must be subtracted.
+
+    Example:
+
+        IV
+
+        I = 1
+        V = 5
+
+        1 < 5
+
+    Therefore:
+
+        -1 + 5 = 4
+
+2. Current value >= next value
+
+    Add the current value normally.
+
+    Example:
+
+        VI
+
+        V = 5
+        I = 1
+
+        5 >= 1
+
+    Therefore:
+
+        5 + 1 = 6
+
+Example:
+
+    s = "MCMIV"
+
+Process:
+
+    M = 1000
+    C = 100, next is M = 1000
+        100 < 1000 -> subtract 100
+
+    M = 1000
+    I = 1, next is V = 5
+        1 < 5 -> subtract 1
+
+    V = 5
+
+Total:
+
+    1000 - 100 + 1000 - 1 + 5
+    = 1904
+
+Why does this work?
+
+The only time a Roman numeral value needs to be subtracted
+is when it appears immediately before a larger value.
+
+Therefore, comparing the current symbol with the next symbol
+is sufficient to determine whether to add or subtract it.
+
+Important:
+The Roman numeral mapping should contain exactly one entry
+for each symbol:
+
+    I, V, X, L, C, D, M
+
+Algorithm:
+1. Create a mapping of Roman symbols to integer values.
+2. Traverse the string.
+3. If the current value is smaller than the next value,
+   subtract it.
+4. Otherwise, add it.
+5. Return the final integer.
+
+Time Complexity : O(n)
+
+Reason:
+The string is traversed exactly once.
+
+Space Complexity : O(1)
+
+Reason:
+There are only seven Roman symbols in the mapping, so the
+extra space is constant.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int romanToInt(string s) {
+
+        unordered_map<char, int> value = {
+            {'I', 1},
+            {'V', 5},
+            {'X', 10},
+            {'L', 50},
+            {'C', 100},
+            {'D', 500},
+            {'M', 1000}
+        };
+
+        int ans = 0;
+        int n = s.size();
+
+        for (int i = 0; i < n; i++) {
+
+            // If current symbol is smaller than the next symbol,
+            // subtract the current value.
+            if (i + 1 < n && value[s[i]] < value[s[i + 1]]) {
+                ans -= value[s[i]];
+            }
+            else {
+                // Otherwise, add the current value.
+                ans += value[s[i]];
+            }
+        }
+
+        return ans;
+    }
+};
