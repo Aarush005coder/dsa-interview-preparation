@@ -1,0 +1,204 @@
+/*
+------------------------------------------------------------
+Problem    : Longest Consecutive Sequence
+Platform   : LeetCode
+Topic      : Arrays
+Difficulty : Medium
+
+Problem:
+Given an unsorted array of integers `nums`, find the length
+of the longest sequence of consecutive integers.
+
+The sequence does not need to appear next to each other in
+the original array.
+
+The solution must run in O(n) time.
+
+Example:
+
+    nums = [100,4,200,1,3,2]
+
+The longest consecutive sequence is:
+
+    [1,2,3,4]
+
+Therefore:
+
+    Output = 4
+
+Approach:
+Use an Unordered Set.
+
+Insert every number into an `unordered_set`.
+
+This gives average O(1) lookup time.
+
+For every unique number `num`, check whether:
+
+    num - 1
+
+exists in the set.
+
+If `num - 1` exists, then `num` is not the beginning of a
+consecutive sequence, so we skip it.
+
+If `num - 1` does not exist, then `num` is the starting point
+of a new consecutive sequence.
+
+For example:
+
+    nums = [100,4,200,1,3,2]
+
+Set:
+
+    {100,4,200,1,3,2}
+
+For `1`:
+
+    0 does not exist
+
+So `1` is the beginning of a sequence.
+
+Now keep checking:
+
+    2 -> exists
+    3 -> exists
+    4 -> exists
+    5 -> does not exist
+
+Therefore:
+
+    sequence = [1,2,3,4]
+    length = 4
+
+For `3`:
+
+    2 exists
+
+So `3` is not the beginning of a sequence and we skip it.
+
+For `4`:
+
+    3 exists
+
+So we skip it as well.
+
+This prevents repeatedly scanning the same sequence.
+
+Why does this run in O(n)?
+
+Each number is inserted into the set once.
+
+During the traversal, we only start expanding a sequence
+from numbers that do not have a predecessor.
+
+Therefore, each consecutive sequence is scanned only once.
+
+Example:
+
+    [1,2,3,4,5]
+
+Only `1` starts a sequence:
+
+    1 -> 2 -> 3 -> 4 -> 5
+
+We do not start separate scans from 2, 3, 4, or 5.
+
+Handling Duplicates:
+
+    nums = [1,2,2,3]
+
+An `unordered_set` automatically removes duplicates:
+
+    {1,2,3}
+
+Therefore, the answer is:
+
+    3
+
+Algorithm:
+1. If the array is empty, return 0.
+2. Insert all elements into an unordered_set.
+3. Initialize `longest = 0`.
+4. For every unique number:
+      - If `num - 1` does not exist:
+          - Start a new sequence.
+          - Keep checking `num + 1`.
+          - Count its length.
+      - Update the maximum length.
+5. Return `longest`.
+
+Why use `unordered_set` instead of sorting?
+
+Sorting would give:
+
+    O(n log n)
+
+But the problem requires:
+
+    O(n)
+
+An unordered set provides average O(1) lookup, allowing the
+consecutive sequence to be found in linear time.
+
+Important:
+`unordered_set` provides average O(1) lookup, but its worst-case
+lookup complexity can be O(n) due to hash collisions.
+
+Time Complexity : O(n) average
+
+Reason:
+- Building the set takes O(n) average time.
+- Each number is checked a constant number of times across
+  the sequence expansions.
+
+Overall:
+
+    O(n) average
+
+Space Complexity : O(n)
+
+Reason:
+The unordered set stores all unique elements.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int longestConsecutive(vector<int>& nums) {
+
+        // Empty array
+        if (nums.empty()) {
+            return 0;
+        }
+
+        // Store all unique numbers
+        unordered_set<int> us(nums.begin(), nums.end());
+
+        int longest = 0;
+
+        // Iterate through unique numbers
+        for (int num : us) {
+
+            // Start only from the beginning of a sequence
+            if (us.find(num - 1) == us.end()) {
+
+                int current = num;
+                int length = 1;
+
+                // Extend the consecutive sequence
+                while (us.find(current + 1) != us.end()) {
+                    current++;
+                    length++;
+                }
+
+                // Update longest sequence
+                longest = max(longest, length);
+            }
+        }
+
+        return longest;
+    }
+};
