@@ -1,0 +1,215 @@
+/*
+------------------------------------------------------------
+Problem    : Sum Root to Leaf Numbers
+Platform   : LeetCode
+Topic      : Binary Tree
+Difficulty : Medium
+
+Problem:
+Given the root of a binary tree containing digits from 0 to 9,
+each root-to-leaf path represents a number.
+
+The digits along the path are combined to form the number.
+
+For example:
+
+    1 -> 2 -> 3
+
+represents:
+
+    123
+
+Return the sum of all root-to-leaf numbers.
+
+Example:
+
+    root = [1,2,3]
+
+            1
+           / \
+          2   3
+
+Root-to-leaf paths:
+
+    1 -> 2 = 12
+    1 -> 3 = 13
+
+Total:
+
+    12 + 13 = 25
+
+Output:
+
+    25
+
+Approach:
+Use Depth First Search (DFS) with Recursion.
+
+While traversing from root to leaf, maintain the number formed
+by the current path.
+
+Suppose the current number is:
+
+    curr
+
+and the current node contains digit:
+
+    root->val
+
+To append the digit to the number:
+
+    curr = curr * 10 + root->val
+
+Example:
+
+    Path:
+
+        1 -> 2 -> 3
+
+    Start:
+
+        curr = 0
+
+    At 1:
+
+        curr = 0 * 10 + 1
+             = 1
+
+    At 2:
+
+        curr = 1 * 10 + 2
+             = 12
+
+    At 3:
+
+        curr = 12 * 10 + 3
+             = 123
+
+When we reach a leaf node, `curr` is the complete number
+represented by that root-to-leaf path.
+
+Therefore, return `curr`.
+
+For non-leaf nodes, recursively calculate the sum from both
+subtrees:
+
+    leftSum  = DFS(root->left, curr)
+    rightSum = DFS(root->right, curr)
+
+Then:
+
+    total = leftSum + rightSum
+
+Base Cases:
+
+1. If the node is nullptr:
+
+       return 0
+
+   because there is no root-to-leaf path.
+
+2. If the node is a leaf:
+
+       return curr
+
+   because the complete number has been formed.
+
+Example:
+
+    root = [1,2,3]
+
+At root 1:
+
+    curr = 1
+
+Left subtree:
+
+    curr = 12
+    leaf -> return 12
+
+Right subtree:
+
+    curr = 13
+    leaf -> return 13
+
+Total:
+
+    12 + 13 = 25
+
+Why multiply by 10?
+
+Multiplying by 10 shifts the existing digits one position
+to the left.
+
+For example:
+
+    12 * 10 = 120
+
+Then adding 3 gives:
+
+    120 + 3 = 123
+
+This is exactly how we construct the number represented by
+the path.
+
+Algorithm:
+1. Start DFS with current number = 0.
+2. At each node:
+      - Update the current number using:
+            curr = curr * 10 + node->val
+3. If the node is a leaf, return the current number.
+4. Otherwise, recursively calculate the sums of the left
+   and right subtrees.
+5. Return their sum.
+
+Time Complexity : O(n)
+
+Reason:
+Every node in the binary tree is visited exactly once.
+
+Space Complexity : O(h)
+
+Reason:
+The recursion stack depends on the height `h` of the tree.
+
+For a balanced tree:
+
+    O(log n)
+
+For a skewed tree:
+
+    O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int sumNumbers(TreeNode* root) {
+
+        return DFS(root, 0);
+    }
+
+    int DFS(TreeNode* root, int curr) {
+
+        // Empty subtree contributes nothing
+        if (root == nullptr) {
+            return 0;
+        }
+
+        // Add current digit to the number
+        curr = curr * 10 + root->val;
+
+        // Leaf node -> complete root-to-leaf number
+        if (root->left == nullptr &&
+            root->right == nullptr) {
+
+            return curr;
+        }
+
+        // Sum numbers from both subtrees
+        return DFS(root->left, curr) +
+               DFS(root->right, curr);
+    }
+};
