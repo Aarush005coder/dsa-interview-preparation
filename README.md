@@ -78,7 +78,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 |--------|-------:|
 | Arrays | 10 |
 | Linked List | 9 |
-| Strings | 6 |
+| Strings | 7 |
 | Matrix | 4 |
 | Hash Map | 3 |
 | Sorting | 1 |
@@ -93,7 +93,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Stack | 2 |
 | Queue | 0 |
 | Trees | 0 |
-| Binary Tree | 14 |
+| Binary Tree | 15 |
 | Binary Search Tree | 3 |
 | Heap | 0 |
 | Trie | 1 |
@@ -173,7 +173,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **91**
+**Total Problems Solved:** **93**
 
 ---
 
