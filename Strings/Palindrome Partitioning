@@ -1,0 +1,291 @@
+/*
+------------------------------------------------------------
+Problem    : Palindrome Partitioning
+Platform   : LeetCode
+Topic      : Strings
+Difficulty : Medium
+
+Problem:
+Given a string `s`, partition it into substrings such that
+every substring in the partition is a palindrome.
+
+Return all possible palindrome partitionings.
+
+Example:
+
+    s = "aab"
+
+Possible partitions:
+
+    ["a", "a", "b"]
+    ["aa", "b"]
+
+Both partitions contain only palindromic substrings.
+
+Output:
+
+    [["a","a","b"],["aa","b"]]
+
+Approach:
+Use Backtracking.
+
+At every position `start`, try every possible substring
+starting from `start`.
+
+For each substring:
+
+    s[start ... i]
+
+check whether it is a palindrome.
+
+If it is:
+1. Add the substring to the current path.
+2. Recursively partition the remaining part of the string.
+3. Remove the substring from the path to try another partition.
+
+Backtracking Pattern:
+
+    Choose
+       ↓
+    Recursive Call
+       ↓
+    Undo Choice
+
+Palindrome Check:
+Use two pointers:
+
+    left  -> beginning of the substring
+    right -> end of the substring
+
+Move both pointers toward the center.
+
+If at any point:
+
+    s[left] != s[right]
+
+the substring is not a palindrome.
+
+Otherwise, continue until:
+
+    left >= right
+
+Example:
+
+    s = "aab"
+
+Start at index 0.
+
+Try:
+
+    "a"
+
+It is a palindrome.
+
+Path:
+
+    ["a"]
+
+Now start from index 1.
+
+Try:
+
+    "a"
+
+It is a palindrome.
+
+Path:
+
+    ["a","a"]
+
+Now start from index 2.
+
+Try:
+
+    "b"
+
+It is a palindrome.
+
+Path:
+
+    ["a","a","b"]
+
+We reached the end of the string, so store this partition.
+
+Backtrack:
+
+    ["a","a"]
+
+Remove "a":
+
+    ["a"]
+
+Now try from index 1:
+
+    "ab"
+
+"ab" is not a palindrome, so skip it.
+
+Backtrack again.
+
+From index 0, try:
+
+    "aa"
+
+This is a palindrome.
+
+Path:
+
+    ["aa"]
+
+Remaining substring:
+
+    "b"
+
+Path becomes:
+
+    ["aa","b"]
+
+Store it.
+
+Final result:
+
+    [["a","a","b"],["aa","b"]]
+
+Why do we check every possible substring?
+
+At each position, the next partition can end at any later
+position.
+
+For example, for:
+
+    "aab"
+
+starting at index 0, possible choices are:
+
+    "a"
+    "aa"
+    "aab"
+
+Only palindromic choices are allowed.
+
+Pruning:
+The palindrome check is performed before making a recursive
+call.
+
+Therefore, non-palindromic substrings are immediately
+discarded and never explored further.
+
+Base Case:
+
+    if (start == s.length())
+
+The complete string has been partitioned.
+
+Therefore, store the current path in the result.
+
+Algorithm:
+1. Start backtracking from index 0.
+2. Try every possible substring starting at `start`.
+3. Check whether the substring is a palindrome.
+4. If it is:
+      - Add it to `path`.
+      - Recursively process the remaining string.
+      - Remove it from `path`.
+5. When the entire string is consumed, store the partition.
+6. Return all valid partitions.
+
+Time Complexity : O(n * 2^n)
+
+Reason:
+There can be up to O(2^n) possible partitions of a string.
+Palindrome checking can take up to O(n) in the worst case.
+
+Therefore, the overall complexity is commonly expressed as:
+
+    O(n * 2^n)
+
+The actual complexity depends on how many partitions and
+palindrome checks are generated.
+
+Space Complexity : O(n)
+
+Auxiliary space is O(n) for:
+- The recursion stack.
+- The current partition path.
+
+The output itself can require O(n * 2^n) space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    vector<vector<string>> result;
+
+    // Check whether s[left...right] is a palindrome
+    bool isPalindrome(
+        string& s,
+        int left,
+        int right
+    ) {
+
+        while (left < right) {
+
+            if (s[left] != s[right]) {
+                return false;
+            }
+
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+
+    void backtrack(
+        string& s,
+        int start,
+        vector<string>& path
+    ) {
+
+        // Entire string has been partitioned
+        if (start == s.length()) {
+
+            result.push_back(path);
+
+            return;
+        }
+
+        // Try every possible substring
+        for (int i = start; i < s.length(); i++) {
+
+            // Only choose palindromic substrings
+            if (!isPalindrome(s, start, i)) {
+                continue;
+            }
+
+            // Choose
+            path.push_back(
+                s.substr(start, i - start + 1)
+            );
+
+            // Explore
+            backtrack(s, i + 1, path);
+
+            // Undo choice
+            path.pop_back();
+        }
+    }
+
+public:
+
+    vector<vector<string>> partition(string s) {
+
+        vector<string> path;
+
+        backtrack(s, 0, path);
+
+        return result;
+    }
+};
