@@ -1,0 +1,152 @@
+/*
+------------------------------------------------------------
+Problem    : Single Number
+Platform   : LeetCode
+Topic      : Bit Manipulation
+Difficulty : Easy
+
+Problem:
+Given a non-empty array of integers where every element appears
+exactly twice except for one element, find the element that
+appears only once.
+
+The solution must satisfy:
+
+- O(n) runtime.
+- O(1) extra space.
+
+Example:
+
+    nums = [2,2,1]
+
+Output:
+
+    1
+
+Approach:
+Use the XOR (^) bitwise operator.
+
+The XOR operator has three important properties:
+
+    1. x ^ 0 = x
+
+    2. x ^ x = 0
+
+    3. XOR is commutative and associative:
+
+       a ^ b ^ c = c ^ a ^ b
+
+This means the order of XOR operations does not matter.
+
+Since every number appears twice except one number, the pairs
+will cancel each other:
+
+    2 ^ 2 = 0
+
+and:
+
+    0 ^ 1 = 1
+
+Therefore:
+
+    2 ^ 2 ^ 1
+    = 0 ^ 1
+    = 1
+
+Example:
+
+    nums = [4,1,2,1,2]
+
+Apply XOR:
+
+    ans = 0
+
+    0 ^ 4 = 4
+    4 ^ 1 = 5
+    5 ^ 2 = 7
+    7 ^ 1 = 6
+    6 ^ 2 = 4
+
+Final answer:
+
+    4
+
+All duplicate elements cancel out, leaving only the single
+number.
+
+Why does XOR work?
+
+Suppose:
+
+    nums = [a,b,c,b,a]
+
+Applying XOR:
+
+    0 ^ a ^ b ^ c ^ b ^ a
+
+Because XOR is commutative and associative, we can rearrange:
+
+    (a ^ a) ^ (b ^ b) ^ c
+
+Using:
+
+    x ^ x = 0
+
+we get:
+
+    0 ^ 0 ^ c
+
+Using:
+
+    0 ^ x = x
+
+the result is:
+
+    c
+
+Therefore, the unique element remains.
+
+Why not use a Hash Map?
+
+A frequency map could count how many times each number occurs,
+but that would require O(n) extra space.
+
+The XOR approach uses only one variable, giving:
+
+    O(1) extra space
+
+Algorithm:
+1. Initialize `ans = 0`.
+2. Traverse every element in the array.
+3. XOR the current element with `ans`.
+4. After processing all elements, return `ans`.
+
+Time Complexity : O(n)
+
+Reason:
+Every element is visited exactly once.
+
+Space Complexity : O(1)
+
+Reason:
+Only one integer variable is used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int singleNumber(vector<int>& nums) {
+
+        int ans = 0;
+
+        for (int num : nums) {
+
+            // Duplicate numbers cancel each other
+            ans = ans ^ num;
+        }
+
+        return ans;
+    }
+};
