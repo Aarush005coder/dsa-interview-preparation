@@ -10,6 +10,7 @@ This folder contains **Bit Manipulation** problems solved in **C++**. Each solut
 |---|---------|------------|--------|
 | 1 | Divide Two Integers | Medium | ✅ |
 | 2 | Gray Code | Medium | ✅ |
+| 3 | Single Number | Easy | ✅ |
 
 ---
 
