@@ -35,4 +35,4 @@ This folder contains **Bit Manipulation** problems solved in **C++**. Each solut
 
 ---
 
-**Problems Solved:** **2**
+**Problems Solved:** **3**
