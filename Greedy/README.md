@@ -11,6 +11,7 @@ This folder contains **Greedy** problems solved in **C++** as part of my DSA pre
 | 1 | Integer to Roman | Medium | ✅ |
 | 2 | Best Time to Buy and Sell Stock | Easy | ✅ |
 | 3 | Best Time to Buy and Sell Stock II | Medium | ✅ |
+| 4 | Candy | Hard | ✅ |
 
 ---
 
@@ -35,4 +36,4 @@ This folder contains **Greedy** problems solved in **C++** as part of my DSA pre
 
 ---
 
-**Problems Solved:** **3**
+**Problems Solved:** **4**
