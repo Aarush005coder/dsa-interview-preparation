@@ -11,6 +11,7 @@ This folder contains **Bit Manipulation** problems solved in **C++**. Each solut
 | 1 | Divide Two Integers | Medium | ✅ |
 | 2 | Gray Code | Medium | ✅ |
 | 3 | Single Number | Easy | ✅ |
+| 4 | Single Number II | Medium | ✅ |
 
 ---
 
@@ -35,4 +36,4 @@ This folder contains **Bit Manipulation** problems solved in **C++**. Each solut
 
 ---
 
-**Problems Solved:** **3**
+**Problems Solved:** **4**
