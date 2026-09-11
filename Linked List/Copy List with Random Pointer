@@ -1,0 +1,311 @@
+/*
+------------------------------------------------------------
+Problem    : Copy List with Random Pointer
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Medium
+
+Problem:
+Given a linked list where every node contains:
+
+    val
+    next
+    random
+
+The `random` pointer can point to:
+- Any node in the list.
+- nullptr.
+
+Create a deep copy of the entire linked list.
+
+A deep copy means:
+- Every copied node must be a completely new node.
+- `next` pointers must point only to copied nodes.
+- `random` pointers must point only to copied nodes.
+- No pointer in the copied list should point to an original node.
+
+Example:
+
+    Original:
+
+        7 -> 13 -> 11 -> 10 -> 1
+             |          |
+             ↓          ↓
+             7          11
+
+The copied list must have the exact same structure, but every
+node must be newly created.
+
+Approach:
+Use the Interleaving / Weaving technique.
+
+Instead of using an extra hash map, insert each copied node
+directly after its corresponding original node.
+
+For example:
+
+    Original:
+
+    A -> B -> C
+
+After inserting copies:
+
+    A -> A' -> B -> B' -> C -> C'
+
+Here:
+
+    A' = copy of A
+    B' = copy of B
+    C' = copy of C
+
+This arrangement makes it very easy to set the random
+pointers.
+
+------------------------------------------------------------
+Step 1: Create and Insert Copies
+------------------------------------------------------------
+
+For every original node:
+
+    A
+
+create:
+
+    A'
+
+and insert it immediately after A:
+
+    A -> A' -> ...
+
+Example:
+
+    Original:
+
+        7 -> 13 -> 11
+
+    After insertion:
+
+        7 -> 7' -> 13 -> 13' -> 11 -> 11'
+
+The copy of any original node can now be found using:
+
+    original->next
+
+------------------------------------------------------------
+Step 2: Set Random Pointers
+------------------------------------------------------------
+
+Suppose:
+
+    A.random -> C
+
+Because each original node is followed by its copy:
+
+    A -> A' -> ...
+    C -> C' -> ...
+
+Therefore:
+
+    A'.random = A.random->next
+
+So for every original node:
+
+    if (temp->random)
+
+set:
+
+    temp->next->random = temp->random->next
+
+Example:
+
+    A.random -> C
+
+Then:
+
+    A'.random -> C'
+
+This works without a Hash Map.
+
+------------------------------------------------------------
+Step 3: Separate Original and Copied Lists
+------------------------------------------------------------
+
+After random pointers are assigned:
+
+    A -> A' -> B -> B' -> C -> C'
+
+We must restore the original list:
+
+    A -> B -> C
+
+and create the copied list:
+
+    A' -> B' -> C'
+
+For every original node:
+
+    copy = temp->next
+
+Then:
+
+    temp->next = copy->next
+
+This restores the original list.
+
+Now connect the copied nodes:
+
+    copy2->next = copy
+
+At the end, return the head of the copied list.
+
+Example:
+
+    Before separation:
+
+        7 -> 7' -> 13 -> 13' -> 11 -> 11'
+
+    After separation:
+
+        Original:
+
+        7 -> 13 -> 11
+
+        Copy:
+
+        7' -> 13' -> 11'
+
+Why does this work?
+
+The key idea is that every original node is temporarily placed
+directly before its copied node.
+
+Therefore:
+
+    copy of X = X->next
+
+and:
+
+    copy of X.random = X.random->next
+
+This completely avoids a Hash Map.
+
+Algorithm:
+1. If head is nullptr, return nullptr.
+2. Traverse the original list and insert a copied node after
+   every original node.
+3. Traverse again and set the random pointers of the copied
+   nodes.
+4. Traverse again to separate the original and copied lists.
+5. Return the copied list's head.
+
+Time Complexity : O(n)
+
+Reason:
+We traverse the linked list three times.
+
+    First pass  -> create copies
+    Second pass -> set random pointers
+    Third pass  -> separate lists
+
+Therefore:
+
+    O(n)
+
+Space Complexity : O(1)
+
+Reason:
+No Hash Map or extra array is used.
+
+Only a constant number of pointers are maintained.
+
+The newly created copy nodes are the required output and are
+not considered auxiliary space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    Node* copyRandomList(Node* head) {
+
+        // Empty list
+        if (head == nullptr) {
+            return nullptr;
+        }
+
+        /*
+        ------------------------------------------------------
+        Step 1: Insert copied nodes after their original nodes
+        ------------------------------------------------------
+        */
+
+        Node* temp = head;
+
+        while (temp != nullptr) {
+
+            // Create copy of current node
+            Node* copy = new Node(temp->val);
+
+            // Insert copy between current node and next node
+            copy->next = temp->next;
+            temp->next = copy;
+
+            // Move to the next original node
+            temp = copy->next;
+        }
+
+        /*
+        ------------------------------------------------------
+        Step 2: Set random pointers of copied nodes
+        ------------------------------------------------------
+        */
+
+        temp = head;
+
+        while (temp != nullptr) {
+
+            // If original node has a random pointer
+            if (temp->random != nullptr) {
+
+                // Copy's random points to the copy of
+                // original's random node.
+                temp->next->random =
+                    temp->random->next;
+            }
+
+            // Move to the next original node
+            temp = temp->next->next;
+        }
+
+        /*
+        ------------------------------------------------------
+        Step 3: Separate original and copied lists
+        ------------------------------------------------------
+        */
+
+        Node* copyHead = new Node(0);
+        Node* copyTail = copyHead;
+
+        temp = head;
+
+        while (temp != nullptr) {
+
+            // Copy node is immediately after original node
+            Node* copy = temp->next;
+
+            // Restore original list
+            temp->next = copy->next;
+
+            // Add copy to the copied list
+            copyTail->next = copy;
+            copyTail = copy;
+
+            // Move to next original node
+            temp = temp->next;
+        }
+
+        // Return copied list
+        return copyHead->next;
+    }
+};
