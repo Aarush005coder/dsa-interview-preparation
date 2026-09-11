@@ -1,0 +1,211 @@
+/*
+------------------------------------------------------------
+Problem    : Single Number II
+Platform   : LeetCode
+Topic      : Bit Manipulation
+Difficulty : Medium
+
+Problem:
+Given an integer array `nums`, every element appears exactly
+three times except for one element, which appears exactly once.
+
+Find and return the single element.
+
+The solution must satisfy:
+
+    Time Complexity  : O(n)
+    Space Complexity : O(1)
+
+Example:
+
+    nums = [2,2,3,2]
+
+Output:
+
+    3
+
+Approach:
+Use Bit Manipulation with two variables:
+
+    ones
+        Stores bits that have appeared exactly once.
+
+    twos
+        Stores bits that have appeared exactly twice.
+
+Whenever a number appears for the third time, its bits are
+removed from both `ones` and `twos`.
+
+The key idea is that every bit position independently follows
+the same pattern:
+
+    Number of occurrences:
+        0 -> 1 -> 2 -> 3 -> 0
+
+We use:
+
+    ones = (ones ^ n) & ~twos;
+
+    twos = (twos ^ n) & ~ones;
+
+How does this work?
+
+Suppose a particular bit of `n` is:
+
+    0
+
+It does not affect the corresponding bit in `ones` or `twos`.
+
+If the bit of `n` is:
+
+    1
+
+then the bit moves through these states:
+
+    First occurrence:
+        ones = 1
+        twos = 0
+
+    Second occurrence:
+        ones = 0
+        twos = 1
+
+    Third occurrence:
+        ones = 0
+        twos = 0
+
+So after three occurrences, the bit is completely cancelled.
+
+Example:
+
+    nums = [2,2,3,2]
+
+Binary representation:
+
+    2 = 010
+    2 = 010
+    3 = 011
+    2 = 010
+
+The bits belonging to 2 appear three times and disappear.
+
+The bits belonging to 3 appear only once and remain in `ones`.
+
+Therefore:
+
+    ones = 3
+
+Why does `~twos` matter?
+
+Consider:
+
+    ones = (ones ^ n) & ~twos;
+
+If a bit is already stored in `twos`, it should not remain
+in `ones`.
+
+The `& ~twos` operation removes those bits.
+
+Similarly:
+
+    twos = (twos ^ n) & ~ones;
+
+removes bits that have moved into `ones`.
+
+Important:
+The second line uses the UPDATED `ones`.
+
+This is intentional.
+
+It ensures that a bit appearing for the first time is placed
+in `ones`, a bit appearing for the second time moves to
+`twos`, and a bit appearing for the third time is removed
+from both.
+
+Example State:
+
+For one bit appearing three times:
+
+    Start:
+        ones = 0
+        twos = 0
+
+    First occurrence:
+        ones = 1
+        twos = 0
+
+    Second occurrence:
+        ones = 0
+        twos = 1
+
+    Third occurrence:
+        ones = 0
+        twos = 0
+
+Thus, only bits belonging to the number appearing once
+remain in `ones`.
+
+Why not use XOR like Single Number I?
+
+For Single Number I:
+
+    Every duplicate appears twice.
+
+Therefore:
+
+    x ^ x = 0
+
+works perfectly.
+
+Here every duplicate appears three times:
+
+    x ^ x ^ x = x
+
+So simple XOR cannot cancel groups of three.
+
+The `ones` and `twos` state machine is required to track
+occurrences modulo 3.
+
+Algorithm:
+1. Initialize `ones = 0`.
+2. Initialize `twos = 0`.
+3. For every number `n`:
+      - Update `ones`.
+      - Update `twos`.
+4. After all numbers are processed, `ones` contains the
+   number that appeared exactly once.
+5. Return `ones`.
+
+Time Complexity : O(n)
+
+Reason:
+Every element is processed exactly once.
+
+Space Complexity : O(1)
+
+Reason:
+Only two integer variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int singleNumber(vector<int>& nums) {
+
+        int ones = 0;
+        int twos = 0;
+
+        for (int n : nums) {
+
+            // Bits appearing once
+            ones = (ones ^ n) & ~twos;
+
+            // Bits appearing twice
+            twos = (twos ^ n) & ~ones;
+        }
+
+        return ones;
+    }
+};
