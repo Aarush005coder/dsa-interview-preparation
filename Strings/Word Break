@@ -1,0 +1,235 @@
+/*
+------------------------------------------------------------
+Problem    : Word Break
+Platform   : LeetCode
+Topic      : Strings
+Difficulty : Medium
+
+Problem:
+Given a string `s` and a dictionary of words `wordDict`,
+determine whether `s` can be segmented into one or more
+dictionary words.
+
+A dictionary word can be used multiple times.
+
+Example:
+
+    s = "leetcode"
+    wordDict = ["leet", "code"]
+
+The string can be segmented as:
+
+    "leet" + "code"
+
+Therefore:
+
+    Output = true
+
+Approach:
+Use Dynamic Programming with a Hash Set.
+
+First, store all dictionary words in an `unordered_set` so
+that we can check whether a substring exists in the dictionary
+in average O(1) time.
+
+Define:
+
+    dp[i] = true
+
+if the first `i` characters of `s` can be segmented into
+valid dictionary words.
+
+Base Case:
+
+    dp[0] = true
+
+An empty prefix can always be considered successfully
+segmented.
+
+For every position `i`, try every previous position `j`.
+
+The substring:
+
+    s[j ... i-1]
+
+is the current word candidate.
+
+If:
+
+    dp[j] == true
+
+and:
+
+    s[j ... i-1] exists in wordDict
+
+then:
+
+    dp[i] = true
+
+This means the prefix before `j` can already be segmented,
+and the remaining substring is a valid dictionary word.
+
+Example:
+
+    s = "leetcode"
+
+    dp[0] = true
+
+For i = 4:
+
+    s[0...3] = "leet"
+
+    dp[0] = true
+    "leet" exists in dictionary
+
+Therefore:
+
+    dp[4] = true
+
+For i = 8:
+
+    s[4...7] = "code"
+
+    dp[4] = true
+    "code" exists in dictionary
+
+Therefore:
+
+    dp[8] = true
+
+Final:
+
+    dp[8] = true
+
+So the string can be segmented.
+
+Example where a prefix cannot be used:
+
+    s = "catsandog"
+    wordDict = ["cats","dog","sand","and","cat"]
+
+We can form:
+
+    "cats" + "and"
+
+but the remaining:
+
+    "og"
+
+is not a dictionary word.
+
+Therefore:
+
+    dp[n] = false
+
+Important:
+The same dictionary word can be reused.
+
+For example:
+
+    s = "aaaa"
+    wordDict = ["a"]
+
+The segmentation is:
+
+    "a" + "a" + "a" + "a"
+
+Therefore, the answer is true.
+
+Why use a Hash Set?
+
+We need to repeatedly check whether a substring is present
+in the dictionary.
+
+Using:
+
+    unordered_set<string>
+
+gives average O(1) lookup.
+
+Without hashing, searching the dictionary repeatedly would
+be slower.
+
+Algorithm:
+1. Store all words from `wordDict` in an unordered_set.
+2. Create a DP array of size `s.length() + 1`.
+3. Set `dp[0] = true`.
+4. For every ending position `i`:
+      - Try every starting position `j`.
+      - Check whether `dp[j]` is true.
+      - Check whether `s[j...i-1]` exists in the dictionary.
+      - If both are true, set `dp[i] = true`.
+5. Return `dp[s.length()]`.
+
+Time Complexity : O(n^3) worst-case
+
+Reason:
+There are O(n^2) pairs of `(j, i)`.
+
+Creating:
+
+    s.substr(j, i - j)
+
+can take O(n) time.
+
+Therefore, with substring creation:
+
+    O(n^3)
+
+In practice, this can be improved by limiting the checked
+word length to the maximum dictionary word length.
+
+Space Complexity : O(n + D)
+
+where:
+- O(n) is the DP array.
+- O(D) represents the space used by the dictionary/hash set.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    bool wordBreak(string s, vector<string>& wordDict) {
+
+        // Store dictionary words for fast lookup
+        unordered_set<string> st(
+            wordDict.begin(),
+            wordDict.end()
+        );
+
+        int n = s.size();
+
+        // dp[i] = whether s[0...i-1] can be segmented
+        vector<bool> dp(n + 1, false);
+
+        // Empty string can be segmented
+        dp[0] = true;
+
+        for (int i = 1; i <= n; i++) {
+
+            for (int j = 0; j < i; j++) {
+
+                // Prefix before j must already be segmentable
+                if (!dp[j]) {
+                    continue;
+                }
+
+                // Current substring
+                string word = s.substr(j, i - j);
+
+                // Check dictionary
+                if (st.find(word) != st.end()) {
+
+                    dp[i] = true;
+
+                    // No need to check more partitions
+                    break;
+                }
+            }
+        }
+
+        return dp[n];
+    }
+};
