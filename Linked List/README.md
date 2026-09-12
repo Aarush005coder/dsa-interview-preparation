@@ -19,6 +19,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 | 9 | Reverse Linked List II | Medium | ✅ |
 | 10 | Copy List with Random Pointer | Medium | ✅ |
 | 11 | Linked List Cycle | Easy | ✅ |
+| 12 | Reorder List | Easy | ✅ |
 
 ---
 
@@ -41,4 +42,4 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 
 ---
 
-**Problems Solved:** **11**
+**Problems Solved:** **12**
