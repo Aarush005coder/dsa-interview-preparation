@@ -15,6 +15,7 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 | 5 | Multiply Strings | Medium | ✅ |
 | 6 | Length of Last Word | Easy | ✅ |
 | 7 | Palindrome Partitioning | Medium | ✅ |
+| 8 | Word Break | Medium | ✅ |
 
 ---
 
@@ -43,4 +44,4 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 
 ---
 
-**Problems Solved:** **7**
+**Problems Solved:** **8**
