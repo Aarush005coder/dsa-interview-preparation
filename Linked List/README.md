@@ -18,6 +18,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 | 8 | Remove Duplicates from Sorted List | Easy | ✅ |
 | 9 | Reverse Linked List II | Medium | ✅ |
 | 10 | Copy List with Random Pointer | Medium | ✅ |
+| 11 | Linked List Cycle | Easy | ✅ |
 
 ---
 
@@ -40,4 +41,4 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 
 ---
 
-**Problems Solved:** **10**
+**Problems Solved:** **11**
