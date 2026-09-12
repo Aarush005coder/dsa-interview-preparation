@@ -1,0 +1,259 @@
+/*
+------------------------------------------------------------
+Problem    : Reorder List
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Medium
+
+Problem:
+Given the head of a singly linked list:
+
+    L0 -> L1 -> ... -> Ln-1 -> Ln
+
+Reorder the list into:
+
+    L0 -> Ln -> L1 -> Ln-1 -> L2 -> Ln-2 -> ...
+
+The values inside the nodes must not be modified.
+
+Only the links between nodes can be changed.
+
+Example:
+
+    Input:
+
+        1 -> 2 -> 3 -> 4
+
+    Output:
+
+        1 -> 4 -> 2 -> 3
+
+Another example:
+
+    Input:
+
+        1 -> 2 -> 3 -> 4 -> 5
+
+    Output:
+
+        1 -> 5 -> 2 -> 4 -> 3
+
+Approach:
+Use three steps:
+
+    1. Find the middle of the linked list.
+    2. Reverse the second half.
+    3. Merge the first half and reversed second half
+       alternately.
+
+------------------------------------------------------------
+Step 1: Find the Middle
+------------------------------------------------------------
+
+Use the Slow and Fast Pointer technique.
+
+    slow -> moves one step
+    fast -> moves two steps
+
+When fast reaches the end, slow is near the middle.
+
+Example:
+
+    1 -> 2 -> 3 -> 4
+
+After moving the pointers:
+
+    slow -> 2
+
+We use the node after slow as the beginning of the second half:
+
+    First half:
+
+        1 -> 2
+
+    Second half:
+
+        3 -> 4
+
+------------------------------------------------------------
+Step 2: Reverse the Second Half
+------------------------------------------------------------
+
+Reverse:
+
+    3 -> 4
+
+into:
+
+    4 -> 3
+
+Now we have:
+
+    First half:
+        1 -> 2
+
+    Reversed second half:
+        4 -> 3
+
+------------------------------------------------------------
+Step 3: Merge Alternately
+------------------------------------------------------------
+
+Take one node from the first half, then one node from the
+second half.
+
+    1 -> 4 -> 2 -> 3
+
+For:
+
+    1 -> 2 -> 3 -> 4 -> 5
+
+Split:
+
+    1 -> 2 -> 3
+
+and:
+
+    4 -> 5
+
+Reverse second half:
+
+    5 -> 4
+
+Merge:
+
+    1 -> 5 -> 2 -> 4 -> 3
+
+Why do we split the list first?
+
+The required order takes:
+- First node from the beginning.
+- Last node from the end.
+- Second node from the beginning.
+- Second-last node from the end.
+
+Reversing the second half converts the "from the end" order
+into a normal forward traversal order.
+
+Important:
+After finding the middle, we disconnect the two halves:
+
+    first->next = nullptr
+
+Otherwise, merging the two lists can create a cycle.
+
+Example:
+
+    1 -> 2 -> 3 -> 4
+
+After splitting:
+
+    1 -> 2 -> nullptr
+
+    4 -> 3 -> nullptr
+
+Then merge the two lists.
+
+Algorithm:
+1. Handle lists containing fewer than two nodes.
+2. Find the middle using slow and fast pointers.
+3. Reverse the second half.
+4. Disconnect the first and second halves.
+5. Merge the two halves alternately.
+6. The list is now reordered in-place.
+
+Time Complexity : O(n)
+
+Reason:
+- Finding the middle takes O(n).
+- Reversing the second half takes O(n).
+- Merging the two halves takes O(n).
+
+Overall:
+
+    O(n)
+
+Space Complexity : O(1)
+
+Reason:
+Only a constant number of pointers are used.
+No extra array, vector, stack, or linked list is created.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    void reorderList(ListNode* head) {
+
+        // Empty list or single node
+        if (head == nullptr || head->next == nullptr) {
+            return;
+        }
+
+        /*
+        ------------------------------------------------------
+        Step 1: Find the middle of the list
+        ------------------------------------------------------
+        */
+
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast->next != nullptr &&
+               fast->next->next != nullptr) {
+
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        /*
+        ------------------------------------------------------
+        Step 2: Reverse the second half
+        ------------------------------------------------------
+        */
+
+        ListNode* curr = slow->next;
+        ListNode* prev = nullptr;
+
+        // Split the list
+        slow->next = nullptr;
+
+        while (curr != nullptr) {
+
+            ListNode* nextNode = curr->next;
+
+            curr->next = prev;
+
+            prev = curr;
+            curr = nextNode;
+        }
+
+        /*
+        ------------------------------------------------------
+        Step 3: Merge both halves alternately
+        ------------------------------------------------------
+        */
+
+        ListNode* first = head;
+        ListNode* second = prev;
+
+        while (second != nullptr) {
+
+            // Save next nodes
+            ListNode* firstNext = first->next;
+            ListNode* secondNext = second->next;
+
+            // Connect first node to second node
+            first->next = second;
+
+            // Connect second node to next first-half node
+            second->next = firstNext;
+
+            // Move both pointers forward
+            first = firstNext;
+            second = secondNext;
+        }
+    }
+};
