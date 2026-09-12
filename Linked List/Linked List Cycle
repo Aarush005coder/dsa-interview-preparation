@@ -1,0 +1,178 @@
+/*
+------------------------------------------------------------
+Problem    : Linked List Cycle
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Easy
+
+Problem:
+Given the head of a linked list, determine whether the linked
+list contains a cycle.
+
+A cycle exists if, by continuously following the `next` pointer,
+we eventually reach a node that we have already visited.
+
+Example:
+
+    3 -> 2 -> 0 -> -4
+         ^         |
+         |_________|
+
+The last node points back to node 2.
+
+Therefore:
+
+    Output = true
+
+Approach:
+Use Floyd's Cycle Detection Algorithm, also called the
+Tortoise and Hare Algorithm.
+
+Maintain two pointers:
+
+    slow
+        Moves one node at a time.
+
+    fast
+        Moves two nodes at a time.
+
+If the linked list contains a cycle, the fast pointer will
+eventually catch up with the slow pointer.
+
+If there is no cycle, the fast pointer will reach nullptr.
+
+Why does this work?
+
+Consider a cycle:
+
+    slow  -> 1 step
+    fast  -> 2 steps
+
+Once both pointers enter the cycle, `fast` gains one position
+on `slow` during every iteration.
+
+Eventually:
+
+    slow == fast
+
+Therefore, a cycle exists.
+
+Example:
+
+    3 -> 2 -> 0 -> -4
+         ^         |
+         |_________|
+
+Initially:
+
+    slow = 3
+    fast = 3
+
+After one iteration:
+
+    slow = 2
+    fast = 0
+
+After another:
+
+    slow = 0
+    fast = 2
+
+Eventually both pointers meet inside the cycle.
+
+No Cycle Example:
+
+    1 -> 2 -> 3 -> nullptr
+
+The pointers move:
+
+    slow = 1, fast = 1
+
+    slow = 2, fast = 3
+
+Next iteration:
+
+    fast->next == nullptr
+
+So the loop stops and we return false.
+
+Why don't we use a Hash Set?
+
+A simple solution could store every visited node in an
+`unordered_set`.
+
+However, that requires O(n) extra space.
+
+Floyd's algorithm only uses two pointers:
+
+    Space = O(1)
+
+This satisfies the constant-space requirement.
+
+Important:
+We compare node addresses:
+
+    slow == fast
+
+not node values.
+
+Two different nodes can have the same value, so comparing
+`slow->val` and `fast->val` would be incorrect.
+
+Algorithm:
+1. Initialize `slow` and `fast` to `head`.
+2. While `fast` and `fast->next` are not nullptr:
+      - Move slow one step.
+      - Move fast two steps.
+      - If slow == fast, a cycle exists.
+3. If fast reaches nullptr, no cycle exists.
+4. Return the result.
+
+Time Complexity : O(n)
+
+Reason:
+Each pointer traverses the list at most a linear number of
+steps before either:
+- They meet, or
+- Fast reaches the end.
+
+Space Complexity : O(1)
+
+Reason:
+Only two pointers are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    bool hasCycle(ListNode* head) {
+
+        // Empty list or single node cannot form a cycle
+        if (head == nullptr || head->next == nullptr) {
+            return false;
+        }
+
+        // Slow moves one step
+        ListNode* slow = head;
+
+        // Fast moves two steps
+        ListNode* fast = head;
+
+        while (fast != nullptr && fast->next != nullptr) {
+
+            slow = slow->next;
+
+            fast = fast->next->next;
+
+            // Both pointers met -> cycle exists
+            if (slow == fast) {
+                return true;
+            }
+        }
+
+        // Fast reached the end -> no cycle
+        return false;
+    }
+};
