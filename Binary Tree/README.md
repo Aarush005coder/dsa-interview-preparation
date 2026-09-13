@@ -23,6 +23,7 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 | 13 | Populating Next Right Pointers in Each Node II | Medium | ✅ |
 | 14 | Binary Tree Maximum Path Sum | Hard | ✅ |
 | 15 | Sum Root to Leaf Numbers | Medium | ✅ |
+| 16 | Binary Tree Preorder Traversal | Easy | ✅ |
 
 ---
 
@@ -47,4 +48,4 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 
 ---
 
-**Problems Solved:** **15**
+**Problems Solved:** **16**
