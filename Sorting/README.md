@@ -9,6 +9,7 @@ This folder contains **Sorting** problems solved in **C++** as part of my DSA pr
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Merge Intervals | Medium | ✅ |
+| 2 | Insertion Sort List | Medium | ✅ |
 
 ---
 
@@ -33,4 +34,4 @@ This folder contains **Sorting** problems solved in **C++** as part of my DSA pr
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
