@@ -1,0 +1,204 @@
+/*
+------------------------------------------------------------
+Problem    : Insertion Sort List
+Platform   : LeetCode
+Topic      : Sorting
+Difficulty : Medium
+
+Problem:
+Given the head of a singly linked list, sort the linked list
+using the Insertion Sort algorithm.
+
+Insertion Sort works by maintaining a sorted portion of the
+list and inserting each new node into its correct position.
+
+Example:
+
+    Input:
+
+        4 -> 2 -> 1 -> 3
+
+    Output:
+
+        1 -> 2 -> 3 -> 4
+
+Approach:
+Use a dummy node to represent the beginning of the sorted
+portion of the list.
+
+The dummy node makes insertion easier, especially when the
+current node needs to be inserted before the first element.
+
+We use:
+
+    curr
+        The current node from the unsorted portion.
+
+    prev
+        Used to find the correct insertion position in the
+        sorted portion.
+
+The process is:
+
+    Sorted portion | Unsorted portion
+
+    [4]            | 2 -> 1 -> 3
+
+Take 2:
+
+    [4]
+     ↓
+    Insert 2 before 4
+
+    [2 -> 4]       | 1 -> 3
+
+Take 1:
+
+    [2 -> 4]
+     ↓
+    Insert 1 before 2
+
+    [1 -> 2 -> 4]  | 3
+
+Take 3:
+
+    [1 -> 2 -> 4]
+     ↓
+    Insert 3 between 2 and 4
+
+    [1 -> 2 -> 3 -> 4]
+
+Dummy Node:
+We create:
+
+    dummy -> nullptr
+
+Initially, the sorted list is empty.
+
+For every node:
+1. Start `prev` from the dummy node.
+2. Move `prev` while the next node's value is smaller than
+   the current value.
+3. Insert the current node between `prev` and `prev->next`.
+
+Insertion:
+
+    curr->next = prev->next;
+    prev->next = curr;
+
+Important:
+Before changing `curr->next`, save the original next node:
+
+    nextNode = curr->next;
+
+Otherwise, we would lose access to the remaining unsorted
+part of the list.
+
+Example:
+
+    4 -> 2 -> 1 -> 3
+
+When processing 2:
+
+    curr = 2
+
+Save:
+
+    nextNode = 1
+
+Find insertion position:
+
+    dummy -> 4
+
+Since 4 is greater than 2, insert before 4:
+
+    dummy -> 2 -> 4
+
+Then continue with:
+
+    curr = nextNode
+         = 1
+
+Why use `<` in the comparison?
+
+We search while:
+
+    prev->next->val < curr->val
+
+This places the current node after all smaller values.
+
+For equal values, the node is inserted before the first equal
+value, which is still a valid sorted ordering.
+
+Algorithm:
+1. Create a dummy node representing the start of the sorted list.
+2. Set `curr = head`.
+3. For every node:
+      - Save its next node.
+      - Start `prev` from dummy.
+      - Find the correct insertion position.
+      - Insert the current node.
+      - Move to the saved next node.
+4. Return `dummy->next`.
+
+Time Complexity : O(n^2)
+
+Reason:
+For each node, we may need to scan the sorted portion of the
+list to find its insertion position.
+
+In the worst case:
+
+    1 + 2 + 3 + ... + n
+
+which gives:
+
+    O(n^2)
+
+Space Complexity : O(1)
+
+Reason:
+The sorting is done by rearranging existing nodes.
+Only a constant number of pointers are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    ListNode* insertionSortList(ListNode* head) {
+
+        // Dummy node simplifies insertion at the beginning
+        ListNode* dummy = new ListNode(0);
+
+        ListNode* curr = head;
+
+        while (curr != nullptr) {
+
+            // Save the next unsorted node
+            ListNode* nextNode = curr->next;
+
+            // Start searching from the beginning of
+            // the sorted list
+            ListNode* prev = dummy;
+
+            // Find the correct insertion position
+            while (
+                prev->next != nullptr &&
+                prev->next->val < curr->val
+            ) {
+                prev = prev->next;
+            }
+
+            // Insert current node into sorted list
+            curr->next = prev->next;
+            prev->next = curr;
+
+            // Move to next unsorted node
+            curr = nextNode;
+        }
+
+        return dummy->next;
+    }
+};
