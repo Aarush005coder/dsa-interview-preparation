@@ -1,0 +1,225 @@
+/*
+------------------------------------------------------------
+Problem    : Evaluate Reverse Polish Notation
+Platform   : LeetCode
+Topic      : Stack
+Difficulty : Medium
+
+Problem:
+Given an array of strings representing an arithmetic
+expression in Reverse Polish Notation (RPN), evaluate the
+expression and return its result.
+
+Valid operators are:
+
+    +
+    -
+    *
+    /
+
+Division between two integers truncates toward zero.
+
+Example:
+
+    tokens = ["2","1","+","3","*"]
+
+RPN evaluation:
+
+    2 1 +
+    = 3
+
+    3 3 *
+    = 9
+
+Output:
+
+    9
+
+Example:
+
+    tokens = ["4","13","5","/","+"]
+
+First:
+
+    13 / 5 = 2
+
+Then:
+
+    4 + 2 = 6
+
+Output:
+
+    6
+
+Approach:
+Use a Stack.
+
+Reverse Polish Notation places the operator after its
+operands.
+
+For every token:
+
+1. If the token is a number:
+      Push it onto the stack.
+
+2. If the token is an operator:
+      - Pop the top two values.
+      - Apply the operator.
+      - Push the result back onto the stack.
+
+Important:
+When applying `-` or `/`, the order matters.
+
+Suppose the stack contains:
+
+    x
+    y
+
+where `y` is the top element.
+
+We must calculate:
+
+    x - y
+
+and:
+
+    x / y
+
+NOT:
+
+    y - x
+
+or:
+
+    y / x
+
+Example:
+
+    tokens = ["4","13","5","/","+"]
+
+Process 4:
+
+    Stack = [4]
+
+Process 13:
+
+    Stack = [4,13]
+
+Process 5:
+
+    Stack = [4,13,5]
+
+Operator '/':
+
+    y = 5
+    x = 13
+
+    13 / 5 = 2
+
+    Stack = [4,2]
+
+Operator '+':
+
+    y = 2
+    x = 4
+
+    4 + 2 = 6
+
+    Stack = [6]
+
+Final answer:
+
+    6
+
+Why does a Stack work?
+
+RPN always places an operator after all operands required
+for that operation.
+
+Therefore, the most recently encountered operands are exactly
+the ones needed for the current operator.
+
+This is Last-In-First-Out (LIFO), which is exactly what a
+stack provides.
+
+Algorithm:
+1. Create an empty stack.
+2. Traverse every token.
+3. If the token is an operand:
+      - Convert it to an integer.
+      - Push it onto the stack.
+4. If the token is an operator:
+      - Pop the second operand.
+      - Pop the first operand.
+      - Perform the operation.
+      - Push the result.
+5. After processing all tokens, the stack contains one value.
+6. Return the top value.
+
+Time Complexity : O(n)
+
+Reason:
+Every token is processed exactly once.
+
+Space Complexity : O(n)
+
+Reason:
+In the worst case, the stack can contain O(n) operands.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int evalRPN(vector<string>& tokens) {
+
+        stack<int> st;
+
+        for (string& token : tokens) {
+
+            // Check whether the token is an operator
+            if (
+                token == "+" ||
+                token == "-" ||
+                token == "*" ||
+                token == "/"
+            ) {
+
+                // Second operand
+                int y = st.top();
+                st.pop();
+
+                // First operand
+                int x = st.top();
+                st.pop();
+
+                int result;
+
+                if (token == "+") {
+                    result = x + y;
+                }
+                else if (token == "-") {
+                    result = x - y;
+                }
+                else if (token == "*") {
+                    result = x * y;
+                }
+                else {
+                    // Division truncates toward zero
+                    result = x / y;
+                }
+
+                // Push result back onto stack
+                st.push(result);
+            }
+
+            else {
+                // Operand
+                st.push(stoi(token));
+            }
+        }
+
+        return st.top();
+    }
+};
