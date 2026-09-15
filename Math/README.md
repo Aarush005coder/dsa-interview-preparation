@@ -11,6 +11,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 1 | Reverse Integer | Medium | ✅ |
 | 2 | Palindrome Number | Easy | ✅ |
 | 3 | Permutation Sequence | Hard | ✅ |
+| 4 | Max Points on a Line | Hard | ✅ |
 
 ---
 
@@ -36,4 +37,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **2**
+**Problems Solved:** **4**
