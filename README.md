@@ -90,7 +90,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Bit Manipulation | 4 |
 | Recursion | 1 |
 | Backtracking | 11 |
-| Stack | 2 |
+| Stack | 3 |
 | Queue | 0 |
 | Trees | 0 |
 | Binary Tree | 17 |
@@ -173,7 +173,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **105**
+**Total Problems Solved:** **106**
 
 ---
 
