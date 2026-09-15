@@ -1,0 +1,156 @@
+/*
+------------------------------------------------------------
+Problem    : Reverse Words in a String
+Platform   : LeetCode
+Topic      : Strings
+Difficulty : Medium
+
+Problem:
+Given a string `s`, reverse the order of its words.
+
+A word is a sequence of non-space characters.
+
+The input may contain:
+- Leading spaces
+- Trailing spaces
+- Multiple spaces between words
+
+The output must:
+- Reverse the order of the words.
+- Contain exactly one space between consecutive words.
+- Contain no leading or trailing spaces.
+
+Example:
+
+    s = "the sky is blue"
+
+Output:
+
+    "blue is sky the"
+
+Another example:
+
+    s = "  hello   world  "
+
+Output:
+
+    "world hello"
+
+Approach:
+Use `stringstream` to extract the words.
+
+The stream operator `>>` automatically:
+- Skips leading spaces.
+- Treats multiple spaces as separators.
+- Extracts only valid words.
+
+For example:
+
+    s = "  hello   world  "
+
+Using:
+
+    stringstream ss(s);
+
+and:
+
+    ss >> word
+
+gives:
+
+    "hello"
+    "world"
+
+Store all words in a vector.
+
+Then reverse the vector using:
+
+    reverse(words.begin(), words.end());
+
+Finally, construct the result string by joining the reversed
+words using exactly one space.
+
+Example:
+
+    words = ["the","sky","is","blue"]
+
+After reverse:
+
+    ["blue","is","sky","the"]
+
+Build result:
+
+    "blue is sky the"
+
+Why use `stringstream`?
+
+It makes handling spaces very simple.
+
+Instead of manually checking:
+- Leading spaces
+- Trailing spaces
+- Multiple consecutive spaces
+
+`stringstream` automatically ignores unnecessary spaces while
+extracting words.
+
+Algorithm:
+1. Create a stringstream from `s`.
+2. Extract every word and store it in a vector.
+3. Reverse the vector.
+4. Join the words using a single space.
+5. Return the result.
+
+Time Complexity : O(n)
+
+Reason:
+- Extracting all words takes O(n).
+- Reversing the words takes O(k), where k is the number of words.
+- Building the result takes O(n).
+
+Overall:
+
+    O(n)
+
+Space Complexity : O(n)
+
+Reason:
+The vector stores all words and the result string also
+requires O(n) space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    string reverseWords(string s) {
+
+        stringstream ss(s);
+
+        vector<string> words;
+        string word;
+
+        // Extract all words
+        while (ss >> word) {
+            words.push_back(word);
+        }
+
+        // Reverse word order
+        reverse(words.begin(), words.end());
+
+        string result;
+
+        // Join words with exactly one space
+        for (int i = 0; i < words.size(); i++) {
+
+            result += words[i];
+
+            if (i != words.size() - 1) {
+                result += " ";
+            }
+        }
+
+        return result;
+    }
+};
