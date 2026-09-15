@@ -1,0 +1,354 @@
+/*
+------------------------------------------------------------
+Problem    : Max Points on a Line
+Platform   : LeetCode
+Topic      : Math
+Difficulty : Hard
+
+Problem:
+Given an array of points where:
+
+    points[i] = [x, y]
+
+return the maximum number of points that lie on the same
+straight line.
+
+Example:
+
+    points = [[1,1],[2,2],[3,3]]
+
+All three points lie on the same line:
+
+    y = x
+
+Therefore:
+
+    Output = 3
+
+Approach:
+Use a Hash Map to count slopes.
+
+For every point `i`, treat it as the starting point.
+
+Then calculate the slope between point `i` and every other
+point `j`.
+
+If two points have the same normalized slope from the same
+starting point, they lie on the same line.
+
+We maintain:
+
+    map<slope, count>
+
+where `slope` is represented as:
+
+    {dx, dy}
+
+Instead of using floating-point slopes such as:
+
+    dy / dx
+
+we store the slope as a reduced integer pair.
+
+Why avoid floating-point values?
+
+Two mathematically equal slopes may sometimes have different
+floating-point representations.
+
+For example:
+
+    1 / 3
+    2 / 6
+
+represent the same slope, but should be treated as the same
+line.
+
+So we reduce the pair using GCD.
+
+For two points:
+
+    (x1, y1)
+    (x2, y2)
+
+we calculate:
+
+    dx = x2 - x1
+    dy = y2 - y1
+
+Then divide both by:
+
+    gcd(|dx|, |dy|)
+
+Example:
+
+    dx = 4
+    dy = 6
+
+GCD:
+
+    gcd(4,6) = 2
+
+Reduced slope:
+
+    dx = 2
+    dy = 3
+
+Another point may produce:
+
+    dx = 6
+    dy = 9
+
+After reduction:
+
+    dx = 2
+    dy = 3
+
+Therefore, both points have the same slope.
+
+------------------------------------------------------------
+Handling Vertical Lines
+------------------------------------------------------------
+
+For a vertical line:
+
+    dx = 0
+
+For example:
+
+    (2,1)
+    (2,5)
+
+Here:
+
+    dx = 0
+    dy = 4
+
+We normalize it as:
+
+    {0,1}
+
+so all vertical lines get the same representation.
+
+------------------------------------------------------------
+Handling Horizontal Lines
+------------------------------------------------------------
+
+For a horizontal line:
+
+    dy = 0
+
+For example:
+
+    (1,3)
+    (5,3)
+
+We normalize it as:
+
+    {1,0}
+
+so all horizontal lines get the same representation.
+
+------------------------------------------------------------
+Sign Normalization
+------------------------------------------------------------
+
+Consider:
+
+    dx = 2
+    dy = 3
+
+and:
+
+    dx = -2
+    dy = -3
+
+These represent the same slope.
+
+To make their representations identical, we ensure that
+`dx` is always positive.
+
+If:
+
+    dx < 0
+
+we multiply both values by -1:
+
+    dx *= -1
+    dy *= -1
+
+Therefore:
+
+    (2,3)
+    (-2,-3)
+
+both become:
+
+    (2,3)
+
+------------------------------------------------------------
+Why fix one point at a time?
+------------------------------------------------------------
+
+Suppose point `i` is fixed.
+
+Every other point creates exactly one line passing through
+point `i`.
+
+If multiple points have the same normalized slope relative
+to `i`, they all lie on the same line through `i`.
+
+Therefore, for each `i`, we count the most frequent slope.
+
+Example:
+
+    points = [[1,1],[2,2],[3,3],[4,5]]
+
+Fix:
+
+    (1,1)
+
+Slopes:
+
+    (2,2) -> (1,1)
+    (3,3) -> (1,1)
+    (4,5) -> (3,4)
+
+The slope `(1,1)` occurs twice.
+
+Including the fixed point:
+
+    2 + 1 = 3
+
+So 3 points lie on the same line.
+
+------------------------------------------------------------
+Why add 1?
+------------------------------------------------------------
+
+The hash map counts points other than the fixed point `i`.
+
+If the most frequent slope occurs `k` times, then the line
+contains:
+
+    k + 1
+
+points including the fixed point.
+
+Therefore:
+
+    answer = curr_max + 1
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. If there are at most 2 points, return n.
+2. For every point `i`:
+      - Create a fresh slope hash map.
+      - For every point `j > i`:
+          - Calculate dx and dy.
+          - Normalize the slope using GCD.
+          - Store the slope in the map.
+          - Update the maximum frequency.
+      - Update the global answer.
+3. Return the maximum number of points.
+
+Time Complexity : O(n^2 log C)
+
+Reason:
+We examine every pair of points.
+
+There are:
+
+    O(n^2)
+
+pairs.
+
+For each pair, GCD takes:
+
+    O(log C)
+
+where C is the coordinate difference.
+
+Therefore:
+
+    O(n^2 log C)
+
+Space Complexity : O(n)
+
+Reason:
+For one fixed point, the hash map can store at most O(n)
+different slopes.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int maxPoints(vector<vector<int>>& points) {
+
+        int n = points.size();
+
+        // 0, 1, or 2 points are always collinear
+        if (n <= 2) {
+            return n;
+        }
+
+        int ans = 0;
+
+        // Fix one point
+        for (int i = 0; i < n; i++) {
+
+            map<pair<int, int>, int> mp;
+
+            int currMax = 0;
+
+            // Compare the fixed point with every other point
+            for (int j = i + 1; j < n; j++) {
+
+                int dx =
+                    points[j][0] - points[i][0];
+
+                int dy =
+                    points[j][1] - points[i][1];
+
+                // Vertical line
+                if (dx == 0) {
+                    dy = 1;
+                }
+
+                // Horizontal line
+                else if (dy == 0) {
+                    dx = 1;
+                }
+
+                else {
+
+                    // Reduce slope using GCD
+                    int g = gcd(abs(dx), abs(dy));
+
+                    dx /= g;
+                    dy /= g;
+
+                    // Normalize sign
+                    if (dx < 0) {
+                        dx *= -1;
+                        dy *= -1;
+                    }
+                }
+
+                // Count this normalized slope
+                mp[{dx, dy}]++;
+
+                currMax =
+                    max(currMax, mp[{dx, dy}]);
+            }
+
+            // Include the fixed point itself
+            ans = max(ans, currMax + 1);
+        }
+
+        return ans;
+    }
+};
