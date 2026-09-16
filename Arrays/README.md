@@ -18,6 +18,8 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 | 8 | Pascal's Triangle | Easy | ✅ |
 | 9 | 4Sum | Medium | ✅ |
 | 10 | Longest Consecutive Sequence | Medium | ✅ |
+| 11 | Find Minimum in Rotated Sorted Array | Medium | ✅ |
+| 12 | Find Minimum in Rotated Sorted Array II | Hard | ✅ |
 
 ---
 
@@ -42,4 +44,4 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **10**
+**Problems Solved:** **12**
