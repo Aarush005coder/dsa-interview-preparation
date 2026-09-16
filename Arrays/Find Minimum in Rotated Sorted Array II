@@ -1,0 +1,284 @@
+/*
+------------------------------------------------------------
+Problem    : Find Minimum in Rotated Sorted Array II
+Platform   : LeetCode
+Topic      : Arrays
+Difficulty : Hard
+
+Problem:
+Given a sorted array that has been rotated and may contain
+duplicate values, find the minimum element.
+
+Unlike Problem 153, duplicate values are allowed.
+
+Example:
+
+    nums = [2,2,2,0,1,2]
+
+Output:
+
+    0
+
+Approach:
+Use Binary Search with duplicate handling.
+
+The main idea is similar to Problem 153:
+
+    Compare nums[mid] with nums[end]
+
+There are three cases:
+
+1. nums[mid] > nums[end]
+
+The minimum must be to the right of `mid`.
+
+Why?
+
+If:
+
+    nums[mid] > nums[end]
+
+then `mid` lies in the left sorted portion and the rotation
+point must be after `mid`.
+
+Therefore:
+
+    start = mid + 1
+
+Example:
+
+    [4,5,6,7,0,1,4]
+         ^
+        mid
+
+    nums[mid] = 7
+    nums[end] = 4
+
+Since:
+
+    7 > 4
+
+the minimum must be to the right.
+
+------------------------------------------------------------
+
+2. nums[mid] < nums[end]
+
+The right portion is sorted and `mid` may itself be the
+minimum.
+
+Therefore:
+
+    end = mid
+
+We keep `mid` because it could contain the minimum.
+
+Example:
+
+    [4,5,6,0,1,2]
+
+        mid
+         ↓
+
+    nums[mid] = 0
+    nums[end] = 2
+
+Since:
+
+    0 < 2
+
+the minimum is at `mid` or to its left.
+
+------------------------------------------------------------
+
+3. nums[mid] == nums[end]
+
+This is the important difference from Problem 153.
+
+When:
+
+    nums[mid] == nums[end]
+
+we cannot determine whether the minimum lies on the left
+or right side using these values alone.
+
+Example:
+
+    [2,2,2,0,2]
+
+Here:
+
+    nums[mid] = 2
+    nums[end] = 2
+
+Both sides could potentially contain the minimum.
+
+However, we know that `nums[end]` is equal to `nums[mid]`.
+
+The element at `end` is therefore not providing any additional
+information for deciding the side containing the minimum.
+
+So we safely remove it:
+
+    end--
+
+This does not discard the unique minimum because if `nums[end]`
+were the minimum, then `nums[mid]` would also have the same
+minimum value.
+
+------------------------------------------------------------
+
+Example Walkthrough:
+
+    nums = [2,2,2,0,1,2]
+
+Initially:
+
+    start = 0
+    end = 5
+
+    mid = 2
+
+    nums[mid] = 2
+    nums[end] = 2
+
+Equal:
+
+    end--
+
+Now:
+
+    start = 0
+    end = 4
+
+    mid = 2
+
+    nums[mid] = 2
+    nums[end] = 1
+
+Since:
+
+    2 > 1
+
+move right:
+
+    start = mid + 1
+          = 3
+
+Now:
+
+    start = 3
+    end = 4
+
+    mid = 3
+
+    nums[mid] = 0
+    nums[end] = 1
+
+Since:
+
+    0 < 1
+
+move:
+
+    end = mid
+        = 3
+
+Now:
+
+    start = 3
+    end = 3
+
+Return:
+
+    nums[3] = 0
+
+------------------------------------------------------------
+
+Why can duplicates make the complexity O(n)?
+
+For the unique-elements version, every comparison lets us
+discard roughly half of the search space.
+
+With duplicates, consider:
+
+    [1,1,1,1,1,1,1]
+
+Every comparison may give:
+
+    nums[mid] == nums[end]
+
+so we only do:
+
+    end--
+
+One element is removed at a time.
+
+Therefore:
+
+    Worst-case Time = O(n)
+
+However, when the values provide enough information, the
+algorithm still behaves like binary search and runs much
+faster in practice.
+
+------------------------------------------------------------
+
+Algorithm:
+1. Set `start = 0` and `end = n - 1`.
+2. While `start < end`:
+      - Calculate `mid`.
+      - If `nums[mid] > nums[end]`:
+            start = mid + 1
+      - Else if `nums[mid] < nums[end]`:
+            end = mid
+      - Else:
+            end--
+3. Return `nums[start]`.
+
+Time Complexity : O(n) worst case, O(log n) average/favorable case
+
+Reason:
+With duplicates, the `nums[mid] == nums[end]` case may reduce
+the search space by only one element.
+
+Space Complexity : O(1)
+
+Reason:
+Only constant extra variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int findMin(vector<int>& nums) {
+
+        int start = 0;
+        int end = nums.size() - 1;
+
+        while (start < end) {
+
+            int mid = start + (end - start) / 2;
+
+            // Minimum lies strictly to the right
+            if (nums[mid] > nums[end]) {
+                start = mid + 1;
+            }
+
+            // Minimum is at mid or somewhere to the left
+            else if (nums[mid] < nums[end]) {
+                end = mid;
+            }
+
+            // Duplicates: cannot determine the side,
+            // so safely discard the duplicate at end.
+            else {
+                end--;
+            }
+        }
+
+        return nums[start];
+    }
+};
