@@ -1,0 +1,250 @@
+/*
+------------------------------------------------------------
+Problem    : Find Minimum in Rotated Sorted Array
+Platform   : LeetCode
+Topic      : Arrays
+Difficulty : Medium
+
+Problem:
+Given a sorted array of unique integers that has been rotated,
+find and return the minimum element.
+
+The original array is sorted in ascending order, but it has
+been rotated at some pivot.
+
+Example:
+
+    Original:
+        [1,2,3,4,5]
+
+    Rotated:
+        [3,4,5,1,2]
+
+The minimum element is:
+
+    1
+
+Output:
+
+    1
+
+Approach:
+Use Binary Search.
+
+A rotated sorted array consists of two sorted portions.
+
+Example:
+
+    [3,4,5,1,2]
+
+    Left sorted portion:
+        [3,4,5]
+
+    Right sorted portion:
+        [1,2]
+
+The minimum element is located at the point where the rotation
+occurs.
+
+We compare `nums[mid]` with `nums[end]`.
+
+There are two cases:
+
+1. nums[mid] > nums[end]
+
+This means the middle element lies in the left sorted portion.
+
+Example:
+
+    [3,4,5,1,2]
+       ^
+      mid
+
+    nums[mid] = 5
+    nums[end] = 2
+
+Since:
+
+    5 > 2
+
+the minimum must be to the RIGHT of mid.
+
+Therefore:
+
+    start = mid + 1
+
+2. nums[mid] <= nums[end]
+
+This means the right portion is sorted and the minimum is at
+`mid` or somewhere to its left.
+
+Therefore:
+
+    end = mid
+
+We do NOT use:
+
+    end = mid - 1
+
+because `nums[mid]` itself could be the minimum.
+
+Example:
+
+    [4,5,1,2,3]
+
+At some point:
+
+    mid = 1
+    nums[mid] = 5
+    nums[end] = 3
+
+Since:
+
+    5 > 3
+
+move right.
+
+Eventually:
+
+    start = 2
+    end = 2
+
+and:
+
+    nums[2] = 1
+
+is the minimum.
+
+Why compare with `nums[end]`?
+
+The last element tells us which sorted portion contains
+the minimum.
+
+If:
+
+    nums[mid] > nums[end]
+
+the minimum is after mid.
+
+Otherwise:
+
+    nums[mid] <= nums[end]
+
+the minimum is at or before mid.
+
+Example:
+
+    nums = [3,4,5,1,2]
+
+Initial:
+
+    start = 0
+    end   = 4
+
+    mid = 2
+
+    nums[mid] = 5
+    nums[end] = 2
+
+Since:
+
+    5 > 2
+
+move:
+
+    start = 3
+
+Now:
+
+    [1,2]
+
+    start = 3
+    end   = 4
+
+    mid = 3
+
+    nums[mid] = 1
+    nums[end] = 2
+
+Since:
+
+    1 <= 2
+
+move:
+
+    end = 3
+
+Now:
+
+    start = 3
+    end = 3
+
+Return:
+
+    nums[3] = 1
+
+Why does the loop use `start < end`?
+
+When:
+
+    start == end
+
+only one element remains in the search range, and that element
+must be the minimum.
+
+Algorithm:
+1. Set `start = 0`.
+2. Set `end = n - 1`.
+3. While `start < end`:
+      - Calculate `mid`.
+      - If `nums[mid] > nums[end]`:
+            start = mid + 1
+        Otherwise:
+            end = mid
+4. Return `nums[start]`.
+
+Why is this O(log n)?
+
+Each iteration eliminates approximately half of the remaining
+search space, just like standard binary search.
+
+Time Complexity : O(log n)
+
+Reason:
+The search range is halved in every iteration.
+
+Space Complexity : O(1)
+
+Reason:
+Only a constant number of variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int findMin(vector<int>& nums) {
+
+        int start = 0;
+        int end = nums.size() - 1;
+
+        while (start < end) {
+
+            int mid = start + (end - start) / 2;
+
+            // Minimum lies to the right of mid
+            if (nums[mid] > nums[end]) {
+                start = mid + 1;
+            }
+
+            // Minimum is at mid or to its left
+            else {
+                end = mid;
+            }
+        }
+
+        // start == end, so only the minimum remains
+        return nums[start];
+    }
+};
