@@ -21,6 +21,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 | 11 | Linked List Cycle | Easy | ✅ |
 | 12 | Reorder List | Easy | ✅ |
 | 13 | Sort List | Medium | ✅ |
+| 14 | Intersection of Two Linked Lists | Easy | ✅ |
 
 ---
 
@@ -43,4 +44,4 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 
 ---
 
-**Problems Solved:** **13**
+**Problems Solved:** **14**
