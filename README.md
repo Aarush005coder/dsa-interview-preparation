@@ -77,11 +77,11 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Topic | Solved |
 |--------|-------:|
 | Arrays | 12 |
-| Linked List | 13 |
+| Linked List | 14 |
 | Strings | 9 |
 | Matrix | 4 |
 | Hash Map | 3 |
-| Sorting | 2 |
+| Sorting | 3 |
 | Searching | 0 |
 | Binary Search | 4 |
 | Two Pointers | 7 |
@@ -173,7 +173,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **109**
+**Total Problems Solved:** **111**
 
 ---
 
