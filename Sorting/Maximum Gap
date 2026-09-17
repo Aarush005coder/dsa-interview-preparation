@@ -1,0 +1,229 @@
+/*
+------------------------------------------------------------
+Problem    : Maximum Gap
+Platform   : LeetCode
+Topic      : Sorting (Radix Sort)
+Difficulty : Medium
+
+Problem:
+Given an integer array `nums`, return the maximum difference
+between two successive elements in its sorted form.
+
+If the array contains fewer than two elements, return 0.
+
+The solution must run in linear time and use linear extra
+space.
+
+Example:
+
+    nums = [3,6,9,1]
+
+Sorted array:
+
+    [1,3,6,9]
+
+Gaps:
+
+    3 - 1 = 2
+    6 - 3 = 3
+    9 - 6 = 3
+
+Maximum gap:
+
+    3
+
+Output:
+
+    3
+
+Approach:
+Use Radix Sort followed by a single pass to find the maximum
+gap.
+
+We cannot use the normal `sort()` function because:
+
+    sort() -> O(n log n)
+
+The problem requires:
+
+    O(n)
+
+Radix Sort processes the integers digit by digit.
+
+For every decimal digit:
+1. Count how many numbers contain each digit.
+2. Place numbers into the correct position according to
+   that digit.
+3. Repeat for units, tens, hundreds, thousands, etc.
+
+We use Counting Sort as the stable sorting step for each
+digit.
+
+Example:
+
+    nums = [170,45,75,90,802,24,2,66]
+
+After sorting by units:
+
+    ...
+
+After sorting by tens:
+
+    ...
+
+After sorting by hundreds:
+
+    [2,24,45,66,75,90,170,802]
+
+Now the array is fully sorted.
+
+Once the array is sorted, the maximum gap is simply the
+largest difference between consecutive elements.
+
+------------------------------------------------------------
+Why Radix Sort gives O(n)
+------------------------------------------------------------
+
+For 32-bit non-negative integers, there are a fixed number
+of decimal digits.
+
+If `d` is the number of digits, Radix Sort takes:
+
+    O(d * n)
+
+Since `d` is bounded for 32-bit integers:
+
+    O(d * n) = O(n)
+
+The extra space used by the counting array and temporary
+array is:
+
+    O(n)
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. If nums contains fewer than 2 elements, return 0.
+2. Find the maximum value.
+3. Perform Radix Sort using decimal digits.
+4. Traverse the sorted array.
+5. Calculate the difference between consecutive elements.
+6. Return the largest difference.
+
+Example:
+
+    nums = [3,6,9,1]
+
+After Radix Sort:
+
+    [1,3,6,9]
+
+Calculate:
+
+    3 - 1 = 2
+    6 - 3 = 3
+    9 - 6 = 3
+
+Therefore:
+
+    answer = 3
+
+Time Complexity : O(n)
+
+Reason:
+Radix Sort processes a fixed number of digits, and every
+pass takes O(n).
+
+After sorting, finding the maximum gap takes O(n).
+
+Therefore the total remains:
+
+    O(n)
+
+Space Complexity : O(n)
+
+Reason:
+Radix Sort requires a temporary array of size n.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Counting Sort based on a particular digit
+    void countingSort(vector<int>& nums, int exp) {
+
+        int n = nums.size();
+
+        vector<int> output(n);
+
+        int count[10] = {0};
+
+        // Count occurrences of each digit
+        for (int num : nums) {
+
+            int digit = (num / exp) % 10;
+
+            count[digit]++;
+        }
+
+        // Convert count into prefix positions
+        for (int i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+        }
+
+        // Build output array from right to left
+        // to maintain stability.
+        for (int i = n - 1; i >= 0; i--) {
+
+            int digit = (nums[i] / exp) % 10;
+
+            output[count[digit] - 1] = nums[i];
+
+            count[digit]--;
+        }
+
+        // Copy sorted values back
+        nums = output;
+    }
+
+    void radixSort(vector<int>& nums) {
+
+        // Find maximum number of digits required
+        int maxi = *max_element(nums.begin(), nums.end());
+
+        // Process units, tens, hundreds, ...
+        for (int exp = 1; maxi / exp > 0; exp *= 10) {
+
+            countingSort(nums, exp);
+        }
+    }
+
+public:
+
+    int maximumGap(vector<int>& nums) {
+
+        if (nums.size() < 2) {
+            return 0;
+        }
+
+        // Sort in linear time using Radix Sort
+        radixSort(nums);
+
+        int maxGap = 0;
+
+        // Find maximum difference between
+        // consecutive sorted elements
+        for (int i = 1; i < nums.size(); i++) {
+
+            maxGap = max(
+                maxGap,
+                nums[i] - nums[i - 1]
+            );
+        }
+
+        return maxGap;
+    }
+};
