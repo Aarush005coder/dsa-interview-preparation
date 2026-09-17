@@ -10,6 +10,7 @@ This folder contains **Sorting** problems solved in **C++** as part of my DSA pr
 |---|---------|------------|--------|
 | 1 | Merge Intervals | Medium | ✅ |
 | 2 | Insertion Sort List | Medium | ✅ |
+| 3 | Maximum Gap | Medium | ✅ |
 
 ---
 
@@ -34,4 +35,4 @@ This folder contains **Sorting** problems solved in **C++** as part of my DSA pr
 
 ---
 
-**Problems Solved:** **2**
+**Problems Solved:** **3**
