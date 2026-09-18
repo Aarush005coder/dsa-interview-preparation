@@ -1,0 +1,180 @@
+/*
+------------------------------------------------------------
+Problem    : Factorial Trailing Zeroes
+Platform   : LeetCode
+Topic      : Math
+Difficulty : Medium
+
+Problem:
+Given an integer `n`, return the number of trailing zeroes
+in `n!`.
+
+A trailing zero is produced when the number contains a factor
+of:
+
+    10 = 2 * 5
+
+In factorials, there are always more factors of 2 than factors
+of 5.
+
+Therefore, the number of trailing zeroes is determined by the
+number of factors of 5 in `n!`.
+
+Example:
+
+    n = 5
+
+    5! = 120
+
+There is one trailing zero.
+
+Factors of 5:
+
+    5
+
+Therefore:
+
+    answer = 1
+
+------------------------------------------------------------
+Approach:
+------------------------------------------------------------
+
+Count how many times 5 is present as a factor in n!.
+
+At first, we count multiples of 5:
+
+    floor(n / 5)
+
+But numbers such as 25 contain TWO factors of 5:
+
+    25 = 5 * 5
+
+Similarly:
+
+    125 = 5 * 5 * 5
+
+So we must also count:
+
+    floor(n / 25)
+    floor(n / 125)
+    floor(n / 625)
+    ...
+
+until the power of 5 becomes greater than n.
+
+Therefore:
+
+    trailing zeroes =
+        n/5 + n/25 + n/125 + ...
+
+Example:
+
+    n = 100
+
+    100 / 5   = 20
+    100 / 25  = 4
+    100 / 125 = 0
+
+Total:
+
+    20 + 4 = 24
+
+So:
+
+    100! has 24 trailing zeroes.
+
+------------------------------------------------------------
+Why do we only count factors of 5?
+------------------------------------------------------------
+
+Every trailing zero requires a pair:
+
+    2 * 5 = 10
+
+In factorials, factors of 2 are much more common than factors
+of 5.
+
+For example, numbers like:
+
+    2, 4, 6, 8, 10, 12, ...
+
+provide many factors of 2.
+
+Therefore, the limiting factor is the number of factors of 5.
+
+Hence:
+
+    Number of trailing zeroes
+    =
+    Number of factors of 5
+
+------------------------------------------------------------
+Why not calculate n! directly?
+------------------------------------------------------------
+
+`n!` grows extremely quickly and will overflow normal integer
+types for even relatively small values of n.
+
+We do not need to calculate the factorial.
+
+We only need to count how many factors of 5 it contains.
+
+This gives an efficient mathematical solution.
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. Initialize `count = 0`.
+2. While `n > 0`:
+      - Divide n by 5.
+      - Add the result to count.
+3. Return count.
+
+Example:
+
+    n = 30
+
+    n / 5 = 6
+    n / 25 = 1
+
+    count = 6 + 1
+          = 7
+
+Therefore:
+
+    30! has 7 trailing zeroes.
+
+------------------------------------------------------------
+Time Complexity : O(log₅ n)
+
+Reason:
+In every iteration, n is divided by 5.
+
+Space Complexity : O(1)
+
+Reason:
+Only one counter variable is used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int trailingZeroes(int n) {
+
+        int count = 0;
+
+        // Count factors of 5
+        while (n > 0) {
+
+            n /= 5;
+
+            count += n;
+        }
+
+        return count;
+    }
+};
