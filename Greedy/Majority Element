@@ -1,0 +1,192 @@
+/*
+------------------------------------------------------------
+Problem    : Majority Element
+Platform   : LeetCode
+Topic      : Greedy (Boyer-Moore Voting Algorithm)
+Difficulty : Easy
+
+Problem:
+Given an array `nums` of size n, find the majority element.
+
+The majority element is the element that appears more than:
+
+    floor(n / 2)
+
+times.
+
+The problem guarantees that a majority element always exists.
+
+Example:
+
+    nums = [3,2,3]
+
+    Frequency of 3 = 2
+    n / 2 = 1
+
+Since:
+
+    2 > 1
+
+the majority element is:
+
+    3
+
+Output:
+
+    3
+
+Approach:
+Use the Boyer-Moore Voting Algorithm.
+
+Maintain two variables:
+
+    element
+        Stores the current candidate for the majority element.
+
+    count
+        Stores the current vote count of that candidate.
+
+The idea is to cancel out different elements.
+
+For every number:
+
+1. If `count == 0`, choose the current number as the new
+   candidate.
+
+2. If the current number is equal to the candidate:
+       count++
+
+3. Otherwise:
+       count--
+
+Why does this work?
+
+Since the majority element appears more than n/2 times, it
+occurs more frequently than all other elements combined.
+
+Whenever we encounter:
+- One occurrence of the candidate -> +1 vote
+- One different element      -> -1 vote
+
+Different elements cancel out one occurrence of the majority
+element.
+
+Because the majority element has more occurrences than all
+other elements combined, it cannot be completely cancelled.
+
+Therefore, the final candidate must be the majority element.
+
+Example:
+
+    nums = [2,2,1,1,1,2,2]
+
+Start:
+
+    element = 0
+    count = 0
+
+Process 2:
+
+    count == 0
+    element = 2
+    count = 1
+
+Process 2:
+
+    2 == 2
+    count = 2
+
+Process 1:
+
+    1 != 2
+    count = 1
+
+Process 1:
+
+    1 != 2
+    count = 0
+
+Process 1:
+
+    count == 0
+    element = 1
+    count = 1
+
+Process 2:
+
+    2 != 1
+    count = 0
+
+Process 2:
+
+    count == 0
+    element = 2
+    count = 1
+
+Final candidate:
+
+    2
+
+And 2 is indeed the majority element.
+
+Why can we return the candidate without verifying it?
+
+The problem guarantees that a majority element always exists.
+
+Therefore, Boyer-Moore is guaranteed to finish with that
+element as the final candidate.
+
+If the problem did NOT guarantee a majority element, we would
+need a second pass to verify that the candidate occurs more
+than n/2 times.
+
+Algorithm:
+1. Initialize `element = 0` and `count = 0`.
+2. Traverse every element in the array.
+3. If `count == 0`, make the current number the candidate.
+4. If the current number equals the candidate, increment count.
+5. Otherwise, decrement count.
+6. Return the final candidate.
+
+Time Complexity : O(n)
+
+Reason:
+The array is traversed exactly once.
+
+Space Complexity : O(1)
+
+Reason:
+Only two variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int majorityElement(vector<int>& nums) {
+
+        int element = 0;
+        int count = 0;
+
+        for (int num : nums) {
+
+            // Choose a new candidate when
+            // the current candidate has no votes.
+            if (count == 0) {
+                element = num;
+            }
+
+            // Give a vote to the candidate
+            // or cancel one vote.
+            if (num == element) {
+                count++;
+            }
+            else {
+                count--;
+            }
+        }
+
+        return element;
+    }
+};
