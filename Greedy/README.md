@@ -12,6 +12,7 @@ This folder contains **Greedy** problems solved in **C++** as part of my DSA pre
 | 2 | Best Time to Buy and Sell Stock | Easy | ✅ |
 | 3 | Best Time to Buy and Sell Stock II | Medium | ✅ |
 | 4 | Candy | Hard | ✅ |
+| 5 | Majority Element | Easy | ✅ |
 
 ---
 
@@ -36,4 +37,4 @@ This folder contains **Greedy** problems solved in **C++** as part of my DSA pre
 
 ---
 
-**Problems Solved:** **4**
+**Problems Solved:** **5**
