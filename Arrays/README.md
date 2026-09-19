@@ -20,6 +20,7 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 | 10 | Longest Consecutive Sequence | Medium | ✅ |
 | 11 | Find Minimum in Rotated Sorted Array | Medium | ✅ |
 | 12 | Find Minimum in Rotated Sorted Array II | Hard | ✅ |
+| 13 | Rotate Array | Medium | ✅ |
 
 ---
 
@@ -44,4 +45,4 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **12**
+**Problems Solved:** **13**
