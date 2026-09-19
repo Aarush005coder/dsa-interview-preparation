@@ -1,0 +1,384 @@
+/*
+------------------------------------------------------------
+Problem    : Best Time to Buy and Sell Stock IV
+Platform   : LeetCode
+Topic      : Dynamic Programming
+Difficulty : Hard
+
+Problem:
+Given an integer array `prices` and an integer `k`, find the
+maximum profit that can be achieved using at most `k`
+transactions.
+
+One transaction consists of:
+
+    Buy -> Sell
+
+Important:
+- We can complete at most `k` transactions.
+- We must sell before buying again.
+- Multiple transactions cannot overlap.
+- We can also choose to perform fewer than `k` transactions.
+
+Example:
+
+    k = 2
+    prices = [2,4,1]
+
+Best transaction:
+
+    Buy  at 2
+    Sell at 4
+
+Profit:
+
+    4 - 2 = 2
+
+Output:
+
+    2
+
+Approach:
+Use Dynamic Programming with an `operationNo` state.
+
+Instead of separately storing:
+
+    buy
+    sell
+    transaction count
+
+we represent every transaction using two operations:
+
+    Buy  -> one operation
+    Sell -> one operation
+
+For `k` transactions, we need:
+
+    2 * k operations
+
+The operations are:
+
+    operationNo = 0 -> Buy
+    operationNo = 1 -> Sell
+    operationNo = 2 -> Buy
+    operationNo = 3 -> Sell
+    ...
+    operationNo = 2k - 2 -> Buy
+    operationNo = 2k - 1 -> Sell
+
+So:
+
+    Even operationNo -> BUY
+    Odd operationNo  -> SELL
+
+Define:
+
+    dp[index][operationNo]
+
+as the maximum profit obtainable starting from day `index`
+when we are currently at operation `operationNo`.
+
+------------------------------------------------------------
+State Transitions:
+------------------------------------------------------------
+
+Case 1: `operationNo` is EVEN
+
+We need to perform a BUY operation.
+
+We have two choices:
+
+1. Buy today:
+
+       buy =
+           -prices[index]
+           + dp[index + 1][operationNo + 1]
+
+Why subtract the price?
+
+Buying the stock costs money.
+
+After buying, we move to the next operation:
+
+    BUY -> SELL
+
+2. Skip buying today:
+
+       skip =
+           dp[index + 1][operationNo]
+
+Therefore:
+
+    dp[index][operationNo]
+        =
+    max(buy, skip)
+
+------------------------------------------------------------
+
+Case 2: `operationNo` is ODD
+
+We need to perform a SELL operation.
+
+We again have two choices:
+
+1. Sell today:
+
+       sell =
+           prices[index]
+           + dp[index + 1][operationNo + 1]
+
+After selling, one complete transaction has been finished.
+
+We move to the next operation:
+
+    SELL -> next BUY
+
+2. Skip selling today:
+
+       skip =
+           dp[index + 1][operationNo]
+
+Therefore:
+
+    dp[index][operationNo]
+        =
+    max(sell, skip)
+
+------------------------------------------------------------
+Why use `operationNo` instead of a transaction counter?
+------------------------------------------------------------
+
+Each transaction contains exactly two operations:
+
+    Buy -> Sell
+
+Therefore:
+
+    k transactions
+    =
+    2k operations
+
+For example, if:
+
+    k = 2
+
+the state sequence is:
+
+    0 -> Buy
+    1 -> Sell
+    2 -> Buy
+    3 -> Sell
+
+Once operation 4 is reached, all allowed transactions have
+been used.
+
+------------------------------------------------------------
+Example:
+------------------------------------------------------------
+
+    k = 2
+    prices = [2,4,1,5]
+
+We can perform at most two transactions.
+
+Possible strategy:
+
+    Buy at 2
+    Sell at 4
+    Profit = 2
+
+    Buy at 1
+    Sell at 5
+    Profit = 4
+
+Total:
+
+    2 + 4 = 6
+
+The DP explores all possible choices of:
+- Buy
+- Skip
+- Sell
+- Skip
+
+while never allowing more than `k` complete transactions.
+
+------------------------------------------------------------
+Bottom-Up DP:
+------------------------------------------------------------
+
+We process days from right to left.
+
+For every day:
+
+    index = n - 1 ... 0
+
+we calculate all possible operation states.
+
+The base case is automatically represented by:
+
+    dp[n][...] = 0
+
+because after all days are finished, no more profit can be
+made.
+
+The answer starts at:
+
+    dp[0][0]
+
+because:
+- We are at day 0.
+- The first operation is BUY.
+- We have all `k` transactions available.
+
+------------------------------------------------------------
+Example for k = 2:
+------------------------------------------------------------
+
+Operations:
+
+    0 = Buy
+    1 = Sell
+    2 = Buy
+    3 = Sell
+
+Initial state:
+
+    dp[0][0]
+
+After processing all states, `dp[0][0]` contains the maximum
+profit possible using at most two transactions.
+
+------------------------------------------------------------
+Important Optimization:
+------------------------------------------------------------
+
+If:
+
+    k >= n / 2
+
+then the transaction limit is effectively large enough to
+perform every profitable price increase.
+
+In that case, the problem becomes the same as
+Best Time to Buy and Sell Stock II.
+
+However, the given DP solution works correctly for all values
+of `k`.
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. Let n = prices.size().
+2. Create a DP table of size:
+
+       (n + 1) x (2k + 1)
+
+3. Process days from right to left.
+4. For every `operationNo` from 0 to `2k - 1`:
+      - If operationNo is even:
+            Try Buy or Skip.
+      - If operationNo is odd:
+            Try Sell or Skip.
+5. Store the maximum profit for each state.
+6. Return `dp[0][0]`.
+
+Time Complexity : O(n * k)
+
+Reason:
+There are:
+- `n` days.
+- `2k` operation states.
+
+Therefore:
+
+    O(n * 2k)
+    = O(nk)
+
+Space Complexity : O(n * k)
+
+Reason:
+We store the DP value for every day and every operation.
+
+The DP can be optimized to O(k) space because each day only
+depends on the next day.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int solve(int k, vector<int>& prices) {
+
+        int n = prices.size();
+
+        // dp[index][operationNo]
+        //
+        // operationNo:
+        // Even -> Buy
+        // Odd  -> Sell
+        vector<vector<int>> dp(
+            n + 1,
+            vector<int>(2 * k + 1, 0)
+        );
+
+        // Process days from right to left
+        for (int index = n - 1; index >= 0; index--) {
+
+            // Process all operations
+            for (int operationNo = 0;
+                 operationNo < 2 * k;
+                 operationNo++) {
+
+                int profit = 0;
+
+                // BUY operation
+                if (operationNo % 2 == 0) {
+
+                    // Buy the stock today
+                    int buy =
+                        -prices[index]
+                        + dp[index + 1][operationNo + 1];
+
+                    // Skip buying today
+                    int skip =
+                        dp[index + 1][operationNo];
+
+                    profit = max(buy, skip);
+                }
+
+                // SELL operation
+                else {
+
+                    // Sell the stock today
+                    int sell =
+                        prices[index]
+                        + dp[index + 1][operationNo + 1];
+
+                    // Skip selling today
+                    int skip =
+                        dp[index + 1][operationNo];
+
+                    profit = max(sell, skip);
+                }
+
+                dp[index][operationNo] = profit;
+            }
+        }
+
+        // Start at day 0 with the first BUY operation
+        return dp[0][0];
+    }
+
+    int maxProfit(int k, vector<int>& prices) {
+
+        // No days or no transactions
+        if (prices.empty() || k == 0) {
+            return 0;
+        }
+
+        return solve(k, prices);
+    }
+};
