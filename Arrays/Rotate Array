@@ -1,0 +1,215 @@
+/*
+------------------------------------------------------------
+Problem    : Rotate Array
+Platform   : LeetCode
+Topic      : Arrays
+Difficulty : Medium
+
+Problem:
+Given an integer array `nums`, rotate the array to the right
+by `k` steps.
+
+Example:
+
+    nums = [1,2,3,4,5,6,7]
+    k = 3
+
+Output:
+
+    [5,6,7,1,2,3,4]
+
+After rotating:
+
+    1 step:
+        [7,1,2,3,4,5,6]
+
+    2 steps:
+        [6,7,1,2,3,4,5]
+
+    3 steps:
+        [5,6,7,1,2,3,4]
+
+Approach:
+Use the Array Reversal Technique.
+
+Instead of rotating the array one step at a time, which
+would take O(n * k) time, we can rotate it using three
+reversals.
+
+For:
+
+    nums = [1,2,3,4,5,6,7]
+    k = 3
+
+Step 1:
+Reverse the entire array.
+
+    [7,6,5,4,3,2,1]
+
+Step 2:
+Reverse the first k elements.
+
+    [7,6,5] -> [5,6,7]
+
+    [5,6,7,4,3,2,1]
+
+Step 3:
+Reverse the remaining n-k elements.
+
+    [4,3,2,1] -> [1,2,3,4]
+
+Final:
+
+    [5,6,7,1,2,3,4]
+
+------------------------------------------------------------
+Why does the reversal technique work?
+------------------------------------------------------------
+
+Suppose the array is divided into two parts:
+
+    A = first n-k elements
+    B = last k elements
+
+Original:
+
+    A B
+
+After reversing the entire array:
+
+    reverse(B) reverse(A)
+
+Then reverse the first k elements:
+
+    B reverse(A)
+
+Finally reverse the remaining elements:
+
+    B A
+
+Therefore, the array is rotated to the right by k positions.
+
+------------------------------------------------------------
+Important:
+------------------------------------------------------------
+
+If:
+
+    k >= nums.size()
+
+we do not need to perform all k rotations.
+
+Only:
+
+    k % n
+
+positions matter.
+
+For example:
+
+    n = 7
+    k = 10
+
+Since:
+
+    10 % 7 = 3
+
+rotating right by 10 positions is equivalent to rotating
+right by 3 positions.
+
+------------------------------------------------------------
+Example:
+------------------------------------------------------------
+
+    nums = [1,2,3,4,5,6,7]
+    k = 3
+
+After full reverse:
+
+    [7,6,5,4,3,2,1]
+
+Reverse first 3:
+
+    [5,6,7,4,3,2,1]
+
+Reverse remaining:
+
+    [5,6,7,1,2,3,4]
+
+Final answer:
+
+    [5,6,7,1,2,3,4]
+
+------------------------------------------------------------
+Edge Cases:
+------------------------------------------------------------
+
+1. k = 0
+
+No rotation is required.
+
+2. k > n
+
+Use:
+
+    k = k % n
+
+3. Single element:
+
+    [1], k = 5
+
+Result:
+
+    [1]
+
+4. k = n
+
+The array returns to its original form.
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. Calculate:
+
+       k = k % n
+
+2. Reverse the entire array.
+3. Reverse the first k elements.
+4. Reverse the remaining n-k elements.
+5. The array is now rotated to the right by k positions.
+
+Time Complexity : O(n)
+
+Reason:
+Each element participates in at most three reversals.
+
+Space Complexity : O(1)
+
+Reason:
+The array is modified in-place using only constant extra
+space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    void rotate(vector<int>& nums, int k) {
+
+        int n = nums.size();
+
+        // Reduce unnecessary full rotations
+        k = k % n;
+
+        // Step 1: Reverse the entire array
+        reverse(nums.begin(), nums.end());
+
+        // Step 2: Reverse the first k elements
+        reverse(nums.begin(), nums.begin() + k);
+
+        // Step 3: Reverse the remaining elements
+        reverse(nums.begin() + k, nums.end());
+    }
+};
