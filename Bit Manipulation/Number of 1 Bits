@@ -1,0 +1,149 @@
+/*
+------------------------------------------------------------
+Problem    : Number of 1 Bits
+Platform   : LeetCode
+Topic      : Bit Manipulation
+Difficulty : Easy
+
+Problem:
+Given a positive integer `n`, return the number of set bits
+in its binary representation.
+
+A set bit is a bit whose value is:
+
+    1
+
+The number of set bits is also called the Hamming Weight.
+
+Example:
+
+    n = 11
+
+Binary representation:
+
+    1011
+
+Number of set bits:
+
+    1 + 0 + 1 + 1 = 3
+
+Output:
+
+    3
+
+Approach:
+Use the built-in GCC/Clang function:
+
+    __builtin_popcount(n)
+
+This function directly counts the number of set bits (1s)
+in the binary representation of an integer.
+
+Example:
+
+    n = 11
+
+    Binary = 1011
+
+    __builtin_popcount(11)
+    = 3
+
+------------------------------------------------------------
+Alternative Bit Manipulation Approach:
+------------------------------------------------------------
+
+We can also count set bits without using the built-in
+function using Brian Kernighan's Algorithm.
+
+The important operation is:
+
+    n = n & (n - 1)
+
+This removes the lowest set bit from `n`.
+
+Example:
+
+    n = 1011
+
+    n - 1 = 1010
+
+    1011 & 1010
+    = 1010
+
+One `1` bit is removed.
+
+Again:
+
+    1010 & 1001
+    = 1000
+
+Again:
+
+    1000 & 0111
+    = 0000
+
+We performed the operation 3 times, so there were 3 set bits.
+
+Therefore:
+
+    while (n != 0) {
+        n = n & (n - 1);
+        count++;
+    }
+
+is another optimal solution.
+
+------------------------------------------------------------
+Why does `n & (n - 1)` remove one set bit?
+------------------------------------------------------------
+
+Subtracting 1 changes the rightmost set bit from:
+
+    1 -> 0
+
+and changes all bits after it from:
+
+    0 -> 1
+
+When we perform AND:
+
+    n & (n - 1)
+
+all those changed lower bits become 0, while the rightmost
+set bit is also removed.
+
+Therefore, exactly one set bit disappears in every iteration.
+
+------------------------------------------------------------
+Algorithm using built-in function:
+------------------------------------------------------------
+
+1. Pass `n` to `__builtin_popcount()`.
+2. Return the number of set bits.
+
+Time Complexity : O(1)
+
+Reason:
+For a standard 32-bit integer, there are a fixed number of
+bits to inspect.
+
+For a general b-bit integer, the built-in operation is
+effectively O(b).
+
+Space Complexity : O(1)
+
+Reason:
+Only constant extra space is used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int hammingWeight(int n) {
+
+        // Count set bits in the binary representation
+        return __builtin_popcount(n);
+    }
+};
