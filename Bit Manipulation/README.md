@@ -12,6 +12,7 @@ This folder contains **Bit Manipulation** problems solved in **C++**. Each solut
 | 2 | Gray Code | Medium | ✅ |
 | 3 | Single Number | Easy | ✅ |
 | 4 | Single Number II | Medium | ✅ |
+| 5 | Number of 1 Bits | Easy | ✅ |
 
 ---
 
@@ -36,4 +37,4 @@ This folder contains **Bit Manipulation** problems solved in **C++**. Each solut
 
 ---
 
-**Problems Solved:** **4**
+**Problems Solved:** **5**
