@@ -1,0 +1,235 @@
+/*
+------------------------------------------------------------
+Problem    : House Robber
+Platform   : LeetCode
+Topic      : Dynamic Programming
+Difficulty : Medium
+
+Problem:
+Given an array `nums` where `nums[i]` represents the amount
+of money in the ith house, find the maximum amount of money
+that can be robbed.
+
+The constraint is:
+
+    Two adjacent houses cannot both be robbed.
+
+If two adjacent houses are robbed, the security system will
+alert the police.
+
+Example:
+
+    nums = [1,2,3,1]
+
+Possible choices:
+
+    House 1 + House 3
+    = 1 + 3
+    = 4
+
+Output:
+
+    4
+
+Approach:
+Use Dynamic Programming with two variables.
+
+For every house, we have two choices:
+
+    1. Rob the current house.
+    2. Skip the current house.
+
+Suppose we are at house `i`.
+
+If we rob house `i`, we cannot rob house `i - 1`.
+
+Therefore:
+
+    rob = nums[i] + prev2
+
+where:
+
+    prev2 = maximum money obtained up to house i - 2
+
+If we skip house `i`, we keep the best result obtained up
+to house `i - 1`.
+
+Therefore:
+
+    skip = prev1
+
+where:
+
+    prev1 = maximum money obtained up to house i - 1
+
+So:
+
+    current = max(rob, skip)
+
+------------------------------------------------------------
+DP State:
+------------------------------------------------------------
+
+    prev2
+        Maximum money obtainable up to i - 2.
+
+    prev1
+        Maximum money obtainable up to i - 1.
+
+For every house:
+
+    rob  = nums[i] + prev2
+    skip = prev1
+
+    current = max(rob, skip)
+
+Then shift:
+
+    prev2 = prev1
+    prev1 = current
+
+------------------------------------------------------------
+Example:
+------------------------------------------------------------
+
+    nums = [1,2,3,1]
+
+Initially:
+
+    prev2 = 0
+    prev1 = 1
+
+House 2:
+
+    rob  = 2 + 0 = 2
+    skip = 1
+
+    current = 2
+
+    prev2 = 1
+    prev1 = 2
+
+House 3:
+
+    rob  = 3 + 1 = 4
+    skip = 2
+
+    current = 4
+
+    prev2 = 2
+    prev1 = 4
+
+House 4:
+
+    rob  = 1 + 2 = 3
+    skip = 4
+
+    current = 4
+
+Final answer:
+
+    4
+
+------------------------------------------------------------
+Why does this work?
+------------------------------------------------------------
+
+At every house, every valid solution must do one of two things:
+
+    Rob the current house
+            OR
+    Skip the current house
+
+If we rob the current house, the previous house cannot be
+robbed, so we use `prev2`.
+
+If we skip the current house, the best answer remains
+`prev1`.
+
+Taking the maximum of these two choices gives the optimal
+answer.
+
+------------------------------------------------------------
+Base Cases:
+------------------------------------------------------------
+
+For an empty set of houses:
+
+    answer = 0
+
+For the first house:
+
+    answer = nums[0]
+
+Therefore:
+
+    prev2 = 0
+    prev1 = nums[0]
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. If the array is empty, return 0.
+2. Initialize:
+       prev2 = 0
+       prev1 = nums[0]
+3. Traverse from the second house.
+4. Calculate:
+       rob  = nums[i] + prev2
+       skip = prev1
+5. Store:
+       current = max(rob, skip)
+6. Shift the previous states.
+7. Return `prev1`.
+
+Time Complexity : O(n)
+
+Reason:
+Every house is processed exactly once.
+
+Space Complexity : O(1)
+
+Reason:
+Only three integer variables are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int rob(vector<int>& nums) {
+
+        int n = nums.size();
+
+        // No houses
+        if (n == 0) {
+            return 0;
+        }
+
+        // Maximum money up to i - 2
+        int prev2 = 0;
+
+        // Maximum money up to i - 1
+        int prev1 = nums[0];
+
+        for (int i = 1; i < n; i++) {
+
+            // Rob current house
+            int rob = prev2 + nums[i];
+
+            // Skip current house
+            int skip = prev1;
+
+            // Best choice for current house
+            int current = max(rob, skip);
+
+            // Move to next state
+            prev2 = prev1;
+            prev1 = current;
+        }
+
+        return prev1;
+    }
+};
