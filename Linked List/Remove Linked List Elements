@@ -1,0 +1,214 @@
+/*
+------------------------------------------------------------
+Problem    : Remove Linked List Elements
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Easy
+
+Problem:
+Given the head of a linked list and an integer `val`, remove
+all nodes whose value is equal to `val`.
+
+Return the head of the resulting linked list.
+
+Example:
+
+    Input:
+
+        head = [1,2,6,3,4,5,6]
+        val = 6
+
+    Output:
+
+        [1,2,3,4,5]
+
+Approach:
+Use a Dummy Node.
+
+A dummy node is placed before the actual head:
+
+    dummy -> 1 -> 2 -> 6 -> 3 -> 4 -> 5 -> 6
+
+This makes deletion easier when the node to be removed is the
+head itself.
+
+We maintain:
+
+    curr
+        Points to the node before the node we are checking.
+
+At every step, examine:
+
+    curr->next
+
+There are two cases:
+
+1. `curr->next->val == val`
+
+The next node must be removed.
+
+Save it temporarily:
+
+    ListNode* toDelete = curr->next;
+
+Skip it:
+
+    curr->next = curr->next->next;
+
+Then delete the removed node.
+
+Important:
+We do NOT move `curr` forward after deleting a node.
+
+Why?
+
+There may be consecutive nodes with the same value.
+
+Example:
+
+    1 -> 6 -> 6 -> 2
+
+After deleting the first 6:
+
+    1 -> 6 -> 2
+
+`curr` must remain at 1 so that the new `curr->next`
+(the second 6) can also be checked.
+
+2. `curr->next->val != val`
+
+The next node is valid, so move forward:
+
+    curr = curr->next
+
+------------------------------------------------------------
+Why use a Dummy Node?
+------------------------------------------------------------
+
+Consider:
+
+    head = [7,7,7,1,2]
+    val = 7
+
+All nodes at the beginning must be removed.
+
+Without a dummy node, we would have to separately update
+`head` repeatedly.
+
+With:
+
+    dummy -> 7 -> 7 -> 7 -> 1 -> 2
+
+we can use exactly the same deletion logic for every node.
+
+After deletion:
+
+    dummy -> 1 -> 2
+
+Return:
+
+    dummy->next
+
+------------------------------------------------------------
+Example Walkthrough:
+------------------------------------------------------------
+
+    head = [1,2,6,3,4,5,6]
+    val = 6
+
+Initial:
+
+    dummy -> 1 -> 2 -> 6 -> 3 -> 4 -> 5 -> 6
+
+`curr` starts at dummy.
+
+Check next node:
+
+    1 != 6
+
+Move curr to 1.
+
+Check:
+
+    2 != 6
+
+Move curr to 2.
+
+Check:
+
+    6 == 6
+
+Delete 6:
+
+    1 -> 2 -> 3 -> 4 -> 5 -> 6
+
+Check next node again.
+
+Finally delete the last 6:
+
+    1 -> 2 -> 3 -> 4 -> 5
+
+Return the new head.
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. Create a dummy node before `head`.
+2. Set `curr = dummy`.
+3. While `curr->next` exists:
+      - If `curr->next->val == val`:
+            - Save the node.
+            - Skip it.
+            - Delete it.
+      - Otherwise:
+            - Move `curr` forward.
+4. Return `dummy->next`.
+
+Time Complexity : O(n)
+
+Reason:
+Every node is visited at most once.
+
+Space Complexity : O(1)
+
+Reason:
+Only a constant number of pointers are used.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    ListNode* removeElements(ListNode* head, int val) {
+
+        // Dummy node handles deletion of the original head
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+
+        ListNode* curr = dummy;
+
+        while (curr->next != nullptr) {
+
+            // Current next node needs to be removed
+            if (curr->next->val == val) {
+
+                ListNode* toDelete = curr->next;
+
+                // Skip the unwanted node
+                curr->next = curr->next->next;
+
+                // Free the removed node
+                delete toDelete;
+            }
+
+            // Move forward only when no deletion happened
+            else {
+                curr = curr->next;
+            }
+        }
+
+        return dummy->next;
+    }
+};
