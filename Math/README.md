@@ -13,6 +13,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 3 | Permutation Sequence | Hard | ✅ |
 | 4 | Max Points on a Line | Hard | ✅ |
 | 5 | Factorial Trailing Zeroes | Medium | ✅ |
+| 6 | Happy Number | Easy | ✅ |
 
 ---
 
@@ -38,4 +39,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **5**
+**Problems Solved:** **6**
