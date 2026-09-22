@@ -1,0 +1,210 @@
+/*
+------------------------------------------------------------
+Problem    : Happy Number
+Platform   : LeetCode
+Topic      : Math, Cycle Detection
+Difficulty : Easy
+
+Problem:
+Given a positive integer `n`, determine whether it is a
+Happy Number.
+
+For every number, repeatedly replace it with the sum of the
+squares of its digits.
+
+The process ends in one of two ways:
+
+    1. It reaches 1.
+       -> The number is happy.
+
+    2. It enters a cycle that does not contain 1.
+       -> The number is not happy.
+
+Example:
+
+    n = 19
+
+    19
+     ↓
+    1² + 9² = 82
+     ↓
+    8² + 2² = 68
+     ↓
+    6² + 8² = 100
+     ↓
+    1² + 0² + 0² = 1
+
+Therefore:
+
+    19 is a happy number.
+
+Output:
+
+    true
+
+Approach:
+Use a Hash Set to detect cycles.
+
+For every value of `n`:
+1. Check whether it is already present in the set.
+2. If it is already present, we have entered a cycle.
+   Therefore, return false.
+3. Otherwise, store it in the set.
+4. Replace `n` with the sum of the squares of its digits.
+5. Continue until `n == 1`.
+
+Why do we need cycle detection?
+
+The process does not always reach 1.
+
+For example, some numbers eventually repeat a previous value.
+Once a value repeats, all future values will also repeat in
+the same cycle.
+
+Therefore:
+
+    repeated number -> cycle -> not happy
+
+Example of a cycle:
+
+    n -> ... -> 4 -> 16 -> 37 -> 58 -> 89 -> 145
+              -> 42 -> 20 -> 4 -> ...
+
+Since 4 appears again, the process will continue forever.
+
+------------------------------------------------------------
+How to calculate the next number?
+------------------------------------------------------------
+
+For every digit:
+
+    digit = n % 10
+
+Add its square:
+
+    sum += digit * digit
+
+Then remove the last digit:
+
+    n /= 10
+
+Example:
+
+    n = 82
+
+    2² = 4
+    8² = 64
+
+    sum = 64 + 4
+        = 68
+
+Therefore:
+
+    next(82) = 68
+
+------------------------------------------------------------
+Why does the Hash Set work?
+------------------------------------------------------------
+
+Suppose the sequence is:
+
+    19 -> 82 -> 68 -> 100 -> 1
+
+We stop when we reach 1.
+
+For an unhappy number:
+
+    2 -> 4 -> 16 -> ... -> 4
+
+When 4 appears for the second time, the set already contains
+4.
+
+Therefore, we know that the process is trapped in a cycle.
+
+------------------------------------------------------------
+Alternative Approach:
+------------------------------------------------------------
+
+This problem can also be solved using Floyd's Cycle Detection
+Algorithm with two pointers:
+
+    slow -> moves one step
+    fast -> moves two steps
+
+This reduces the auxiliary space from O(n) to O(1).
+
+The Hash Set approach is simpler and easier to understand.
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. Create an empty unordered_set.
+2. While `n != 1`:
+      - If `n` already exists in the set, return false.
+      - Insert `n` into the set.
+      - Replace `n` with the sum of squares of its digits.
+3. Return true.
+
+Time Complexity : O(log n) per transformation
+
+Reason:
+Calculating the sum of squares requires processing all digits
+of the current number.
+
+For a fixed-width integer, this is effectively O(1).
+
+Space Complexity : O(log n)
+
+Reason:
+The set stores numbers encountered in the sequence until
+either 1 or a cycle is reached.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    bool isHappy(int n) {
+
+        unordered_set<int> seen;
+
+        while (n != 1) {
+
+            // A repeated number means we entered a cycle
+            if (seen.count(n)) {
+                return false;
+            }
+
+            // Store current number
+            seen.insert(n);
+
+            // Move to the next number
+            n = nextNumber(n);
+        }
+
+        return true;
+    }
+
+private:
+
+    int nextNumber(int n) {
+
+        int sum = 0;
+
+        while (n > 0) {
+
+            // Extract last digit
+            int digit = n % 10;
+
+            // Add square of digit
+            sum += digit * digit;
+
+            // Remove last digit
+            n /= 10;
+        }
+
+        return sum;
+    }
+};
