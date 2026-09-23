@@ -1,0 +1,249 @@
+/*
+------------------------------------------------------------
+Problem    : Count Primes
+Platform   : LeetCode
+Topic      : Math, Sieve of Eratosthenes
+Difficulty : Medium
+
+Problem:
+Given an integer `n`, return the number of prime numbers that
+are strictly less than `n`.
+
+A prime number is a number greater than 1 that has exactly two
+positive divisors:
+
+    1 and itself
+
+Example:
+
+    n = 10
+
+Prime numbers strictly less than 10:
+
+    2, 3, 5, 7
+
+Therefore:
+
+    Output = 4
+
+Approach:
+Use the Sieve of Eratosthenes.
+
+Instead of checking every number individually to determine
+whether it is prime, we mark all composite numbers.
+
+Create a boolean array:
+
+    isPrime[i] = true
+
+initially for every number from 0 to n - 1.
+
+Then:
+- 0 and 1 are not prime.
+- Start from 2.
+- If `i` is prime, mark all multiples of `i` as composite.
+
+For example, when:
+
+    i = 2
+
+mark:
+
+    4, 6, 8, 10, 12, ...
+
+as non-prime.
+
+When:
+
+    i = 3
+
+mark:
+
+    9, 12, 15, 18, ...
+
+as non-prime.
+
+Continue this process until:
+
+    i * i < n
+
+------------------------------------------------------------
+Why start marking from i * i?
+------------------------------------------------------------
+
+Suppose:
+
+    i = 5
+
+Its multiples are:
+
+    5*2 = 10
+    5*3 = 15
+    5*4 = 20
+    5*5 = 25
+
+But 10, 15, and 20 have already been marked by smaller
+prime numbers:
+
+    10 -> marked by 2
+    15 -> marked by 3
+    20 -> marked by 2
+
+Therefore, the first new multiple that needs to be marked is:
+
+    5 * 5 = 25
+
+So we start from:
+
+    i * i
+
+This significantly reduces unnecessary operations.
+
+------------------------------------------------------------
+Why do we only go up to sqrt(n)?
+------------------------------------------------------------
+
+If a number `x` is composite, it must have at least one factor
+that is less than or equal to:
+
+    sqrt(x)
+
+Therefore, every composite number less than `n` will already
+be marked by a prime number not greater than:
+
+    sqrt(n)
+
+For example:
+
+    36 = 4 * 9
+
+At least one factor is <= sqrt(36) = 6.
+
+Therefore, processing values up to sqrt(n) is sufficient.
+
+------------------------------------------------------------
+Example Walkthrough:
+------------------------------------------------------------
+
+    n = 10
+
+Initially:
+
+    [0,1,2,3,4,5,6,7,8,9]
+
+Set:
+
+    isPrime[0] = false
+    isPrime[1] = false
+
+Start with 2:
+
+    2 is prime
+
+Mark multiples of 2:
+
+    4, 6, 8
+
+Now:
+
+    2,3,5,7,9
+
+Next 3:
+
+    3 is prime
+
+Mark multiples of 3 starting from 9:
+
+    9
+
+Final prime numbers:
+
+    2,3,5,7
+
+Count:
+
+    4
+
+------------------------------------------------------------
+Why use `vector<bool>`?
+------------------------------------------------------------
+
+We only need to store whether each number is prime or not.
+
+Therefore, a boolean array is enough:
+
+    true  -> prime
+    false -> not prime
+
+`vector<bool>` is also memory efficient for this use case.
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. If `n <= 2`, return 0.
+2. Create `isPrime` of size n and initialize it to true.
+3. Mark 0 and 1 as non-prime.
+4. For every `i` from 2 while `i * i < n`:
+      - If `isPrime[i]` is true:
+          - Mark every multiple starting from `i * i` as false.
+5. Count all indices from 2 to n - 1 that remain prime.
+6. Return the count.
+
+Time Complexity : O(n log log n)
+
+Reason:
+The Sieve of Eratosthenes marks composite numbers very
+efficiently.
+
+Space Complexity : O(n)
+
+Reason:
+We maintain a boolean array of size n.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int countPrimes(int n) {
+
+        // No prime number exists below 2
+        if (n <= 2) {
+            return 0;
+        }
+
+        // Assume every number is prime initially
+        vector<bool> isPrime(n, true);
+
+        // 0 and 1 are not prime
+        isPrime[0] = false;
+        isPrime[1] = false;
+
+        // Mark composite numbers
+        for (int i = 2; i * i < n; i++) {
+
+            if (isPrime[i]) {
+
+                // Start from i * i because smaller
+                // multiples were already processed.
+                for (int j = i * i; j < n; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+
+        // Count remaining prime numbers
+        int count = 0;
+
+        for (int i = 2; i < n; i++) {
+
+            if (isPrime[i]) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+};
