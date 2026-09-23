@@ -1,0 +1,225 @@
+/*
+------------------------------------------------------------
+Problem    : Reverse Linked List
+Platform   : LeetCode
+Topic      : Linked List
+Difficulty : Easy
+
+Problem:
+Given the head of a singly linked list, reverse the list and
+return the new head.
+
+Example:
+
+    Input:
+
+        1 -> 2 -> 3 -> 4 -> 5 -> nullptr
+
+    Output:
+
+        5 -> 4 -> 3 -> 2 -> 1 -> nullptr
+
+Approach:
+Use Recursive Reversal.
+
+The idea is to recursively reverse the list starting from
+the second node.
+
+For example:
+
+    1 -> 2 -> 3 -> 4 -> 5
+
+We first recursively reverse:
+
+    2 -> 3 -> 4 -> 5
+
+which becomes:
+
+    5 -> 4 -> 3 -> 2
+
+Then we attach node 1 at the end.
+
+The important pointer operation is:
+
+    head->next->next = head
+
+Suppose:
+
+    1 -> 2
+
+Here `head` is 1 and `head->next` is 2.
+
+We change:
+
+    2->next = 1
+
+So:
+
+    2 -> 1
+
+Then:
+
+    1->next = nullptr
+
+to remove the old forward connection.
+
+------------------------------------------------------------
+Base Case:
+------------------------------------------------------------
+
+If:
+
+    head == nullptr
+
+the list is empty.
+
+If:
+
+    head->next == nullptr
+
+the list contains only one node and is already reversed.
+
+Therefore:
+
+    if (!head || !head->next)
+        return head;
+
+------------------------------------------------------------
+Recursive Process:
+------------------------------------------------------------
+
+Example:
+
+    1 -> 2 -> 3 -> 4 -> 5
+
+Call recursively until reaching:
+
+    5
+
+At node 5:
+
+    return 5
+
+At node 4:
+
+    5 -> 4
+
+At node 3:
+
+    5 -> 4 -> 3
+
+At node 2:
+
+    5 -> 4 -> 3 -> 2
+
+At node 1:
+
+    5 -> 4 -> 3 -> 2 -> 1
+
+The pointer returned by the deepest recursive call is always
+the new head of the reversed list.
+
+------------------------------------------------------------
+Why do we return `tail`?
+------------------------------------------------------------
+
+When we reach the last node:
+
+    5 -> nullptr
+
+that node becomes the new head after reversal.
+
+So the recursive call returns:
+
+    5
+
+Every previous call keeps returning the same node.
+
+Therefore:
+
+    return tail;
+
+gives us the head of the fully reversed list.
+
+------------------------------------------------------------
+Important Pointer Operation:
+------------------------------------------------------------
+
+For:
+
+    1 -> 2 -> 3
+
+Suppose we are processing node 1.
+
+After reversing the remaining list:
+
+    3 -> 2
+
+Now:
+
+    head = 1
+
+    head->next = 2
+
+To reverse the connection:
+
+    head->next->next = head
+
+which means:
+
+    2 -> 1
+
+Then:
+
+    head->next = nullptr
+
+so the final list becomes:
+
+    3 -> 2 -> 1
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. If the list is empty or contains one node, return head.
+2. Recursively reverse the list starting from `head->next`.
+3. Make the next node point back to the current node.
+4. Set the current node's next pointer to nullptr.
+5. Return the head of the reversed list.
+
+Time Complexity : O(n)
+
+Reason:
+Every node is visited exactly once.
+
+Space Complexity : O(n)
+
+Reason:
+The recursion stack can contain up to n function calls.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    ListNode* reverseList(ListNode* head) {
+
+        // Empty list or single node
+        if (head == nullptr || head->next == nullptr) {
+            return head;
+        }
+
+        // Reverse the remaining list
+        ListNode* newHead = reverseList(head->next);
+
+        // Reverse the current connection
+        head->next->next = head;
+
+        // Remove the old forward connection
+        head->next = nullptr;
+
+        // Return the new head
+        return newHead;
+    }
+};
