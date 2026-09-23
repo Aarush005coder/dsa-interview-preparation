@@ -23,6 +23,7 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 | 13 | Sort List | Medium | ✅ |
 | 14 | Intersection of Two Linked Lists | Easy | ✅ |
 | 15 | Remove Linked List Elements | Easy | ✅ |
+| 16 | Reverse Linked List | Easy | ✅ |
 
 ---
 
@@ -45,4 +46,4 @@ This folder contains **Linked List** problems solved in **C++**. Each solution i
 
 ---
 
-**Problems Solved:** **15**
+**Problems Solved:** **16**
