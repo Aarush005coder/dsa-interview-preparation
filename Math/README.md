@@ -14,6 +14,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 4 | Max Points on a Line | Hard | ✅ |
 | 5 | Factorial Trailing Zeroes | Medium | ✅ |
 | 6 | Happy Number | Easy | ✅ |
+| 7 | Count Primes | Medium | ✅ |
 
 ---
 
@@ -39,4 +40,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **6**
+**Problems Solved:** **7**
