@@ -1,0 +1,294 @@
+/*
+------------------------------------------------------------
+Problem    : Shortest Palindrome
+Platform   : LeetCode
+Topic      : Strings, Knuth–Morris–Pratt Algorithm, Prefix Function
+Difficulty : Hard
+
+Problem:
+Given a string `s`, add characters only to the beginning of
+the string so that the resulting string becomes a palindrome.
+
+Return the shortest possible palindrome.
+
+Example:
+
+    s = "aacecaaa"
+
+Output:
+
+    "aaacecaaa"
+
+We only add characters in front of the original string.
+
+Approach:
+Use the KMP (Knuth-Morris-Pratt) Prefix Function.
+
+The key idea is to find the longest prefix of `s` that is also
+a palindrome.
+
+Suppose:
+
+    s = "aacecaaa"
+
+The longest palindromic prefix is:
+
+    "aacecaa"
+
+The remaining suffix is:
+
+    "a"
+
+To make the complete string a palindrome, we reverse the
+remaining suffix:
+
+    "a"
+
+and add it to the beginning:
+
+    "a" + "aacecaaa"
+
+Result:
+
+    "aaacecaaa"
+
+------------------------------------------------------------
+How do we find the longest palindromic prefix?
+------------------------------------------------------------
+
+Create:
+
+    rev = reverse(s)
+
+Then construct:
+
+    temp = s + "#" + rev
+
+Example:
+
+    s   = "aacecaaa"
+    rev = "aaacecaa"
+
+    temp = "aacecaaa#aaacecaa"
+
+We use the KMP prefix-function array (`lps`).
+
+For every position `i`:
+
+    lps[i]
+
+stores the length of the longest proper prefix of `temp[0...i]`
+which is also a suffix.
+
+The last value:
+
+    lps[temp.size() - 1]
+
+gives the length of the longest prefix of `s` that matches a
+suffix of `reverse(s)`.
+
+Because that suffix corresponds to the reverse of the prefix,
+this gives the longest palindromic prefix of `s`.
+
+For example:
+
+    s = "aacecaaa"
+
+    longest palindromic prefix length = 7
+
+Therefore:
+
+    s.substr(7) = "a"
+
+Only this suffix needs to be reversed and added to the front.
+
+------------------------------------------------------------
+Why use "#" between the strings?
+------------------------------------------------------------
+
+We create:
+
+    s + "#" + reverse(s)
+
+The separator must be a character that does not appear in the
+string.
+
+This prevents matches from crossing directly from `s` into
+`reverse(s)`.
+
+Therefore, the KMP prefix calculation correctly identifies
+the relationship between the original string and its reverse.
+
+------------------------------------------------------------
+KMP Prefix Function:
+------------------------------------------------------------
+
+For every character:
+
+1. Start with the previous prefix length `j`.
+2. If characters do not match, use:
+
+       j = lps[j - 1]
+
+   to fall back to the next possible prefix.
+3. If they match, increase `j`.
+4. Store `j` in `lps[i]`.
+
+This allows us to compute the required prefix information in
+linear time.
+
+------------------------------------------------------------
+Example:
+------------------------------------------------------------
+
+    s = "abcd"
+
+    reverse(s) = "dcba"
+
+    temp = "abcd#dcba"
+
+There is no meaningful palindromic prefix longer than 1:
+
+    "a"
+
+So:
+
+    longest palindromic prefix = "a"
+
+Remaining suffix:
+
+    "bcd"
+
+Reverse it:
+
+    "dcb"
+
+Add to front:
+
+    "dcbabcd"
+
+This is the shortest palindrome.
+
+------------------------------------------------------------
+Why is this the shortest palindrome?
+------------------------------------------------------------
+
+Suppose the longest palindromic prefix has length `L`.
+
+That prefix is already a palindrome, so we do not need to
+change or add anything to it.
+
+The remaining suffix:
+
+    s[L...n-1]
+
+is not part of the palindromic prefix.
+
+To make the complete string a palindrome, the minimum required
+characters are exactly the reverse of this remaining suffix.
+
+Therefore:
+
+    answer =
+        reverse(s.substr(L)) + s
+
+Choosing any shorter palindromic prefix would leave a longer
+suffix to prepend, producing a longer result.
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. Create the reverse of `s`.
+2. Build:
+
+       temp = s + "#" + reverse(s)
+
+3. Compute the KMP prefix-function array.
+4. Let:
+
+       L = lps[temp.size() - 1]
+
+5. Extract the suffix:
+
+       add = s.substr(L)
+
+6. Reverse `add`.
+7. Return:
+
+       add + s
+
+------------------------------------------------------------
+Time Complexity : O(n)
+
+Reason:
+- Reversing the string takes O(n).
+- Building the prefix-function array takes O(n).
+- Creating and reversing the remaining suffix takes O(n).
+
+Overall:
+
+    O(n)
+
+Space Complexity : O(n)
+
+Reason:
+We store:
+- The reversed string.
+- The combined string.
+- The prefix-function array.
+
+Therefore:
+
+    O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    string shortestPalindrome(string s) {
+
+        // Create reversed string
+        string rever = s;
+        reverse(rever.begin(), rever.end());
+
+        // Combine original and reversed strings
+        // with a separator.
+        string temp = s + "#" + rever;
+
+        int n = temp.size();
+
+        // KMP prefix-function / LPS array
+        vector<int> lps(n, 0);
+
+        for (int i = 1; i < n; i++) {
+
+            int j = lps[i - 1];
+
+            // Fall back until characters match
+            while (j > 0 && temp[i] != temp[j]) {
+                j = lps[j - 1];
+            }
+
+            // Characters match
+            if (temp[i] == temp[j]) {
+                j++;
+            }
+
+            lps[i] = j;
+        }
+
+        // Length of the longest palindromic prefix
+        int prefixLength = lps[n - 1];
+
+        // Remaining suffix is not part of the palindrome
+        string add = s.substr(prefixLength);
+
+        // Reverse it and add to the beginning
+        reverse(add.begin(), add.end());
+
+        return add + s;
+    }
+};
