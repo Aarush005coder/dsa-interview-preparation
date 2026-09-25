@@ -1,0 +1,175 @@
+/*
+------------------------------------------------------------
+Problem    : Contains Duplicate
+Platform   : LeetCode
+Topic      : Arrays
+Difficulty : Easy
+
+Problem:
+Given an integer array `nums`, determine whether any value
+appears at least twice.
+
+Return:
+
+    true
+        If any duplicate element exists.
+
+    false
+        If every element is unique.
+
+Example:
+
+    nums = [1,2,3,1]
+
+The value `1` appears twice.
+
+Therefore:
+
+    Output = true
+
+Approach:
+Use an `unordered_set`.
+
+The set stores the elements that have already been visited.
+
+For every number:
+1. Check whether the number already exists in the set.
+2. If it exists, a duplicate has been found.
+3. Otherwise, insert the number into the set.
+
+Example:
+
+    nums = [1,2,3,1]
+
+Process 1:
+
+    Set = {}
+
+    1 is not present
+    Insert 1
+
+    Set = {1}
+
+Process 2:
+
+    2 is not present
+    Insert 2
+
+    Set = {1,2}
+
+Process 3:
+
+    3 is not present
+    Insert 3
+
+    Set = {1,2,3}
+
+Process 1:
+
+    1 is already present
+
+Therefore:
+
+    return true
+
+Why use a Hash Set?
+
+An `unordered_set` provides average O(1) lookup and insertion.
+
+This allows us to detect duplicates in a single traversal.
+
+------------------------------------------------------------
+Important:
+------------------------------------------------------------
+
+Your original code contains:
+
+    s.end(num)
+
+This is incorrect.
+
+The correct syntax is:
+
+    s.end()
+
+because `end()` does not take an argument.
+
+Therefore, the condition should be:
+
+    if (s.find(num) != s.end())
+
+------------------------------------------------------------
+Alternative Approach:
+------------------------------------------------------------
+
+We can also sort the array and check adjacent elements.
+
+For example:
+
+    [1,2,3,1]
+
+After sorting:
+
+    [1,1,2,3]
+
+Then:
+
+    nums[i] == nums[i-1]
+
+indicates a duplicate.
+
+However, sorting takes:
+
+    O(n log n)
+
+The Hash Set approach takes:
+
+    O(n) average time
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. Create an empty unordered_set.
+2. Traverse every element of `nums`.
+3. If the current element already exists in the set:
+      - Return true.
+4. Otherwise, insert it into the set.
+5. If the traversal finishes without finding a duplicate,
+   return false.
+
+Time Complexity : O(n) average
+
+Reason:
+Each element requires average O(1) insertion and lookup.
+
+Space Complexity : O(n)
+
+Reason:
+In the worst case, all n elements are stored in the set.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    bool containsDuplicate(vector<int>& nums) {
+
+        unordered_set<int> s;
+
+        for (int num : nums) {
+
+            // Duplicate found
+            if (s.find(num) != s.end()) {
+                return true;
+            }
+
+            // Store current element
+            s.insert(num);
+        }
+
+        // Every element is unique
+        return false;
+    }
+};
