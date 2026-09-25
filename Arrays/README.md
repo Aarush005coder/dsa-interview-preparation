@@ -21,6 +21,7 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 | 11 | Find Minimum in Rotated Sorted Array | Medium | ✅ |
 | 12 | Find Minimum in Rotated Sorted Array II | Hard | ✅ |
 | 13 | Rotate Array | Medium | ✅ |
+| 14 | Contains Duplicate | Easy | ✅ |
 
 ---
 
@@ -45,4 +46,4 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **13**
+**Problems Solved:** **14**
