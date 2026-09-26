@@ -1,0 +1,340 @@
+/*
+------------------------------------------------------------
+Problem    : Maximal Square
+Platform   : LeetCode
+Topic      : Matrix
+Difficulty : Medium
+
+Problem:
+Given an m x n binary matrix containing only '0' and '1',
+find the largest square containing only '1's and return
+its area.
+
+Example:
+
+    matrix =
+    [
+        ["1","0","1","0","0"],
+        ["1","0","1","1","1"],
+        ["1","1","1","1","1"],
+        ["1","0","0","1","0"]
+    ]
+
+The largest square containing only 1s has side length 2.
+
+Therefore:
+
+    Area = 2 * 2
+         = 4
+
+Output:
+
+    4
+
+Approach:
+Use Dynamic Programming.
+
+For every cell containing '1', determine the largest square
+that can start from that cell.
+
+Let:
+
+    dp[i][j]
+
+represent the maximum side length of a square of 1s starting
+at matrix[i][j].
+
+If:
+
+    matrix[i][j] == '0'
+
+then no square can start there:
+
+    dp[i][j] = 0
+
+If:
+
+    matrix[i][j] == '1'
+
+then the square can be formed only if all three neighboring
+states are also available:
+
+    Right -> dp[i][j + 1]
+    Down  -> dp[i + 1][j]
+    Diag  -> dp[i + 1][j + 1]
+
+Therefore:
+
+    dp[i][j] =
+        1 + min(
+            dp[i][j + 1],
+            dp[i + 1][j],
+            dp[i + 1][j + 1]
+        )
+
+Why do we take the minimum?
+
+Suppose the three neighboring square sizes are:
+
+    Right = 3
+    Down  = 2
+    Diag  = 2
+
+The current cell can only form a square of side:
+
+    1 + min(3,2,2)
+    = 3
+
+The smallest neighboring square determines how large the
+current square can become.
+
+------------------------------------------------------------
+Example:
+------------------------------------------------------------
+
+Consider:
+
+    1 1
+    1 1
+
+At the bottom-right cell:
+
+    dp = 1
+
+For the bottom-left cell:
+
+    right = 1
+    down  = 0
+    diag  = 0
+
+    dp = 1
+
+For the top-right cell:
+
+    right = 0
+    down  = 1
+    diag  = 0
+
+    dp = 1
+
+For the top-left cell:
+
+    right = 1
+    down  = 1
+    diag  = 1
+
+    dp = 1 + min(1,1,1)
+       = 2
+
+So the largest square has:
+
+    side = 2
+
+and:
+
+    area = 2 * 2
+         = 4
+
+------------------------------------------------------------
+Why process from bottom-right?
+------------------------------------------------------------
+
+The state:
+
+    dp[i][j]
+
+depends on:
+
+    dp[i][j + 1]     -> right
+    dp[i + 1][j]     -> down
+    dp[i + 1][j + 1] -> diagonal
+
+Therefore, these values must already be calculated.
+
+Processing the matrix:
+
+    bottom -> top
+    right  -> left
+
+ensures all required states are available.
+
+------------------------------------------------------------
+Space Optimization:
+------------------------------------------------------------
+
+A full DP table would require:
+
+    O(m * n)
+
+space.
+
+However, each row only depends on:
+- The current row.
+- The row directly below it.
+
+Therefore, we can use two 1D arrays:
+
+    curr
+    next
+
+where:
+
+    curr -> current row
+    next -> row below
+
+This reduces the auxiliary space to:
+
+    O(n)
+
+------------------------------------------------------------
+Meaning of the variables:
+------------------------------------------------------------
+
+For the current cell `(i,j)`:
+
+    right = curr[j + 1]
+    down  = curr[j]
+    diag  = next[j + 1]
+
+Then:
+
+    curr[j] = 1 + min(right, min(diag, down))
+
+If the cell is '0':
+
+    curr[j] = 0
+
+We also keep:
+
+    maxi
+
+which stores the largest square side length found so far.
+
+At the end:
+
+    area = maxi * maxi
+
+------------------------------------------------------------
+Example:
+------------------------------------------------------------
+
+    matrix:
+
+    1 0 1
+    1 1 1
+    1 1 1
+
+The largest square is:
+
+    1 1
+    1 1
+
+Side length:
+
+    2
+
+Area:
+
+    2² = 4
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. Initialize `maxi = 0`.
+2. Create two DP arrays of size `cols + 1`.
+3. Traverse the matrix from bottom-right to top-left.
+4. If the current cell is '0':
+      - Set current DP value to 0.
+5. If the current cell is '1':
+      - Calculate:
+
+            1 + min(right, down, diagonal)
+
+      - Update `maxi`.
+6. After processing each row, copy the current row into
+   the next row.
+7. Return:
+
+       maxi * maxi
+
+------------------------------------------------------------
+Time Complexity : O(m * n)
+
+Reason:
+Every matrix cell is processed exactly once.
+
+------------------------------------------------------------
+Space Complexity : O(n)
+
+Reason:
+We use two arrays of size `n + 1`.
+
+The output is only one integer, so no additional output
+space is required.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int solve(
+        vector<vector<char>>& matrix,
+        int& maxi
+    ) {
+
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+
+        // Current row and next row
+        vector<int> curr(cols + 1, 0);
+        vector<int> next(cols + 1, 0);
+
+        // Process from bottom to top
+        for (int i = rows - 1; i >= 0; i--) {
+
+            // Process from right to left
+            for (int j = cols - 1; j >= 0; j--) {
+
+                // Values needed for the recurrence
+                int right = curr[j + 1];
+                int down = curr[j];
+                int diagonal = next[j + 1];
+
+                if (matrix[i][j] == '1') {
+
+                    // Largest square starting at (i, j)
+                    curr[j] =
+                        1 + min(
+                            right,
+                            min(down, diagonal)
+                        );
+
+                    // Update maximum side length
+                    maxi = max(maxi, curr[j]);
+                }
+                else {
+
+                    // No square can start from a '0'
+                    curr[j] = 0;
+                }
+            }
+
+            // Current row becomes the next row
+            next = curr;
+        }
+
+        return next[0];
+    }
+
+    int maximalSquare(vector<vector<char>>& matrix) {
+
+        int maxi = 0;
+
+        solve(matrix, maxi);
+
+        // Convert maximum side length to area
+        return maxi * maxi;
+    }
+};
