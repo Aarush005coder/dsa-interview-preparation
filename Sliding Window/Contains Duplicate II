@@ -1,0 +1,227 @@
+/*
+------------------------------------------------------------
+Problem    : Contains Duplicate II
+Platform   : LeetCode
+Topic      : Sliding Window
+Difficulty : Easy
+
+Problem:
+Given an integer array `nums` and an integer `k`, determine
+whether there are two distinct indices `i` and `j` such that:
+
+    nums[i] == nums[j]
+
+and:
+
+    |i - j| <= k
+
+Example:
+
+    nums = [1,2,3,1]
+    k = 3
+
+The value `1` appears at:
+
+    index 0
+    index 3
+
+Difference:
+
+    |3 - 0| = 3
+
+Since:
+
+    3 <= 3
+
+the answer is:
+
+    true
+
+Approach:
+Use a Hash Map.
+
+Store the most recent index of every number.
+
+For every index `i`:
+1. Check whether `nums[i]` has already appeared.
+2. If it has, calculate the distance from its previous index.
+3. If the distance is at most `k`, a valid nearby duplicate
+   has been found.
+4. Update the stored index to the current index.
+
+Why store the latest index?
+
+Suppose the same number appears multiple times.
+
+Example:
+
+    nums = [1,2,1,1]
+    k = 1
+
+For the last `1`, the most recent previous index is 2.
+
+Distance:
+
+    3 - 2 = 1
+
+which satisfies the condition.
+
+Using the latest occurrence gives us the smallest possible
+index difference for the current element.
+
+------------------------------------------------------------
+Example Walkthrough:
+------------------------------------------------------------
+
+    nums = [1,0,1,1]
+    k = 1
+
+Initially:
+
+    map = {}
+
+Index 0:
+
+    nums[0] = 1
+
+    1 not present
+
+    map[1] = 0
+
+Index 1:
+
+    nums[1] = 0
+
+    0 not present
+
+    map[0] = 1
+
+Index 2:
+
+    nums[2] = 1
+
+    1 already exists at index 0
+
+    distance = 2 - 0 = 2
+
+    2 > 1
+
+Not valid.
+
+Update:
+
+    map[1] = 2
+
+Index 3:
+
+    nums[3] = 1
+
+    1 exists at index 2
+
+    distance = 3 - 2 = 1
+
+    1 <= 1
+
+Therefore:
+
+    return true
+
+------------------------------------------------------------
+Why does updating the index matter?
+------------------------------------------------------------
+
+Consider:
+
+    nums = [1,2,1,1]
+    k = 1
+
+When processing index 2:
+
+    1 was previously at index 0
+    distance = 2
+
+So it does not satisfy the condition.
+
+But we update:
+
+    map[1] = 2
+
+Now when index 3 is processed:
+
+    distance = 3 - 2 = 1
+
+This correctly finds the valid pair.
+
+------------------------------------------------------------
+Alternative Approach:
+------------------------------------------------------------
+
+A Sliding Window with an `unordered_set` can also be used.
+
+The set stores at most `k` recent elements.
+
+For every element:
+- If it already exists in the set, return true.
+- Insert it.
+- If the window size becomes greater than k, remove the
+  element that is leaving the window.
+
+That approach also runs in O(n) average time.
+
+The Hash Map approach is straightforward because it directly
+stores the previous index.
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. Create an `unordered_map<int, int>`.
+2. Traverse the array.
+3. If the current value already exists:
+      - Check the distance between the current index and
+        the stored index.
+      - If the distance is <= k, return true.
+4. Update the value's index to the current index.
+5. Return false if no valid pair exists.
+
+Time Complexity : O(n) average
+
+Reason:
+Each element is processed once and hash map lookup/update
+takes O(1) average time.
+
+Space Complexity : O(n)
+
+Reason:
+In the worst case, the map stores all distinct elements.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+
+        unordered_map<int, int> lastIndex;
+
+        for (int i = 0; i < nums.size(); i++) {
+
+            auto it = lastIndex.find(nums[i]);
+
+            // Check whether the value has appeared before
+            if (it != lastIndex.end()) {
+
+                // Check distance between duplicate indices
+                if (i - it->second <= k) {
+                    return true;
+                }
+            }
+
+            // Store the most recent index
+            lastIndex[nums[i]] = i;
+        }
+
+        return false;
+    }
+};
