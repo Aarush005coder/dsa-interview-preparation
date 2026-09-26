@@ -79,13 +79,13 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Arrays | 14 |
 | Linked List | 16 |
 | Strings | 10 |
-| Matrix | 4 |
+| Matrix | 5 |
 | Hash Map | 3 |
 | Sorting | 3 |
 | Searching | 0 |
 | Binary Search | 4 |
 | Two Pointers | 7 |
-| Sliding Window | 1 |
+| Sliding Window | 2 |
 | Prefix Sum | 0 |
 | Bit Manipulation | 5 |
 | Recursion | 1 |
@@ -173,7 +173,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **126**
+**Total Problems Solved:** **128**
 
 ---
 
