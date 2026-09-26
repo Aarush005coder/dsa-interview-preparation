@@ -12,6 +12,7 @@ This folder contains **Matrix** problems solved in **C++** as part of my DSA pre
 | 2 | Search a 2D Matrix | Medium | ✅ |
 | 3 | Word Search | Medium | ✅ |
 | 4 | Maximal Rectangle | Hard | ✅ |
+| 5 | Maximal Square | Medium | ✅ |
 
 ---
 
@@ -36,4 +37,4 @@ This folder contains **Matrix** problems solved in **C++** as part of my DSA pre
 
 ---
 
-**Problems Solved:** **4**
+**Problems Solved:** **5**
