@@ -9,6 +9,7 @@ This folder contains **Sliding Window** problems solved in **C++**. Each solutio
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Longest Substring Without Repeating Characters | Medium | ✅ |
+| 2 | Contains Duplicate II | Easy | ✅ |
 
 ---
 
@@ -35,4 +36,4 @@ This folder contains **Sliding Window** problems solved in **C++**. Each solutio
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
