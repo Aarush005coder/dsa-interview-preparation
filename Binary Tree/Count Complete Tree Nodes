@@ -1,0 +1,269 @@
+/*
+------------------------------------------------------------
+Problem    : Count Complete Tree Nodes
+Platform   : LeetCode
+Topic      : Binary Tree, Complete Binary Tree
+Difficulty : Medium
+
+Problem:
+Given the root of a complete binary tree, return the total
+number of nodes in the tree.
+
+A complete binary tree has:
+- Every level completely filled except possibly the last.
+- All nodes in the last level are as far left as possible.
+
+Example:
+
+    root = [1,2,3,4,5,6]
+
+            1
+           / \
+          2   3
+         / \  /
+        4  5 6
+
+Output:
+
+    6
+
+Important:
+A simple recursive solution:
+
+    1 + count(left) + count(right)
+
+visits every node and takes:
+
+    O(n)
+
+But the problem asks for an algorithm faster than O(n).
+
+Approach:
+Use the special property of a Complete Binary Tree.
+
+For every subtree, calculate:
+
+    leftHeight  = height of the leftmost path
+    rightHeight = height of the rightmost path
+
+There are two cases.
+
+------------------------------------------------------------
+Case 1: leftHeight == rightHeight
+------------------------------------------------------------
+
+If the leftmost and rightmost heights are equal, the subtree
+is a PERFECT binary tree.
+
+A perfect binary tree of height h contains:
+
+    2^h - 1
+
+nodes.
+
+Therefore, we can calculate the answer directly.
+
+Example:
+
+            1
+           / \
+          2   3
+         / \ / \
+        4  5 6  7
+
+Height:
+
+    h = 3
+
+Number of nodes:
+
+    2^3 - 1
+    = 7
+
+No individual node traversal is required.
+
+------------------------------------------------------------
+Case 2: leftHeight != rightHeight
+------------------------------------------------------------
+
+The subtree is not perfect.
+
+Because the tree is complete, the last level is partially
+filled from left to right.
+
+Therefore, recursively count the left and right subtrees:
+
+    1 + countNodes(left) + countNodes(right)
+
+At every recursive level, we calculate heights in O(log n)
+and then move into only one or both smaller subtrees.
+
+------------------------------------------------------------
+Why does equal height mean a perfect tree?
+------------------------------------------------------------
+
+In a complete binary tree, if the leftmost path and rightmost
+path have the same height, then the last level must be fully
+filled.
+
+Therefore, the entire subtree is perfect.
+
+So we can use:
+
+    (2^h) - 1
+
+instead of visiting every node.
+
+------------------------------------------------------------
+Example:
+------------------------------------------------------------
+
+    root = [1,2,3,4,5,6]
+
+            1
+           / \
+          2   3
+         / \ /
+        4  5 6
+
+At root:
+
+    leftHeight = 3
+    rightHeight = 2
+
+Heights are different, so recursively process the subtrees.
+
+For the left subtree:
+
+            2
+           / \
+          4   5
+
+    leftHeight  = 2
+    rightHeight = 2
+
+It is perfect.
+
+Therefore:
+
+    nodes = 2^2 - 1
+          = 3
+
+For the right subtree:
+
+        3
+       /
+      6
+
+It is not perfect, so process it recursively.
+
+Total:
+
+    1 + 3 + 2 = 6
+
+------------------------------------------------------------
+Why is this faster than O(n)?
+------------------------------------------------------------
+
+The height of a complete binary tree is:
+
+    O(log n)
+
+At each recursive level, calculating the leftmost and
+rightmost heights takes O(log n).
+
+The recursion has O(log n) levels.
+
+Therefore:
+
+    O(log n) * O(log n)
+    = O(log² n)
+
+This is much faster than traversing all n nodes.
+
+------------------------------------------------------------
+Algorithm:
+------------------------------------------------------------
+
+1. If root is nullptr, return 0.
+2. Find the height of the leftmost path.
+3. Find the height of the rightmost path.
+4. If both heights are equal:
+      - The tree is perfect.
+      - Return:
+
+            2^height - 1
+5. Otherwise:
+      - Recursively count the left subtree.
+      - Recursively count the right subtree.
+      - Add 1 for the current node.
+6. Return the total.
+
+Time Complexity : O(log² n)
+
+Reason:
+At each recursive level, height calculation takes O(log n),
+and there are O(log n) levels.
+
+Space Complexity : O(log n)
+
+Reason:
+The recursion depth is equal to the height of the tree.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+private:
+
+    // Find the height of the leftmost path
+    int leftHeight(TreeNode* root) {
+
+        int height = 0;
+
+        while (root != nullptr) {
+            height++;
+            root = root->left;
+        }
+
+        return height;
+    }
+
+    // Find the height of the rightmost path
+    int rightHeight(TreeNode* root) {
+
+        int height = 0;
+
+        while (root != nullptr) {
+            height++;
+            root = root->right;
+        }
+
+        return height;
+    }
+
+public:
+
+    int countNodes(TreeNode* root) {
+
+        // Empty tree
+        if (root == nullptr) {
+            return 0;
+        }
+
+        int left = leftHeight(root);
+        int right = rightHeight(root);
+
+        // Perfect binary tree
+        if (left == right) {
+
+            // Number of nodes = 2^height - 1
+            return (1 << left) - 1;
+        }
+
+        // Complete but not perfect
+        return 1 +
+               countNodes(root->left) +
+               countNodes(root->right);
+    }
+};
