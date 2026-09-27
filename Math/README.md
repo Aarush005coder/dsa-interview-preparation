@@ -15,6 +15,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 5 | Factorial Trailing Zeroes | Medium | ✅ |
 | 6 | Happy Number | Easy | ✅ |
 | 7 | Count Primes | Medium | ✅ |
+| 8 | Rectangle Area | Medium | ✅ |
 
 ---
 
@@ -40,4 +41,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **7**
+**Problems Solved:** **8**
