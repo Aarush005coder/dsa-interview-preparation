@@ -11,6 +11,7 @@ This folder contains **Stack** problems solved in **C++**. Each solution include
 | 1 | Valid Parentheses | Easy | ✅ |
 | 2 | Largest Rectangle in Histogram | Hard | ✅ |
 | 3 | Evaluate Reverse Polish Notation | Medium | ✅ |
+| 4 | Basic Calculator | Hard | ✅ |
 
 ---
 
@@ -37,4 +38,4 @@ This folder contains **Stack** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **3**
+**Problems Solved:** **4**
