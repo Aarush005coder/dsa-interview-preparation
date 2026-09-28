@@ -12,6 +12,7 @@ This folder contains **Stack** problems solved in **C++**. Each solution include
 | 2 | Largest Rectangle in Histogram | Hard | ✅ |
 | 3 | Evaluate Reverse Polish Notation | Medium | ✅ |
 | 4 | Basic Calculator | Hard | ✅ |
+| 5 | Implement Stack using Queues | Easy | ✅ |
 
 ---
 
@@ -38,4 +39,4 @@ This folder contains **Stack** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **4**
+**Problems Solved:** **5**
