@@ -1,0 +1,178 @@
+/*
+------------------------------------------------------------
+Problem    : Implement Stack using Queues
+Platform   : LeetCode
+Topic      : Stack 
+Difficulty : Easy
+
+Problem:
+Implement a Stack using only two Queues.
+
+A Stack follows:
+    LIFO -> Last In, First Out
+
+A Queue follows:
+    FIFO -> First In, First Out
+
+We need to implement:
+    push()
+    pop()
+    top()
+    empty()
+
+Approach:
+We use two queues:
+    q1 -> stores the stack elements in stack order
+    q2 -> temporary queue used during push()
+
+The main idea is to make the newly inserted element
+come to the FRONT of q1.
+
+For push(x):
+1. Push x into q2.
+2. Move all elements of q1 into q2.
+3. Swap q1 and q2.
+
+Example:
+Initially:
+    q1 = [1]
+
+Push 2:
+
+Step 1:
+    q2 = [2]
+
+Step 2:
+Move all elements from q1 to q2:
+    q2 = [2, 1]
+    q1 = []
+
+Step 3:
+swap(q1, q2)
+
+Now:
+    q1 = [2, 1]
+    q2 = []
+
+The front of q1 is now 2, which is exactly what
+we need for Stack's top element.
+
+Therefore:
+
+    pop()  -> q1.front()
+    top()  -> q1.front()
+
+Why does this work?
+
+A stack should look like:
+
+    TOP
+     ↓
+    2
+    1
+
+Our q1 stores:
+
+    front → [2, 1] ← back
+
+So the queue's front behaves exactly like the
+stack's top.
+
+Dry Run:
+Operations:
+    push(1)
+    push(2)
+    top()
+    pop()
+    empty()
+
+After push(1):
+    q1 = [1]
+
+After push(2):
+    q1 = [2, 1]
+
+top():
+    q1.front() = 2
+
+pop():
+    remove q1.front()
+    q1 = [1]
+    return 2
+
+empty():
+    q1 is not empty
+    return false
+
+Important:
+The expensive operation is push(), because every existing
+element may need to be moved from q1 to q2.
+
+pop(), top(), and empty() are O(1).
+
+Algorithm:
+push(x):
+    q2.push(x)
+    while q1 is not empty:
+        move q1.front() to q2
+        remove it from q1
+    swap(q1, q2)
+
+pop():
+    take q1.front()
+    q1.pop()
+    return the value
+
+top():
+    return q1.front()
+
+empty():
+    return q1.empty()
+
+Complexity:
+push() -> O(n)
+pop()  -> O(1)
+top()  -> O(1)
+empty() -> O(1)
+
+Overall Auxiliary Space : O(n)
+
+------------------------------------------------------------
+*/
+
+class MyStack {
+public:
+    queue<int> q1, q2;
+
+    MyStack() {
+    }
+
+    void push(int x) {
+        // First put the new element into q2
+        q2.push(x);
+
+        // Move all existing stack elements behind x
+        while (!q1.empty()) {
+            q2.push(q1.front());
+            q1.pop();
+        }
+
+        // q2 now has the stack order, so swap them
+        swap(q1, q2);
+    }
+
+    int pop() {
+        int z = q1.front();
+        q1.pop();
+
+        return z;
+    }
+
+    int top() {
+        return q1.front();
+    }
+
+    bool empty() {
+        return q1.empty();
+    }
+};
