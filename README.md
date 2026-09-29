@@ -88,7 +88,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Sliding Window | 2 |
 | Prefix Sum | 0 |
 | Bit Manipulation | 5 |
-| Recursion | 1 |
+| Recursion | 2 |
 | Backtracking | 11 |
 | Stack | 5 |
 | Queue | 0 |
@@ -100,7 +100,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Graph | 1 |
 | Dynamic Programming | 8 |
 | Greedy | 5 |
-| Math | 8 |
+| Math | 9 |
 | Segment Tree | 0 |
 | Fenwick Tree | 0 |
 | Union Find | 0 |
@@ -173,7 +173,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **132**
+**Total Problems Solved:** **134**
 
 ---
 
