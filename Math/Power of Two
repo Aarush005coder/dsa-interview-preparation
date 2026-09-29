@@ -1,0 +1,125 @@
+/*
+------------------------------------------------------------
+Problem    : Power of Two
+Platform   : LeetCode
+Topic      : Math / Bit Manipulation
+Difficulty : Easy
+
+Problem:
+Given an integer n, return true if n is a power of two.
+Otherwise, return false.
+
+A number is a power of two if:
+
+    n = 2^x
+
+where x is a non-negative integer.
+
+Examples:
+    1  = 2^0  -> true
+    2  = 2^1  -> true
+    4  = 2^2  -> true
+    8  = 2^3  -> true
+    10 -> false
+
+Approach:
+We repeatedly divide n by 2 as long as n is divisible by 2.
+
+Why?
+A power of two contains only factors of 2.
+
+For example:
+
+    16 -> 8 -> 4 -> 2 -> 1
+
+So, after removing all factors of 2:
+- If we reach 1, n was a power of two.
+- If we get another number, n had some factor other than 2.
+
+Example:
+n = 16
+
+16 % 2 == 0
+16 / 2 = 8
+
+8 % 2 == 0
+8 / 2 = 4
+
+4 % 2 == 0
+4 / 2 = 2
+
+2 % 2 == 0
+2 / 2 = 1
+
+Now:
+n = 1
+
+Therefore:
+    return true
+
+Example:
+n = 12
+
+12 / 2 = 6
+6 / 2 = 3
+
+Now 3 % 2 != 0.
+
+Since:
+    3 != 1
+
+12 is not a power of two.
+
+Why n <= 0 returns false?
+Powers of two are always positive:
+
+    2^0 = 1
+    2^1 = 2
+    2^2 = 4
+    ...
+
+So 0 and negative numbers cannot be powers of two.
+
+Algorithm:
+1. If n <= 0, return false.
+2. While n is divisible by 2:
+      n = n / 2
+3. Return true if n == 1, otherwise false.
+
+Alternative Bit Manipulation:
+A positive power of two has exactly one set bit.
+
+Examples:
+    1  -> 0001
+    2  -> 0010
+    4  -> 0100
+    8  -> 1000
+
+For such numbers:
+
+    n & (n - 1) == 0
+
+This gives an O(1) bit-manipulation solution.
+
+Time Complexity  : O(log n)
+Space Complexity : O(1)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    bool isPowerOfTwo(int n) {
+        // Powers of two are always positive
+        if (n <= 0)
+            return false;
+
+        // Keep removing factors of 2
+        while (n % 2 == 0) {
+            n /= 2;
+        }
+
+        // Only a power of 2 reduces exactly to 1
+        return n == 1;
+    }
+};
