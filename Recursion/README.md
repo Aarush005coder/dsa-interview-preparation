@@ -9,6 +9,7 @@ This folder contains **Recursion** problems solved in **C++** as part of my DSA 
 | # | Problem | Difficulty | Status |
 |---|---------|------------|--------|
 | 1 | Pow(x, n) | Medium | ✅ |
+| 2 | Invert Binary Tree | Easy | ✅ |
 
 ---
 
@@ -34,4 +35,4 @@ This folder contains **Recursion** problems solved in **C++** as part of my DSA 
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
