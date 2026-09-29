@@ -1,0 +1,154 @@
+/*
+------------------------------------------------------------
+Problem    : Invert Binary Tree
+Platform   : LeetCode
+Topic      : Recursion
+Difficulty : Easy
+
+Problem:
+Given the root of a binary tree, invert the tree and return
+its root.
+
+Inverting a binary tree means swapping the left and right
+child of every node.
+
+Example:
+
+Original:
+
+        4
+       / \
+      2   7
+     / \ / \
+    1  3 6  9
+
+After inversion:
+
+        4
+       / \
+      7   2
+     / \ / \
+    9  6 3  1
+
+Approach:
+We use recursion.
+
+For every node:
+1. Swap its left and right children.
+2. Recursively invert the new left subtree.
+3. Recursively invert the new right subtree.
+
+Base Case:
+If root is NULL, there is nothing to invert.
+
+    if (!root)
+        return nullptr;
+
+Why recursion works:
+A binary tree is made of smaller binary trees (left and
+right subtrees).
+
+So, if we invert:
+    - the current node's children
+    - the left subtree
+    - the right subtree
+
+then the complete tree becomes inverted.
+
+Dry Run:
+root = 4
+
+Initially:
+    left  = 2
+    right = 7
+
+Swap:
+    left  = 7
+    right = 2
+
+Now recursively invert 7:
+
+        7
+       / \
+      6   9
+
+After swapping:
+        7
+       / \
+      9   6
+
+Similarly invert 2:
+
+        2
+       / \
+      1   3
+
+After swapping:
+        2
+       / \
+      3   1
+
+Final tree:
+
+        4
+       / \
+      7   2
+     / \ / \
+    9  6 3  1
+
+Important:
+We swap the children BEFORE recursive calls.
+
+After the swap:
+    root->left  becomes the original right subtree
+    root->right becomes the original left subtree
+
+So recursively calling both children automatically processes
+the correct subtrees.
+
+Algorithm:
+1. If root is NULL, return NULL.
+2. Store root->left in a temporary variable.
+3. Set root->left = root->right.
+4. Set root->right = temporary.
+5. Recursively invert root->left.
+6. Recursively invert root->right.
+7. Return root.
+
+Time Complexity  : O(n)
+Space Complexity : O(h)
+
+Where:
+    n = number of nodes
+    h = height of the tree
+
+Worst-case recursion space:
+    O(n)   -> skewed tree
+
+Balanced tree:
+    O(log n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        // Base case: empty tree
+        if (!root)
+            return nullptr;
+
+        // Swap left and right children
+        TreeNode* temp = root->left;
+        root->left = root->right;
+        root->right = temp;
+
+        // Invert left subtree
+        invertTree(root->left);
+
+        // Invert right subtree
+        invertTree(root->right);
+
+        return root;
+    }
+};
