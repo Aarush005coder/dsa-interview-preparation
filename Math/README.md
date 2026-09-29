@@ -16,6 +16,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 6 | Happy Number | Easy | ✅ |
 | 7 | Count Primes | Medium | ✅ |
 | 8 | Rectangle Area | Medium | ✅ |
+| 9 | Power of Two | Easy | ✅ |
 
 ---
 
@@ -41,4 +42,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **8**
+**Problems Solved:** **9**
