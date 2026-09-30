@@ -17,6 +17,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 7 | Count Primes | Medium | ✅ |
 | 8 | Rectangle Area | Medium | ✅ |
 | 9 | Power of Two | Easy | ✅ |
+| 10 | Number of Digit One | Hard | ✅ |
 
 ---
 
@@ -42,4 +43,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **9**
+**Problems Solved:** **10**
