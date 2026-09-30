@@ -1,0 +1,291 @@
+/*
+------------------------------------------------------------
+Problem    : Number of Digit One
+Platform   : LeetCode
+Topic      : Math / Digit DP Pattern
+Difficulty : Hard
+
+Problem:
+Given an integer n, count how many times the digit '1'
+appears in all numbers from 0 to n.
+
+Example:
+    n = 13
+
+Numbers:
+    1, 10, 11, 12, 13
+
+Digit '1' appears:
+    1  -> 1 time
+    10 -> 1 time
+    11 -> 2 times
+    12 -> 1 time
+    13 -> 1 time
+
+Total = 6
+
+Approach:
+We count the number of 1s position by position.
+
+For each position:
+    ones
+    tens
+    hundreds
+    thousands
+    ...
+
+we divide n into three parts:
+
+    high
+    curr
+    low
+
+Suppose:
+    n = 12345
+    fact = 100
+
+Then we are looking at the hundreds digit.
+
+    high = 123
+    curr = 3
+    low  = 45
+
+Meaning:
+
+    high -> digits to the LEFT of current position
+    curr -> current digit
+    low  -> digits to the RIGHT of current position
+
+The formula depends on the current digit.
+
+------------------------------------------------------------
+Case 1: curr == 0
+------------------------------------------------------------
+
+If the current digit is 0:
+
+    count += high * fact
+
+Example:
+n = 405
+
+At tens position:
+    high = 4
+    curr = 0
+    low = 5
+    fact = 10
+
+Number of tens-place 1s:
+
+    high * fact
+    = 4 * 10
+    = 40
+
+------------------------------------------------------------
+Case 2: curr == 1
+------------------------------------------------------------
+
+If the current digit is exactly 1:
+
+    count += high * fact + low + 1
+
+Why + low + 1?
+
+Because the current position is 1, so the
+numbers from:
+
+    0 to low
+
+are also included.
+
+Example:
+n = 13
+
+At ones position:
+    high = 1
+    curr = 3
+    low = 0
+
+Since curr > 1:
+
+    count += (high + 1) * fact
+          = (1 + 1) * 1
+          = 2
+
+Those numbers are:
+    1, 11
+
+At tens position:
+    high = 0
+    curr = 1
+    low = 3
+
+So:
+
+    count += high * fact + low + 1
+          = 0 + 3 + 1
+          = 4
+
+Those numbers are:
+    10, 11, 12, 13
+
+Total:
+
+    2 + 4 = 6
+
+------------------------------------------------------------
+Case 3: curr > 1
+------------------------------------------------------------
+
+If the current digit is greater than 1:
+
+    count += (high + 1) * fact
+
+Why +1?
+
+Because the current digit has already passed 1,
+so one additional complete cycle is available.
+
+------------------------------------------------------------
+
+Why use "fact"?
+------------------------------------------------------------
+
+We use:
+
+    fact = 1
+
+for ones place,
+
+    fact = 10
+
+for tens place,
+
+    fact = 100
+
+for hundreds place,
+
+and so on.
+
+We move to the next digit with:
+
+    fact *= 10
+
+------------------------------------------------------------
+
+Dry Run for n = 13
+------------------------------------------------------------
+
+fact = 1  (ones position)
+
+    low  = 13 % 1 = 0
+    curr = (13 / 1) % 10 = 3
+    high = 13 / 10 = 1
+
+curr > 1:
+
+    count += (1 + 1) * 1
+           = 2
+
+count = 2
+
+Move to tens:
+
+fact = 10
+
+    low  = 13 % 10 = 3
+    curr = (13 / 10) % 10 = 1
+    high = 13 / 100 = 0
+
+curr == 1:
+
+    count += 0 * 10 + 3 + 1
+           = 4
+
+count = 6
+
+Move to hundreds:
+
+    fact = 100
+
+100 > 13, so stop.
+
+Answer = 6
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Start with:
+       fact = 1
+       count = 0
+
+2. While fact <= n:
+       low  = n % fact
+       curr = (n / fact) % 10
+       high = n / (fact * 10)
+
+3. Apply:
+       curr == 0:
+           count += high * fact
+
+       curr == 1:
+           count += high * fact + low + 1
+
+       curr > 1:
+           count += (high + 1) * fact
+
+4. Move to the next position:
+       fact *= 10
+
+5. Return count.
+
+Why use long long?
+For large n, expressions such as:
+
+    fact * 10
+    high * fact
+
+can exceed the range of a 32-bit integer during calculation.
+
+So using long long makes the intermediate calculations safer.
+
+Time Complexity  : O(log10(n))
+Space Complexity : O(1)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int countDigitOne(int n) {
+        long long fact = 1;
+        int count = 0;
+
+        while (fact <= n) {
+            // Digits to the right of current position
+            long long low = n % fact;
+
+            // Current digit
+            long long curr = (n / fact) % 10;
+
+            // Digits to the left of current position
+            long long high = n / (fact * 10);
+
+            if (curr == 0) {
+                count += high * fact;
+            }
+            else if (curr == 1) {
+                count += high * fact + low + 1;
+            }
+            else {
+                count += (high + 1) * fact;
+            }
+
+            // Move to the next digit position
+            fact *= 10;
+        }
+
+        return count;
+    }
+};
