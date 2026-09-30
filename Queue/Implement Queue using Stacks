@@ -1,0 +1,235 @@
+/*
+------------------------------------------------------------
+Problem    : Implement Queue using Stacks
+Platform   : LeetCode
+Topic      : Queue
+Difficulty : Easy
+
+Problem:
+Implement a Queue using only two Stacks.
+
+A Queue follows:
+    FIFO -> First In, First Out
+
+A Stack follows:
+    LIFO -> Last In, First Out
+
+We need to implement:
+    push()
+    pop()
+    peek()
+    empty()
+
+Approach:
+We use two stacks:
+
+    s1 -> used for pushing new elements
+    s2 -> used for accessing/removing the front element
+
+The important idea is:
+
+When s2 is empty, move all elements from s1 to s2.
+
+Example:
+
+Queue:
+    [1, 2, 3]
+
+s1 contains:
+    top
+     ↓
+    3
+    2
+    1
+
+Move everything to s2:
+
+s2 contains:
+    top
+     ↓
+    1
+    2
+    3
+
+Now 1 is at the top of s2, so it behaves like the
+front of the queue.
+
+Why does this work?
+--------------------------------
+s1 stores elements in reverse order.
+
+Every time we transfer:
+
+    s1 -> s2
+
+the order is reversed again.
+
+Therefore:
+
+    First inserted element
+             ↓
+         top of s2
+
+This gives us FIFO behavior.
+
+Push:
+    push x into s1.
+
+We don't need to move anything during push.
+
+Pop:
+    1. If both stacks are empty, the queue is empty.
+    2. If s2 is empty, transfer all elements from s1 to s2.
+    3. The top of s2 is the queue front.
+    4. Pop and return it.
+
+Peek:
+    Same transfer logic as pop,
+    but do not remove the element.
+
+Empty:
+    Queue is empty only when both s1 and s2 are empty.
+
+Dry Run:
+Operations:
+    push(1)
+    push(2)
+    push(3)
+
+After push(1):
+    s1 = [1]
+    s2 = []
+
+After push(2):
+    s1 = [1, 2]
+    s2 = []
+
+After push(3):
+    s1 = [1, 2, 3]
+    s2 = []
+
+Now peek():
+
+s2 is empty, so transfer:
+
+    s1:             s2:
+    top             top
+     3               1
+     2               2
+     1               3
+
+Now:
+    s2.top() = 1
+
+peek() returns 1.
+
+Now pop():
+
+    s2.pop()
+
+Queue becomes:
+    [2, 3]
+
+Next pop():
+    s2.top() = 2
+
+We don't transfer again because s2 is still not empty.
+
+This is the key optimization:
+We transfer elements only when s2 is empty.
+
+Algorithm:
+1. push(x):
+      s1.push(x)
+
+2. pop():
+      If both stacks are empty, return -1.
+      If s2 is empty:
+          move all elements from s1 to s2.
+      Return s2.top() and pop it.
+
+3. peek():
+      If s2 is empty:
+          move all elements from s1 to s2.
+      Return s2.top().
+
+4. empty():
+      Return s1.empty() && s2.empty().
+
+Complexity:
+--------------------------------
+push() : O(1)
+
+pop() :
+    Amortized O(1)
+    Worst case O(n) when transferring elements.
+
+peek() :
+    Amortized O(1)
+    Worst case O(n) when transferring elements.
+
+empty() : O(1)
+
+Overall Auxiliary Space : O(n)
+
+Important:
+Do NOT transfer elements from s1 to s2 on every operation.
+
+Only transfer when:
+    s2.empty() == true
+
+This makes the implementation efficient.
+
+------------------------------------------------------------
+*/
+
+class MyQueue {
+private:
+    stack<int> s1, s2;
+
+public:
+    MyQueue() {
+    }
+
+    void push(int x) {
+        // New elements are always pushed into s1
+        s1.push(x);
+    }
+
+    int pop() {
+        // Queue is empty
+        if (s1.empty() && s2.empty()) {
+            return -1;
+        }
+
+        // Transfer only when s2 is empty
+        if (s2.empty()) {
+            while (!s1.empty()) {
+                s2.push(s1.top());
+                s1.pop();
+            }
+        }
+
+        // Front element of queue is at top of s2
+        int front = s2.top();
+        s2.pop();
+
+        return front;
+    }
+
+    int peek() {
+        // Transfer only when s2 is empty
+        if (s2.empty()) {
+            while (!s1.empty()) {
+                s2.push(s1.top());
+                s1.pop();
+            }
+        }
+
+        return s2.top();
+    }
+
+    bool empty() {
+        return s1.empty() && s2.empty();
+    }
+};
