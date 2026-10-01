@@ -1,0 +1,185 @@
+/*
+------------------------------------------------------------
+Problem    : Search a 2D Matrix II
+Platform   : LeetCode
+Topic      : Matrix
+Difficulty : Medium
+
+Problem:
+Given an m x n matrix where:
+- Every row is sorted in ascending order from left to right.
+- Every column is sorted in ascending order from top to bottom.
+
+Return true if target exists in the matrix, otherwise false.
+
+Approach:
+We start from the TOP-RIGHT corner of the matrix.
+
+Why top-right?
+
+At any position matrix[r][c]:
+
+- Everything to the LEFT is smaller or equal.
+- Everything BELOW is greater or equal.
+
+Therefore:
+
+1. If matrix[r][c] == target:
+       Target found.
+
+2. If matrix[r][c] > target:
+       The current value is too large.
+       Since everything BELOW is even larger,
+       we cannot move down.
+       So move LEFT:
+           c--
+
+3. If matrix[r][c] < target:
+       The current value is too small.
+       Since everything to the LEFT is even smaller,
+       we cannot move left.
+       So move DOWN:
+           r++
+
+This eliminates one complete row or one complete column
+at every step.
+
+------------------------------------------------------------
+Dry Run
+------------------------------------------------------------
+
+Matrix:
+
+    1   4   7   11  15
+    2   5   8   12  19
+    3   6   9   16  22
+    10  13  14  17  24
+    18  21  23  26  30
+
+target = 5
+
+Start at top-right:
+
+    15
+
+15 > 5
+    Move LEFT
+
+    11
+
+11 > 5
+    Move LEFT
+
+    7
+
+7 > 5
+    Move LEFT
+
+    4
+
+4 < 5
+    Move DOWN
+
+    5
+
+5 == target
+
+Return true.
+
+------------------------------------------------------------
+Why top-right works
+------------------------------------------------------------
+
+Suppose:
+
+    current = 7
+    target = 5
+
+Because rows are sorted:
+
+    values to the left of 7 are smaller
+    values to the right of 7 are larger
+
+Because columns are sorted:
+
+    values below 7 are larger
+
+Since 7 > 5:
+    - Going right is impossible.
+    - Going down is impossible.
+    - Only LEFT can contain 5.
+
+Similarly, if:
+
+    current = 4
+    target = 5
+
+Since 4 < 5:
+    - Going left gives even smaller values.
+    - Only DOWN can contain 5.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Check if matrix is empty.
+2. Set:
+       r = 0
+       c = number of columns - 1
+3. While r is inside the matrix and c >= 0:
+       a. If matrix[r][c] == target -> true
+       b. If matrix[r][c] > target -> c--
+       c. Otherwise -> r++
+4. If the loop ends, target does not exist.
+5. Return false.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+At every step, either:
+    row increases
+or
+    column decreases.
+
+Maximum number of moves:
+    m + n
+
+Time Complexity  : O(m + n)
+Space Complexity : O(1)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        // Handle empty matrix
+        if (matrix.empty() || matrix[0].empty()) {
+            return false;
+        }
+
+        int r = 0;
+        int c = matrix[0].size() - 1;
+
+        // Start from top-right corner
+        while (r < matrix.size() && c >= 0) {
+
+            if (matrix[r][c] == target) {
+                return true;
+            }
+
+            // Current value is too large
+            else if (matrix[r][c] > target) {
+                c--;
+            }
+
+            // Current value is too small
+            else {
+                r++;
+            }
+        }
+
+        return false;
+    }
+};
