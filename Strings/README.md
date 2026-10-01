@@ -18,6 +18,7 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 | 8 | Word Break | Medium | ✅ |
 | 9 | Reverse Words in a String | Medium | ✅ |
 | 10 | Shortest Palindrome | Hard | ✅ |
+| 11 | Count and Say | Medium | ✅ |
 
 ---
 
@@ -46,4 +47,4 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 
 ---
 
-**Problems Solved:** **10**
+**Problems Solved:** **11**
