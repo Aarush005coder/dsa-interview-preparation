@@ -1,0 +1,250 @@
+/*
+------------------------------------------------------------
+Problem    : Count and Say
+Platform   : LeetCode
+Topic      : String / Run-Length Encoding
+Difficulty : Medium
+
+Problem:
+The Count-and-Say sequence is defined as:
+
+    countAndSay(1) = "1"
+
+For every next term, describe the previous term by counting
+consecutive identical digits.
+
+For example:
+
+    "1"      -> "11"
+    "11"     -> "21"
+    "21"     -> "1211"
+    "1211"   -> "111221"
+
+Important:
+We are NOT counting how many times a digit appears in the
+whole string.
+
+We count only consecutive groups.
+
+For example:
+
+    "3322251"
+
+Groups are:
+
+    "33"   -> two 3s  -> "23"
+    "222"  -> three 2s -> "32"
+    "5"    -> one 5   -> "15"
+    "1"    -> one 1   -> "11"
+
+Therefore:
+
+    "3322251" -> "23321511"
+
+Approach:
+We start with:
+
+    ans = "1"
+
+Then generate the next term one by one until n.
+
+For every term:
+1. Start from index j = 0.
+2. Take the current digit:
+       digit = ans[j]
+3. Count how many consecutive times it appears.
+4. Add:
+       count + digit
+   to the next string.
+5. Move to the next group.
+
+Why do we use TWO while loops?
+
+Outer loop:
+    while (j < ans.length())
+
+This moves from one group to the next.
+
+Inner loop:
+    while (j < ans.length() && ans[j] == digit)
+
+This counts all consecutive occurrences of the same digit.
+
+Example:
+ans = "111221"
+
+Start:
+    digit = '1'
+
+Inner loop counts:
+    1, 1, 1
+
+count = 3
+
+Add:
+    "3" + "1" = "31"
+
+Next group:
+    "22"
+
+count = 2
+
+Add:
+    "2" + "2" = "22"
+
+Next group:
+    "1"
+
+count = 1
+
+Add:
+    "1" + "1" = "11"
+
+So:
+
+    "111221" -> "312211"
+
+------------------------------------------------------------
+Dry Run: n = 5
+------------------------------------------------------------
+
+Term 1:
+    "1"
+
+Term 2:
+    "1"
+    one 1
+    -> "11"
+
+Term 3:
+    "11"
+    two 1s
+    -> "21"
+
+Term 4:
+    "21"
+
+    one 2 -> "12"
+    one 1 -> "11"
+
+    -> "1211"
+
+Term 5:
+    "1211"
+
+    one 1 -> "11"
+    one 2 -> "12"
+    two 1s -> "21"
+
+    -> "111221"
+
+Answer:
+    "111221"
+
+------------------------------------------------------------
+Why not use a frequency map?
+------------------------------------------------------------
+
+Because the problem asks for CONSECUTIVE identical digits.
+
+For example:
+
+    "121"
+
+Frequency of 1 = 2
+
+But the correct count-and-say result is:
+
+    "111211"
+
+because:
+    one 1
+    one 2
+    one 1
+
+So we must process groups from left to right instead of
+counting total frequencies.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize:
+       ans = "1"
+
+2. Repeat from i = 2 to n:
+       next = ""
+
+3. Traverse ans using j.
+
+4. For each group:
+       digit = ans[j]
+       count = 0
+
+5. Count consecutive equal digits.
+
+6. Append:
+       to_string(count) + digit
+
+7. Set:
+       ans = next
+
+8. Return ans.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Each generated term is scanned once.
+
+Time Complexity:
+    O(n * L)
+
+where L is the length of the generated sequence.
+
+Space Complexity:
+    O(L)
+
+for the next generated string.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    string countAndSay(int n) {
+        // First term of the sequence
+        string ans = "1";
+
+        // Generate terms from 2 to n
+        for (int i = 2; i <= n; i++) {
+
+            string next = "";
+            int j = 0;
+
+            // Process each consecutive group
+            while (j < ans.length()) {
+
+                // Current digit of the group
+                char digit = ans[j];
+
+                int count = 0;
+
+                // Count consecutive occurrences
+                while (j < ans.length() && ans[j] == digit) {
+                    count++;
+                    j++;
+                }
+
+                // Append count followed by the digit
+                next += to_string(count);
+                next += digit;
+            }
+
+            // Move to the next term
+            ans = next;
+        }
+
+        return ans;
+    }
+};
