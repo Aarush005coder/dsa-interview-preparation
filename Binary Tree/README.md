@@ -27,6 +27,7 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 | 17 | Binary Tree Postorder Traversal | Easy | ✅ |
 | 18 | Binary Tree Right Side View | Medium | ✅ |
 | 19 | Count Complete Tree Nodes | Medium | ✅ |
+| 20 | Binary Tree Paths | Easy | ✅ |
 
 ---
 
@@ -51,4 +52,4 @@ This folder contains Binary Tree problems solved in C++. Each solution includes 
 
 ---
 
-**Problems Solved:** **19**
+**Problems Solved:** **20**
