@@ -1,0 +1,167 @@
+/*
+------------------------------------------------------------
+Problem    : Add Digits
+Platform   : LeetCode
+Topic      : Math / Digital Root
+Difficulty : Easy
+
+Problem:
+Given a non-negative integer num, repeatedly add all of its
+digits until only one digit remains.
+
+Example:
+    num = 38
+
+    38 -> 3 + 8 = 11
+    11 -> 1 + 1 = 2
+
+Answer:
+    2
+
+Approach:
+Instead of repeatedly calculating the sum of digits, we can
+use the concept of the DIGITAL ROOT.
+
+For any positive integer, its final single-digit result is:
+
+    1 + (num - 1) % 9
+
+Special Case:
+    num = 0 -> answer is 0
+
+Why does the formula work?
+
+Numbers can be reduced modulo 9 by repeatedly adding their
+digits.
+
+For example:
+
+    38 % 9 = 2
+
+And the repeated digit sum also gives:
+
+    38 -> 11 -> 2
+
+So both give the same final digit.
+
+------------------------------------------------------------
+Why modulo 9?
+------------------------------------------------------------
+
+Consider a number:
+
+    1234
+
+We can write:
+
+    1234 = 1*1000 + 2*100 + 3*10 + 4
+
+Since:
+
+    10 % 9 = 1
+    100 % 9 = 1
+    1000 % 9 = 1
+
+Therefore:
+
+    1234 % 9
+    = (1 + 2 + 3 + 4) % 9
+    = 10 % 9
+    = 1
+
+So a number and the sum of its digits have the same
+remainder modulo 9.
+
+------------------------------------------------------------
+Why use:
+    1 + (num - 1) % 9
+instead of:
+    num % 9
+------------------------------------------------------------
+
+Because a positive multiple of 9 should return 9,
+not 0.
+
+Example:
+
+    num = 18
+
+    18 % 9 = 0
+
+But:
+
+    18 -> 1 + 8 = 9
+
+Answer should be 9.
+
+Using:
+
+    1 + (18 - 1) % 9
+    = 1 + 17 % 9
+    = 1 + 8
+    = 9
+
+Correct.
+
+------------------------------------------------------------
+Examples
+------------------------------------------------------------
+
+num = 38:
+
+    1 + (38 - 1) % 9
+    = 1 + 37 % 9
+    = 1 + 1
+    = 2
+
+num = 9:
+
+    1 + (9 - 1) % 9
+    = 1 + 8
+    = 9
+
+num = 123:
+
+    123 -> 1 + 2 + 3 = 6
+
+Formula:
+
+    1 + (123 - 1) % 9
+    = 1 + 122 % 9
+    = 1 + 5
+    = 6
+
+num = 0:
+
+    return 0
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. If num == 0, return 0.
+2. Otherwise return:
+       1 + (num - 1) % 9
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity  : O(1)
+Space Complexity : O(1)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int addDigits(int num) {
+        // Digital root of 0 is 0
+        if (num == 0) {
+            return 0;
+        }
+
+        // Digital root formula
+        return 1 + (num - 1) % 9;
+    }
+};
