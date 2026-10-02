@@ -18,6 +18,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 8 | Rectangle Area | Medium | ✅ |
 | 9 | Power of Two | Easy | ✅ |
 | 10 | Number of Digit One | Hard | ✅ |
+| 11 | Add Digits | Easy | ✅ |
 
 ---
 
@@ -43,4 +44,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **10**
+**Problems Solved:** **11**
