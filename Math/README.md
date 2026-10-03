@@ -19,6 +19,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 9 | Power of Two | Easy | ✅ |
 | 10 | Number of Digit One | Hard | ✅ |
 | 11 | Add Digits | Easy | ✅ |
+| 12 | Ugly Number| Easy | ✅ |
 
 ---
 
@@ -44,4 +45,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **11**
+**Problems Solved:** **12**
