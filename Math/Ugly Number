@@ -1,0 +1,332 @@
+/*
+------------------------------------------------------------
+Problem    : Ugly Number
+Platform   : LeetCode
+Topic      : Math 
+Difficulty : Easy
+
+Problem:
+An ugly number is a positive integer which does not have a
+prime factor other than 2, 3, and 5.
+
+Given an integer n, return true if n is an ugly number.
+
+Example:
+    n = 6
+
+    6 = 2 × 3
+
+    Prime factors are only:
+        2 and 3
+
+    Therefore:
+        Answer = true
+
+------------------------------------------------------------
+Approach
+------------------------------------------------------------
+
+An ugly number can contain only these prime factors:
+
+    2, 3, 5
+
+So, we repeatedly divide n by:
+
+    2
+    3
+    5
+
+If after removing all these factors the remaining value
+is 1, then n contains no other prime factor.
+
+Therefore:
+
+    n == 1  -> Ugly Number
+    n != 1  -> Not an Ugly Number
+
+------------------------------------------------------------
+Why does this work?
+------------------------------------------------------------
+
+Consider:
+
+    n = 60
+
+Prime factorization:
+
+    60 = 2 × 2 × 3 × 5
+
+Remove all factors of 2:
+
+    60 -> 30 -> 15
+
+Remove all factors of 3:
+
+    15 -> 5
+
+Remove all factors of 5:
+
+    5 -> 1
+
+Final value:
+
+    1
+
+Therefore:
+
+    60 is an Ugly Number
+
+------------------------------------------------------------
+Example of NOT an Ugly Number
+------------------------------------------------------------
+
+Consider:
+
+    n = 14
+
+Prime factorization:
+
+    14 = 2 × 7
+
+Remove factor 2:
+
+    14 -> 7
+
+Now 7 is not divisible by:
+
+    2
+    3
+    5
+
+So 7 remains.
+
+Since:
+
+    7 != 1
+
+There is another prime factor (7).
+
+Therefore:
+
+    14 is NOT an Ugly Number
+
+------------------------------------------------------------
+Important Edge Case
+------------------------------------------------------------
+
+If:
+
+    n <= 0
+
+then n cannot be an ugly number because an ugly number
+must be a positive integer.
+
+Therefore:
+
+    if (n <= 0)
+        return false;
+
+------------------------------------------------------------
+Dry Run
+------------------------------------------------------------
+
+Input:
+    n = 6
+
+Step 1:
+    6 % 2 == 0
+
+    6 / 2 = 3
+
+Step 2:
+    3 % 2 != 0
+
+    Stop dividing by 2.
+
+Step 3:
+    3 % 3 == 0
+
+    3 / 3 = 1
+
+Step 4:
+    1 % 3 != 0
+
+    Stop dividing by 3.
+
+Step 5:
+    1 % 5 != 0
+
+Final:
+
+    n = 1
+
+Therefore:
+
+    return true
+
+------------------------------------------------------------
+Another Dry Run
+------------------------------------------------------------
+
+Input:
+    n = 30
+
+Prime factors:
+
+    30 = 2 × 3 × 5
+
+Divide by 2:
+
+    30 -> 15
+
+Divide by 3:
+
+    15 -> 5
+
+Divide by 5:
+
+    5 -> 1
+
+Final:
+
+    n = 1
+
+Answer:
+
+    true
+
+------------------------------------------------------------
+Dry Run: n = 42
+------------------------------------------------------------
+
+Prime factors:
+
+    42 = 2 × 3 × 7
+
+Divide by 2:
+
+    42 -> 21
+
+Divide by 3:
+
+    21 -> 7
+
+Now:
+
+    7 % 2 != 0
+    7 % 3 != 0
+    7 % 5 != 0
+
+Final:
+
+    n = 7
+
+Since:
+
+    7 != 1
+
+Answer:
+
+    false
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. If n <= 0:
+       return false
+
+2. While n is divisible by 2:
+       n = n / 2
+
+3. While n is divisible by 3:
+       n = n / 3
+
+4. While n is divisible by 5:
+       n = n / 5
+
+5. If n == 1:
+       return true
+
+6. Otherwise:
+       return false
+
+------------------------------------------------------------
+Why do we use separate while loops?
+------------------------------------------------------------
+
+A number can contain the same prime factor multiple times.
+
+For example:
+
+    72 = 2 × 2 × 2 × 3 × 3
+
+Therefore, we must keep dividing while the number is
+divisible by that factor.
+
+For 2:
+
+    while (n % 2 == 0)
+
+For 3:
+
+    while (n % 3 == 0)
+
+For 5:
+
+    while (n % 5 == 0)
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Each division reduces the value of n.
+
+The maximum number of divisions is proportional to log(n).
+
+Time Complexity  : O(log n)
+Space Complexity : O(1)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    bool isUgly(int n) {
+
+        // -------------------------------------------------
+        // Edge Case:
+        // Ugly numbers must be positive
+        // -------------------------------------------------
+        if (n <= 0) {
+            return false;
+        }
+
+        // -------------------------------------------------
+        // Remove all factors of 2
+        // -------------------------------------------------
+        while (n % 2 == 0) {
+            n /= 2;
+        }
+
+        // -------------------------------------------------
+        // Remove all factors of 3
+        // -------------------------------------------------
+        while (n % 3 == 0) {
+            n /= 3;
+        }
+
+        // -------------------------------------------------
+        // Remove all factors of 5
+        // -------------------------------------------------
+        while (n % 5 == 0) {
+            n /= 5;
+        }
+
+        // -------------------------------------------------
+        // If nothing remains except 1,
+        // all prime factors were 2, 3, or 5.
+        // -------------------------------------------------
+        return n == 1;
+    }
+};
