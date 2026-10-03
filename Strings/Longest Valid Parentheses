@@ -1,0 +1,307 @@
+/*
+------------------------------------------------------------
+Problem    : Longest Valid Parentheses
+Platform   : LeetCode
+Topic      : String 
+Difficulty : Hard
+
+Problem:
+Given a string containing only '(' and ')', find the length
+of the longest valid (well-formed) parentheses substring.
+
+A valid parentheses string must have:
+    - Matching '(' and ')'
+    - Correct ordering
+
+Example:
+    s = "(()"
+
+    Valid substring = "()"
+
+    Answer = 2
+
+Approach:
+We use TWO passes:
+    1. Left -> Right
+    2. Right -> Left
+
+We maintain:
+    left  = number of '('
+    right = number of ')'
+
+------------------------------------------------------------
+PASS 1: Left -> Right
+------------------------------------------------------------
+
+When we scan from left to right:
+
+If:
+    s[i] == '('
+        left++
+
+Otherwise:
+        right++
+
+A valid substring occurs when:
+
+    left == right
+
+Then:
+    length = left + right
+
+Update the maximum answer.
+
+Problem:
+What if we get more ')' than '('?
+
+Example:
+    ")()"
+
+At the first character:
+
+    left = 0
+    right = 1
+
+This can never form a valid substring starting from here.
+
+So we reset:
+
+    left = 0
+    right = 0
+
+------------------------------------------------------------
+PASS 2: Right -> Left
+------------------------------------------------------------
+
+The first pass handles cases where there are extra ')'.
+
+But it can miss cases with extra '('.
+
+Example:
+
+    "(()"
+
+Left -> Right:
+
+    '(' -> left = 1
+    '(' -> left = 2
+    ')' -> right = 1
+
+We never get:
+    left == right
+
+So the answer would incorrectly remain 0.
+
+Therefore, we scan from RIGHT to LEFT.
+
+Now, if:
+
+    right > left
+
+the current substring has too many '('.
+
+So we reset the counters.
+
+When:
+
+    left == right
+
+we have a valid substring.
+
+------------------------------------------------------------
+Dry Run
+------------------------------------------------------------
+
+s = "(()"
+
+PASS 1: Left -> Right
+
+i = 0:
+    '('
+    left = 1
+    right = 0
+
+i = 1:
+    '('
+    left = 2
+    right = 0
+
+i = 2:
+    ')'
+    left = 2
+    right = 1
+
+No balance.
+
+maxLen = 0
+
+PASS 2: Right -> Left
+
+i = 2:
+    ')'
+    right = 1
+
+i = 1:
+    '('
+    left = 1
+    right = 1
+
+Balanced:
+    length = 2
+
+maxLen = 2
+
+i = 0:
+    '('
+    left = 2
+    right = 1
+
+Final answer:
+    2
+
+------------------------------------------------------------
+Why do we need two passes?
+------------------------------------------------------------
+
+Because a single direction cannot detect both types of
+imbalance.
+
+Left -> Right handles:
+
+    Extra ')'
+
+Right -> Left handles:
+
+    Extra '('
+
+Together, they cover all cases.
+
+------------------------------------------------------------
+Example: ")()())"
+
+Left -> Right:
+
+    )  -> reset
+    (  -> left = 1
+    )  -> left = 1, right = 1 -> length = 2
+    (  -> left = 2
+    )  -> left = 2, right = 2 -> length = 4
+    )  -> right > left -> reset
+
+Answer = 4
+
+Valid substring:
+
+    "()()"
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize:
+       left = 0
+       right = 0
+       maxLen = 0
+
+2. Scan from left to right:
+       '(' -> left++
+       ')' -> right++
+
+       If left == right:
+           update maxLen
+
+       If right > left:
+           reset counters
+
+3. Reset counters.
+
+4. Scan from right to left:
+       ')' -> right++
+       '(' -> left++
+
+       If left == right:
+           update maxLen
+
+       If left > right:
+           reset counters
+
+5. Return maxLen.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+First pass  : O(n)
+Second pass : O(n)
+
+Time Complexity  : O(n)
+Space Complexity : O(1)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+
+        int left = 0;
+        int right = 0;
+        int maxLen = 0;
+
+        // -------------------------------------------------
+        // Pass 1: Left -> Right
+        // Handles extra ')'
+        // -------------------------------------------------
+        for (int i = 0; i < s.length(); i++) {
+
+            if (s[i] == '(') {
+                left++;
+            }
+            else {
+                right++;
+            }
+
+            // We have a balanced valid substring
+            if (left == right) {
+                maxLen = max(maxLen, 2 * right);
+            }
+
+            // Too many ')' -> invalid
+            else if (right > left) {
+                left = 0;
+                right = 0;
+            }
+        }
+
+        // Reset for second pass
+        left = 0;
+        right = 0;
+
+        // -------------------------------------------------
+        // Pass 2: Right -> Left
+        // Handles extra '('
+        // -------------------------------------------------
+        for (int i = s.length() - 1; i >= 0; i--) {
+
+            if (s[i] == '(') {
+                left++;
+            }
+            else {
+                right++;
+            }
+
+            // Balanced valid substring
+            if (left == right) {
+                maxLen = max(maxLen, 2 * left);
+            }
+
+            // Too many '(' -> invalid
+            else if (left > right) {
+                left = 0;
+                right = 0;
+            }
+        }
+
+        return maxLen;
+    }
+};
