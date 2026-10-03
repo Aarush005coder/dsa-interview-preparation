@@ -19,6 +19,7 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 | 9 | Reverse Words in a String | Medium | ✅ |
 | 10 | Shortest Palindrome | Hard | ✅ |
 | 11 | Count and Say | Medium | ✅ |
+| 12 | Longest Valid Parentheses | Hard | ✅ |
 
 ---
 
@@ -47,4 +48,4 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 
 ---
 
-**Problems Solved:** **11**
+**Problems Solved:** **12**
