@@ -1,0 +1,411 @@
+/*
+------------------------------------------------------------
+Problem    : Perfect Squares
+Platform   : LeetCode
+Topic      : Dynamic Programming
+Difficulty : Medium
+
+Problem:
+Given an integer n, return the least number of perfect square
+numbers that sum to n.
+
+A perfect square is a number that can be written as:
+
+    k × k
+
+Examples:
+
+    1 = 1 × 1
+    4 = 2 × 2
+    9 = 3 × 3
+    16 = 4 × 4
+    25 = 5 × 5
+
+Example:
+
+    n = 12
+
+    12 = 4 + 4 + 4
+
+Therefore:
+
+    Answer = 3
+
+------------------------------------------------------------
+Approach
+------------------------------------------------------------
+
+We use Dynamic Programming (DP).
+
+We define:
+
+    dp[i] = minimum number of perfect squares
+            required to make the value i
+
+For example:
+
+    dp[0] = 0
+
+Because zero requires zero perfect squares.
+
+For every value i, we try every perfect square that is
+less than or equal to i.
+
+For example, when:
+
+    i = 12
+
+Possible perfect squares are:
+
+    1, 4, 9
+
+We can calculate:
+
+    dp[12] = min(
+        dp[12 - 1] + 1,
+        dp[12 - 4] + 1,
+        dp[12 - 9] + 1
+    )
+
+Therefore:
+
+    dp[12] = min(
+        dp[11] + 1,
+        dp[8] + 1,
+        dp[3] + 1
+    )
+
+------------------------------------------------------------
+Why do we add +1?
+------------------------------------------------------------
+
+Suppose we want to calculate:
+
+    dp[12]
+
+and choose the perfect square:
+
+    4
+
+Then:
+
+    12 = 8 + 4
+
+We already know the minimum number of squares required
+to make 8:
+
+    dp[8]
+
+We add one more square:
+
+    4
+
+Therefore:
+
+    dp[12] = dp[8] + 1
+
+Similarly, if we choose 9:
+
+    12 = 3 + 9
+
+Therefore:
+
+    dp[12] = dp[3] + 1
+
+------------------------------------------------------------
+DP State
+------------------------------------------------------------
+
+    dp[i] = minimum number of perfect squares
+            required to form i
+
+Initialization:
+
+    dp[0] = 0
+
+For all other values:
+
+    dp[i] = INT_MAX
+
+Then we gradually calculate:
+
+    dp[1]
+    dp[2]
+    dp[3]
+    ...
+    dp[n]
+
+------------------------------------------------------------
+Dry Run
+------------------------------------------------------------
+
+Input:
+
+    n = 12
+
+Initially:
+
+    dp[0] = 0
+
+For i = 1:
+
+Perfect square:
+
+    1
+
+    dp[1] = dp[0] + 1
+          = 1
+
+So:
+
+    dp[1] = 1
+
+------------------------------------------------------------
+
+For i = 2:
+
+Perfect square:
+
+    1
+
+    dp[2] = dp[1] + 1
+          = 2
+
+So:
+
+    dp[2] = 2
+
+    2 = 1 + 1
+
+------------------------------------------------------------
+
+For i = 3:
+
+    dp[3] = dp[2] + 1
+          = 3
+
+    3 = 1 + 1 + 1
+
+------------------------------------------------------------
+
+For i = 4:
+
+Possible squares:
+
+    1
+    4
+
+Using 1:
+
+    dp[4] = dp[3] + 1
+          = 4
+
+Using 4:
+
+    dp[4] = dp[0] + 1
+          = 1
+
+Therefore:
+
+    dp[4] = 1
+
+Because:
+
+    4 = 4
+
+------------------------------------------------------------
+Continue...
+------------------------------------------------------------
+
+Some important values become:
+
+    dp[1]  = 1
+    dp[2]  = 2
+    dp[3]  = 3
+    dp[4]  = 1
+    dp[5]  = 2
+    dp[6]  = 3
+    dp[7]  = 4
+    dp[8]  = 2
+    dp[9]  = 1
+    dp[10] = 2
+    dp[11] = 3
+    dp[12] = 3
+
+For 12:
+
+    Possible squares:
+
+        1, 4, 9
+
+Using 1:
+
+    dp[11] + 1
+    = 3 + 1
+    = 4
+
+Using 4:
+
+    dp[8] + 1
+    = 2 + 1
+    = 3
+
+Using 9:
+
+    dp[3] + 1
+    = 3 + 1
+    = 4
+
+Therefore:
+
+    dp[12] = min(4, 3, 4)
+
+    dp[12] = 3
+
+Answer:
+
+    3
+
+And:
+
+    12 = 4 + 4 + 4
+
+------------------------------------------------------------
+Why do we use j * j <= i?
+------------------------------------------------------------
+
+We need to generate all perfect squares less than or
+equal to i.
+
+For example:
+
+    i = 12
+
+j = 1:
+
+    1 × 1 = 1
+
+j = 2:
+
+    2 × 2 = 4
+
+j = 3:
+
+    3 × 3 = 9
+
+j = 4:
+
+    4 × 4 = 16
+
+16 > 12, so we stop.
+
+Therefore:
+
+    j * j <= i
+
+ensures that we only consider valid perfect squares.
+
+------------------------------------------------------------
+Why does Dynamic Programming work?
+------------------------------------------------------------
+
+The problem has overlapping subproblems.
+
+For example:
+
+    dp[12] needs dp[11], dp[8], dp[3]
+
+and these smaller values themselves need other previously
+calculated values.
+
+Instead of calculating the same values repeatedly, we store
+them in dp[].
+
+This is called:
+
+    Bottom-Up Dynamic Programming
+
+We calculate smaller values first and use them to calculate
+larger values.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Create a DP array of size n + 1.
+
+       vector<int> dp(n + 1, INT_MAX);
+
+2. Set:
+
+       dp[0] = 0
+
+3. For every i from 1 to n:
+
+       for every j where j * j <= i:
+
+           dp[i] = min(
+               dp[i],
+               dp[i - j * j] + 1
+           );
+
+4. Return:
+
+       dp[n]
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Outer loop:
+
+    n iterations
+
+Inner loop:
+
+    At most √n iterations
+
+Therefore:
+
+    Time Complexity = O(n√n)
+
+DP array stores n + 1 values:
+
+    Space Complexity = O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int numSquares(int n) {
+
+        // -------------------------------------------------
+        // dp[i] = minimum number of perfect squares
+        //         required to make i
+        // -------------------------------------------------
+        vector<int> dp(n + 1, INT_MAX);
+
+        // Zero requires zero perfect squares
+        dp[0] = 0;
+
+        // -------------------------------------------------
+        // Calculate answer for every value from 1 to n
+        // -------------------------------------------------
+        for (int i = 1; i <= n; i++) {
+
+            // Try every perfect square <= i
+            for (int j = 1; j * j <= i; j++) {
+
+                // Choose j*j as one of the squares
+                dp[i] = min(
+                    dp[i],
+                    dp[i - j * j] + 1
+                );
+            }
+        }
+
+        // Minimum number of perfect squares required
+        return dp[n];
+    }
+};
