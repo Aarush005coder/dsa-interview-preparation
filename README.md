@@ -87,7 +87,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Two Pointers | 7 |
 | Sliding Window | 2 |
 | Prefix Sum | 0 |
-| Bit Manipulation | 5 |
+| Bit Manipulation | 6 |
 | Recursion | 2 |
 | Backtracking | 11 |
 | Stack | 5 |
@@ -98,7 +98,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Heap | 1 |
 | Trie | 1 |
 | Graph | 1 |
-| Dynamic Programming | 8 |
+| Dynamic Programming | 9 |
 | Greedy | 5 |
 | Math | 12 |
 | Segment Tree | 0 |
@@ -173,7 +173,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **142**
+**Total Problems Solved:** **144**
 
 ---
 
