@@ -16,6 +16,7 @@ This folder contains **Dynamic Programming** problems solved in **C++** as part 
 | 6 | Best Time to Buy and Sell Stock III | Hard | ✅ |
 | 7 | Best Time to Buy and Sell Stock IV | Hard | ✅ |
 | 8 | House Robber | Medium | ✅ |
+| 9 | Perfect Squares | Medium | ✅ |
 
 ---
 
@@ -100,4 +101,4 @@ When approaching a Dynamic Programming problem:
 
 ---
 
-**Problems Solved:** **8**
+**Problems Solved:** **9**
