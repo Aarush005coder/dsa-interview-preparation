@@ -1,0 +1,405 @@
+/*
+------------------------------------------------------------
+Problem    : Missing Number
+Platform   : LeetCode
+Topic      : Bit Manipulation / XOR
+Difficulty : Easy
+
+Problem:
+Given an array nums containing n distinct numbers in the range
+[0, n], return the only number that is missing from the array.
+
+Example:
+    nums = [3, 0, 1]
+
+    n = 3
+
+    Complete range:
+        [0, 1, 2, 3]
+
+    Numbers present:
+        0, 1, 3
+
+    Missing number:
+        2
+
+    Answer = 2
+
+------------------------------------------------------------
+Approach
+------------------------------------------------------------
+
+We use the XOR (^) operator.
+
+For the array:
+
+    nums = [3, 0, 1]
+
+The complete range should be:
+
+    0, 1, 2, 3
+
+So we XOR:
+
+    0 ^ 1 ^ 2 ^ 3
+
+with all elements of the array:
+
+    3 ^ 0 ^ 1
+
+Because XOR has an important property:
+
+    x ^ x = 0
+
+and:
+
+    x ^ 0 = x
+
+All numbers that appear in both groups will cancel out.
+
+Only the missing number will remain.
+
+------------------------------------------------------------
+Why does XOR work?
+------------------------------------------------------------
+
+Important XOR properties:
+
+1. Same numbers cancel each other:
+
+       x ^ x = 0
+
+2. XOR with zero does nothing:
+
+       x ^ 0 = x
+
+3. XOR is commutative:
+
+       a ^ b = b ^ a
+
+4. XOR is associative:
+
+       (a ^ b) ^ c = a ^ (b ^ c)
+
+Therefore, the order of XOR operations does not matter.
+
+------------------------------------------------------------
+Example
+------------------------------------------------------------
+
+nums = [3, 0, 1]
+
+n = 3
+
+Complete range:
+
+    0, 1, 2, 3
+
+XOR of complete range:
+
+    0 ^ 1 ^ 2 ^ 3
+
+XOR of array:
+
+    3 ^ 0 ^ 1
+
+Combine everything:
+
+    0 ^ 1 ^ 2 ^ 3
+    ^ 3 ^ 0 ^ 1
+
+Rearrange:
+
+    (0 ^ 0)
+    ^ (1 ^ 1)
+    ^ (3 ^ 3)
+    ^ 2
+
+Everything cancels:
+
+    0 ^ 0 = 0
+    1 ^ 1 = 0
+    3 ^ 3 = 0
+
+Remaining:
+
+    2
+
+Therefore:
+
+    Answer = 2
+
+------------------------------------------------------------
+Why do we loop until i <= n?
+------------------------------------------------------------
+
+If:
+
+    nums.size() = n
+
+then the possible numbers are:
+
+    [0, n]
+
+Notice that n is also included.
+
+For example:
+
+    nums = [3, 0, 1]
+
+    n = 3
+
+Possible numbers:
+
+    0, 1, 2, 3
+
+Therefore, we need:
+
+    for (int i = 0; i <= n; i++)
+
+NOT:
+
+    i < n
+
+------------------------------------------------------------
+Dry Run
+------------------------------------------------------------
+
+Input:
+
+    nums = [3, 0, 1]
+
+Step 1:
+    n = nums.size()
+
+    n = 3
+
+Step 2:
+    x = 0
+
+------------------------------------------------------------
+First Loop
+------------------------------------------------------------
+
+We XOR all numbers from 0 to n.
+
+    i = 0
+
+    x = 0 ^ 0
+      = 0
+
+    i = 1
+
+    x = 0 ^ 1
+      = 1
+
+    i = 2
+
+    x = 1 ^ 2
+      = 3
+
+    i = 3
+
+    x = 3 ^ 3
+      = 0
+
+So:
+
+    x = 0
+
+------------------------------------------------------------
+Second Loop
+------------------------------------------------------------
+
+Now XOR all elements of nums.
+
+nums = [3, 0, 1]
+
+First:
+
+    x = 0 ^ 3
+      = 3
+
+Second:
+
+    x = 3 ^ 0
+      = 3
+
+Third:
+
+    x = 3 ^ 1
+      = 2
+
+Final:
+
+    x = 2
+
+Therefore:
+
+    return 2
+
+------------------------------------------------------------
+Another Example
+------------------------------------------------------------
+
+Input:
+
+    nums = [0, 1]
+
+n = 2
+
+Complete range:
+
+    [0, 1, 2]
+
+Missing number:
+
+    2
+
+XOR:
+
+    0 ^ 1 ^ 2
+    ^ 0 ^ 1
+
+Cancel equal numbers:
+
+    (0 ^ 0)
+    ^ (1 ^ 1)
+    ^ 2
+
+Remaining:
+
+    2
+
+Answer:
+
+    2
+
+------------------------------------------------------------
+Another Example
+------------------------------------------------------------
+
+Input:
+
+    nums = [9,6,4,2,3,5,7,0,1]
+
+n = 9
+
+Complete range:
+
+    [0,1,2,3,4,5,6,7,8,9]
+
+Array contains:
+
+    [0,1,2,3,4,5,6,7,9]
+
+Missing:
+
+    8
+
+After XOR cancellation:
+
+    Answer = 8
+
+------------------------------------------------------------
+Alternative Approach
+------------------------------------------------------------
+
+We could also use the mathematical formula:
+
+    Sum of numbers from 0 to n:
+
+        n × (n + 1)
+        -------------
+             2
+
+Then:
+
+    Missing = Expected Sum - Actual Sum
+
+However, XOR is preferable here because it avoids
+potential integer overflow from calculating:
+
+    n * (n + 1)
+
+The XOR approach uses constant extra space and does not
+require sorting.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Find n using:
+
+       n = nums.size()
+
+2. Initialize:
+
+       x = 0
+
+3. XOR all numbers from 0 to n:
+
+       for (i = 0; i <= n; i++)
+           x ^= i
+
+4. XOR every element of nums:
+
+       for (num : nums)
+           x ^= num
+
+5. Return x.
+
+The duplicate numbers cancel each other and the missing
+number remains.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+First loop:
+
+    O(n)
+
+Second loop:
+
+    O(n)
+
+Total:
+
+    O(n)
+
+Space Complexity:
+
+    O(1)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+
+        int x = 0;
+        int n = nums.size();
+
+        // -------------------------------------------------
+        // XOR all numbers from 0 to n
+        // -------------------------------------------------
+        for (int i = 0; i <= n; i++) {
+            x ^= i;
+        }
+
+        // -------------------------------------------------
+        // XOR all elements present in the array
+        // -------------------------------------------------
+        for (int num : nums) {
+            x ^= num;
+        }
+
+        // -------------------------------------------------
+        // All existing numbers cancel out.
+        // Only the missing number remains.
+        // -------------------------------------------------
+        return x;
+    }
+};
