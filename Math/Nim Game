@@ -1,0 +1,400 @@
+/*
+------------------------------------------------------------
+Problem    : Nim Game
+Platform   : LeetCode
+Topic      : Math / Game Theory
+Difficulty : Easy
+
+Problem:
+You are given a heap containing n stones.
+
+You and your friend take turns.
+
+On each turn, a player can remove:
+
+    1 stone
+    2 stones
+    3 stones
+
+You go first.
+
+The player who removes the last stone wins.
+
+Return true if you can win assuming both players play
+optimally.
+
+Example:
+
+    n = 4
+
+    You can remove:
+        1, 2, or 3 stones
+
+    Suppose you remove 1:
+
+        4 -> 3
+
+    Your opponent can remove all 3 stones and win.
+
+    Suppose you remove 2:
+
+        4 -> 2
+
+    Opponent removes 2 and wins.
+
+    Suppose you remove 3:
+
+        4 -> 1
+
+    Opponent removes 1 and wins.
+
+    Therefore:
+
+        Answer = false
+
+------------------------------------------------------------
+Approach
+------------------------------------------------------------
+
+The key observation is:
+
+    Every multiple of 4 is a losing position.
+
+Therefore:
+
+    n % 4 == 0
+        -> false
+
+    n % 4 != 0
+        -> true
+
+Why?
+
+Because you can remove 1, 2, or 3 stones.
+
+If n is NOT divisible by 4, you can always remove enough
+stones to make the remaining number divisible by 4.
+
+For example:
+
+    n = 6
+
+    6 % 4 = 2
+
+    Remove 2 stones:
+
+        6 -> 4
+
+Now your opponent has 4 stones.
+
+From there, whatever the opponent removes, you can make
+the total stones removed by both players equal to 4.
+
+------------------------------------------------------------
+Why are multiples of 4 losing positions?
+------------------------------------------------------------
+
+Consider:
+
+    n = 4
+
+Whatever you remove:
+
+    Remove 1:
+        4 -> 3
+
+    Remove 2:
+        4 -> 2
+
+    Remove 3:
+        4 -> 1
+
+Your opponent can always take the remaining stones and win.
+
+Therefore:
+
+    4 is losing.
+
+------------------------------------------------------------
+
+Consider:
+
+    n = 8
+
+Whatever you remove:
+
+    Remove 1:
+        8 -> 7
+
+    Remove 2:
+        8 -> 6
+
+    Remove 3:
+        8 -> 5
+
+Your opponent can always make the number 4.
+
+For example:
+
+    You remove 1:
+        8 -> 7
+
+    Opponent removes 3:
+        7 -> 4
+
+Now you are again in the losing position.
+
+Therefore:
+
+    8 is losing.
+
+------------------------------------------------------------
+General Pattern
+------------------------------------------------------------
+
+Losing positions:
+
+    4
+    8
+    12
+    16
+    20
+    ...
+
+These are exactly:
+
+    multiples of 4
+
+Therefore:
+
+    n % 4 == 0
+
+means you cannot force a win.
+
+------------------------------------------------------------
+What happens when n is NOT divisible by 4?
+------------------------------------------------------------
+
+There are three possible cases:
+
+1. n % 4 == 1
+
+   Remove 1 stone.
+
+2. n % 4 == 2
+
+   Remove 2 stones.
+
+3. n % 4 == 3
+
+   Remove 3 stones.
+
+In every case, you can make the remaining number divisible
+by 4.
+
+------------------------------------------------------------
+Dry Run 1
+------------------------------------------------------------
+
+Input:
+
+    n = 1
+
+You can remove 1 stone.
+
+    1 -> 0
+
+You remove the last stone.
+
+Answer:
+
+    true
+
+Using formula:
+
+    1 % 4 = 1
+
+    true
+
+------------------------------------------------------------
+Dry Run 2
+------------------------------------------------------------
+
+Input:
+
+    n = 2
+
+You can remove 1 or 2 stones.
+
+Simply remove 2:
+
+    2 -> 0
+
+Answer:
+
+    true
+
+    2 % 4 = 2
+
+    true
+
+------------------------------------------------------------
+Dry Run 3
+------------------------------------------------------------
+
+Input:
+
+    n = 3
+
+Remove all 3 stones:
+
+    3 -> 0
+
+Answer:
+
+    true
+
+    3 % 4 = 3
+
+    true
+
+------------------------------------------------------------
+Dry Run 4
+------------------------------------------------------------
+
+Input:
+
+    n = 4
+
+Possible moves:
+
+    4 -> 3
+    4 -> 2
+    4 -> 1
+
+In every case, the opponent can remove the remaining stones.
+
+Therefore:
+
+    false
+
+    4 % 4 = 0
+
+    false
+
+------------------------------------------------------------
+Dry Run 5
+------------------------------------------------------------
+
+Input:
+
+    n = 7
+
+Since:
+
+    7 % 4 = 3
+
+Remove 3 stones:
+
+    7 -> 4
+
+Now the opponent has 4 stones.
+
+Therefore, you can force a win.
+
+Answer:
+
+    true
+
+------------------------------------------------------------
+Strategy
+------------------------------------------------------------
+
+The goal is to always leave a multiple of 4 for your
+opponent.
+
+Suppose:
+
+    n = 10
+
+Then:
+
+    10 % 4 = 2
+
+Remove 2:
+
+    10 -> 8
+
+Now opponent has 8.
+
+If opponent removes:
+
+    1 stone
+        8 -> 7
+
+    You remove 3:
+        7 -> 4
+
+OR
+
+    2 stones
+        8 -> 6
+
+    You remove 2:
+        6 -> 4
+
+OR
+
+    3 stones
+        8 -> 5
+
+    You remove 1:
+        5 -> 4
+
+You can always return the game to a multiple of 4.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Calculate:
+
+       n % 4
+
+2. If:
+
+       n % 4 == 0
+
+   return false.
+
+3. Otherwise:
+
+       return true.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Only one modulo operation is performed.
+
+Time Complexity  : O(1)
+
+No extra data structure is used.
+
+Space Complexity : O(1)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    bool canWinNim(int n) {
+
+        // -------------------------------------------------
+        // Multiples of 4 are losing positions.
+        // If n is not divisible by 4, we can remove
+        // 1, 2, or 3 stones to make it divisible by 4.
+        // -------------------------------------------------
+        return (n % 4 != 0);
+    }
+};
