@@ -1,0 +1,581 @@
+/*
+------------------------------------------------------------
+Problem    : Bulls and Cows
+Platform   : LeetCode
+Topic      : Hashing / Frequency Counting
+Difficulty : Medium
+
+Problem:
+You are given two strings:
+
+    secret
+    guess
+
+We need to calculate:
+
+    Bulls:
+        Digits that are present in the correct position.
+
+    Cows:
+        Digits that are present in secret and guess but are
+        present at different positions.
+
+The answer must be returned in the format:
+
+    xAyB
+
+where:
+
+    x = number of Bulls
+    y = number of Cows
+
+Example:
+
+    secret = "1807"
+    guess  = "7810"
+
+Output:
+
+    "1A3B"
+
+------------------------------------------------------------
+Understanding Bulls and Cows
+------------------------------------------------------------
+
+A Bull means:
+
+    Same digit
+    Same position
+
+A Cow means:
+
+    Same digit
+    Different position
+
+Important:
+
+    A digit counted as a Bull cannot also be counted
+    as a Cow.
+
+------------------------------------------------------------
+Example
+------------------------------------------------------------
+
+secret = "1807"
+guess  = "7810"
+
+Compare position by position:
+
+    Position 0:
+        secret = 1
+        guess  = 7
+
+        Different -> Not a Bull
+
+    Position 1:
+        secret = 8
+        guess  = 8
+
+        Same -> Bull
+
+    Position 2:
+        secret = 0
+        guess  = 1
+
+        Different -> Not a Bull
+
+    Position 3:
+        secret = 7
+        guess = 0
+
+        Different -> Not a Bull
+
+Therefore:
+
+    Bulls = 1
+
+The remaining digits are:
+
+    Secret: 1, 0, 7
+    Guess : 7, 1, 0
+
+All three can be matched, but at different positions.
+
+Therefore:
+
+    Cows = 3
+
+Final:
+
+    "1A3B"
+
+------------------------------------------------------------
+Approach
+------------------------------------------------------------
+
+We use TWO frequency arrays:
+
+    count_s[10]
+    count_g[10]
+
+Because the strings contain only digits from:
+
+    0 to 9
+
+So we only need an array of size 10.
+
+------------------------------------------------------------
+Step 1: Find Bulls
+------------------------------------------------------------
+
+We compare:
+
+    secret[i]
+    guess[i]
+
+If:
+
+    secret[i] == guess[i]
+
+then:
+
+    bulls++
+
+Otherwise, the digits are not in the correct position.
+
+We store these non-bull digits in frequency arrays.
+
+For secret:
+
+    count_s[digit]++
+
+For guess:
+
+    count_g[digit]++
+
+------------------------------------------------------------
+Why do we ignore Bulls when counting frequencies?
+------------------------------------------------------------
+
+This is VERY important.
+
+Suppose:
+
+    secret = "1122"
+    guess  = "1112"
+
+Position comparison:
+
+    1 == 1 -> Bull
+    1 == 1 -> Bull
+    2 != 1
+    2 == 2 -> Bull
+
+Therefore:
+
+    Bulls = 3
+
+Only the remaining digits should be considered for cows.
+
+If we stored the Bull digits in the frequency arrays, they
+could incorrectly be counted again as cows.
+
+Therefore, we only store:
+
+    non-bull digits
+
+------------------------------------------------------------
+Step 2: Find Cows
+------------------------------------------------------------
+
+After removing all Bulls, we have:
+
+    count_s = frequency of remaining secret digits
+    count_g = frequency of remaining guess digits
+
+For every digit from 0 to 9:
+
+    cows += min(count_s[i], count_g[i])
+
+Why minimum?
+
+Suppose:
+
+    secret has three 7s
+    guess has two 7s
+
+Only two 7s can be matched.
+
+Therefore:
+
+    min(3, 2) = 2
+
+So:
+
+    cows += min(count_s[i], count_g[i])
+
+------------------------------------------------------------
+Dry Run
+------------------------------------------------------------
+
+Input:
+
+    secret = "1807"
+    guess  = "7810"
+
+Initialize:
+
+    bulls = 0
+    cows = 0
+
+    count_s[10] = {0}
+    count_g[10] = {0}
+
+------------------------------------------------------------
+Position 0
+------------------------------------------------------------
+
+secret[0] = '1'
+guess[0]  = '7'
+
+Different.
+
+Therefore:
+
+    bulls = 0
+
+Store:
+
+    count_s[1]++
+    count_g[7]++
+
+Frequencies:
+
+    secret:
+        1 -> 1
+
+    guess:
+        7 -> 1
+
+------------------------------------------------------------
+Position 1
+------------------------------------------------------------
+
+secret[1] = '8'
+guess[1]  = '8'
+
+Same digit and same position.
+
+Therefore:
+
+    bulls++
+
+    bulls = 1
+
+We do NOT store 8 in the frequency arrays.
+
+------------------------------------------------------------
+Position 2
+------------------------------------------------------------
+
+secret[2] = '0'
+guess[2]  = '1'
+
+Different.
+
+Store:
+
+    count_s[0]++
+    count_g[1]++
+
+------------------------------------------------------------
+Position 3
+------------------------------------------------------------
+
+secret[3] = '7'
+guess[3]  = '0'
+
+Different.
+
+Store:
+
+    count_s[7]++
+    count_g[0]++
+
+------------------------------------------------------------
+Frequency Arrays
+------------------------------------------------------------
+
+Secret non-bulls:
+
+    0 -> 1
+    1 -> 1
+    7 -> 1
+
+Guess non-bulls:
+
+    0 -> 1
+    1 -> 1
+    7 -> 1
+
+------------------------------------------------------------
+Calculate Cows
+------------------------------------------------------------
+
+Digit 0:
+
+    min(1, 1) = 1
+
+Digit 1:
+
+    min(1, 1) = 1
+
+Digit 7:
+
+    min(1, 1) = 1
+
+Therefore:
+
+    cows = 3
+
+------------------------------------------------------------
+Final Answer
+------------------------------------------------------------
+
+Bulls:
+
+    1
+
+Cows:
+
+    3
+
+Return:
+
+    "1A3B"
+
+------------------------------------------------------------
+Example with Duplicate Digits
+------------------------------------------------------------
+
+secret = "1123"
+guess  = "0111"
+
+Compare:
+
+    1 vs 0 -> Not Bull
+    1 vs 1 -> Bull
+    2 vs 1 -> Not Bull
+    3 vs 1 -> Not Bull
+
+Therefore:
+
+    Bulls = 1
+
+Remaining secret:
+
+    1, 2, 3
+
+Remaining guess:
+
+    0, 1, 1
+
+For digit 1:
+
+    secret has 1
+    guess has 2
+
+So:
+
+    min(1, 2) = 1
+
+For digits 2 and 3:
+
+    guess has none
+
+Therefore:
+
+    Cows = 1
+
+Answer:
+
+    "1A1B"
+
+------------------------------------------------------------
+Why do we use min() for Cows?
+------------------------------------------------------------
+
+Consider:
+
+    secret = "1122"
+    guess  = "2211"
+
+There are no Bulls.
+
+Secret frequencies:
+
+    1 -> 2
+    2 -> 2
+
+Guess frequencies:
+
+    1 -> 2
+    2 -> 2
+
+Therefore:
+
+    Cows = min(2,2) + min(2,2)
+         = 2 + 2
+         = 4
+
+Answer:
+
+    "0A4B"
+
+Now consider:
+
+    secret = "1111"
+    guess  = "1122"
+
+Bulls:
+
+    Position 0 -> Bull
+    Position 1 -> Bull
+
+Therefore:
+
+    Bulls = 2
+
+Remaining:
+
+    Secret -> 1, 1
+    Guess  -> 2, 2
+
+No matching digits remain.
+
+Therefore:
+
+    Cows = 0
+
+Answer:
+
+    "2A0B"
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize:
+
+       bulls = 0
+       cows = 0
+
+2. Create two frequency arrays of size 10:
+
+       count_s
+       count_g
+
+3. Traverse secret and guess together.
+
+4. If:
+
+       secret[i] == guess[i]
+
+   increment:
+
+       bulls++
+
+5. Otherwise, store the digits in their respective
+   frequency arrays.
+
+6. Traverse digits from 0 to 9.
+
+7. For every digit:
+
+       cows += min(count_s[i], count_g[i])
+
+8. Return:
+
+       to_string(bulls) + "A" + to_string(cows) + "B"
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+We traverse the strings once:
+
+    O(n)
+
+Then we traverse only 10 digits:
+
+    O(10) = O(1)
+
+Overall:
+
+    Time Complexity = O(n)
+
+The frequency arrays contain only 10 elements:
+
+    Space Complexity = O(1)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    string getHint(string secret, string guess) {
+
+        int bulls = 0;
+        int cows = 0;
+
+        // -------------------------------------------------
+        // Frequency of non-bull digits in secret
+        // -------------------------------------------------
+        vector<int> count_s(10, 0);
+
+        // -------------------------------------------------
+        // Frequency of non-bull digits in guess
+        // -------------------------------------------------
+        vector<int> count_g(10, 0);
+
+        // -------------------------------------------------
+        // First pass:
+        // Find Bulls and store non-bull digits
+        // -------------------------------------------------
+        for (int i = 0; i < secret.size(); i++) {
+
+            // Same digit and same position
+            if (secret[i] == guess[i]) {
+                bulls++;
+            }
+            else {
+                // Store only non-bull digits
+                count_s[secret[i] - '0']++;
+                count_g[guess[i] - '0']++;
+            }
+        }
+
+        // -------------------------------------------------
+        // Second pass:
+        // Find Cows using frequency counts
+        // -------------------------------------------------
+        for (int i = 0; i < 10; i++) {
+
+            // Only the minimum number of matching digits
+            // can become Cows.
+            cows += min(count_s[i], count_g[i]);
+        }
+
+        // -------------------------------------------------
+        // Format:
+        // xAyB
+        //
+        // Example:
+        // bulls = 1
+        // cows  = 3
+        //
+        // Result = "1A3B"
+        // -------------------------------------------------
+        return to_string(bulls) + "A" + to_string(cows) + "B";
+    }
+};
