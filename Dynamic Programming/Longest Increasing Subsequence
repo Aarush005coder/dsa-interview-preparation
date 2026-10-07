@@ -1,0 +1,592 @@
+/*
+------------------------------------------------------------
+Problem    : Longest Increasing Subsequence
+Platform   : LeetCode
+Topic      : Dynamic Programming 
+Difficulty : Medium
+
+Problem:
+Given an integer array nums, return the length of the longest
+strictly increasing subsequence.
+
+A subsequence:
+    - Maintains the original order of elements.
+    - Does not need to be contiguous.
+    - Must be strictly increasing.
+
+Example:
+
+    nums = [10, 9, 2, 5, 3, 7, 101, 18]
+
+One Longest Increasing Subsequence is:
+
+    [2, 3, 7, 101]
+
+Therefore:
+
+    Answer = 4
+
+------------------------------------------------------------
+What is a Subsequence?
+------------------------------------------------------------
+
+A subsequence is obtained by deleting some elements from the
+array while maintaining the relative order.
+
+For:
+
+    [10, 9, 2, 5, 3, 7, 101, 18]
+
+We can choose:
+
+    [2, 5, 7, 101]
+
+This is a valid subsequence because the order is maintained.
+
+But:
+
+    [2, 7, 3]
+
+is NOT increasing because:
+
+    7 > 3
+
+------------------------------------------------------------
+Approach
+------------------------------------------------------------
+
+We use:
+
+    Binary Search + Patience Sorting technique
+
+We maintain a vector:
+
+    ans
+
+The vector does NOT necessarily contain the actual LIS.
+
+Instead:
+
+    ans[i] = smallest possible ending value of an
+             increasing subsequence of length i + 1
+
+The smaller the ending value, the more possibilities we have
+to extend the subsequence later.
+
+------------------------------------------------------------
+Important Idea
+------------------------------------------------------------
+
+Suppose:
+
+    ans = [2, 5, 7]
+
+Now we get:
+
+    3
+
+Since:
+
+    3 < 5
+
+we replace 5 with 3:
+
+    ans = [2, 3, 7]
+
+Why?
+
+Because:
+
+    [2, 3]
+
+has the same length as:
+
+    [2, 5]
+
+but has a smaller ending value.
+
+A smaller ending value gives us a better chance of extending
+the subsequence with future elements.
+
+------------------------------------------------------------
+Why do we use lower_bound()?
+------------------------------------------------------------
+
+Suppose:
+
+    ans = [2, 5, 7]
+
+and:
+
+    nums[i] = 3
+
+We need to find the first element in ans which is:
+
+    >= 3
+
+That position is:
+
+    5
+
+So:
+
+    5 -> 3
+
+Result:
+
+    [2, 3, 7]
+
+In C++, we use:
+
+    lower_bound(ans.begin(), ans.end(), nums[i])
+
+lower_bound() returns the first position whose value is
+greater than or equal to nums[i].
+
+------------------------------------------------------------
+Two Cases
+------------------------------------------------------------
+
+CASE 1:
+Current element is greater than the last element.
+
+    nums[i] > ans.back()
+
+Then we can extend the increasing subsequence.
+
+So:
+
+    ans.push_back(nums[i])
+
+Example:
+
+    ans = [2, 3, 7]
+
+    nums[i] = 10
+
+Since:
+
+    10 > 7
+
+We append:
+
+    ans = [2, 3, 7, 10]
+
+The LIS length increases.
+
+------------------------------------------------------------
+
+CASE 2:
+Current element is smaller than or equal to ans.back()
+
+We cannot extend the current length.
+
+Instead, we find the first element >= nums[i]:
+
+    index = lower_bound(...)
+
+and replace it.
+
+Example:
+
+    ans = [2, 3, 7]
+
+    nums[i] = 5
+
+lower_bound gives position of 7.
+
+Replace:
+
+    7 -> 5
+
+Now:
+
+    ans = [2, 3, 5]
+
+The length remains the same, but the ending values
+become smaller and therefore better for future elements.
+
+------------------------------------------------------------
+Dry Run
+------------------------------------------------------------
+
+Input:
+
+    nums = [10, 9, 2, 5, 3, 7, 101, 18]
+
+Initially:
+
+    ans = []
+
+------------------------------------------------------------
+i = 0
+------------------------------------------------------------
+
+nums[0] = 10
+
+ans is empty.
+
+Add 10:
+
+    ans = [10]
+
+Length:
+
+    1
+
+------------------------------------------------------------
+i = 1
+------------------------------------------------------------
+
+nums[1] = 9
+
+Compare:
+
+    9 > 10 ? No
+
+Find lower_bound(9):
+
+    [10]
+     ↑
+    first element >= 9
+
+Replace 10 with 9:
+
+    ans = [9]
+
+Length:
+
+    1
+
+------------------------------------------------------------
+i = 2
+------------------------------------------------------------
+
+nums[2] = 2
+
+    2 > 9 ? No
+
+lower_bound(2):
+
+    9
+
+Replace:
+
+    ans = [2]
+
+Length:
+
+    1
+
+------------------------------------------------------------
+i = 3
+------------------------------------------------------------
+
+nums[3] = 5
+
+    5 > 2 ? Yes
+
+Append:
+
+    ans = [2, 5]
+
+Length:
+
+    2
+
+------------------------------------------------------------
+i = 4
+------------------------------------------------------------
+
+nums[4] = 3
+
+    3 > 5 ? No
+
+lower_bound(3):
+
+    position of 5
+
+Replace:
+
+    ans = [2, 3]
+
+Length:
+
+    2
+
+------------------------------------------------------------
+i = 5
+------------------------------------------------------------
+
+nums[5] = 7
+
+    7 > 3 ? Yes
+
+Append:
+
+    ans = [2, 3, 7]
+
+Length:
+
+    3
+
+------------------------------------------------------------
+i = 6
+------------------------------------------------------------
+
+nums[6] = 101
+
+    101 > 7 ? Yes
+
+Append:
+
+    ans = [2, 3, 7, 101]
+
+Length:
+
+    4
+
+------------------------------------------------------------
+i = 7
+------------------------------------------------------------
+
+nums[7] = 18
+
+    18 > 101 ? No
+
+Find:
+
+    lower_bound(18)
+
+First element >= 18 is:
+
+    101
+
+Replace:
+
+    ans = [2, 3, 7, 18]
+
+Length remains:
+
+    4
+
+------------------------------------------------------------
+Final Answer
+------------------------------------------------------------
+
+ans.size() = 4
+
+Therefore:
+
+    Answer = 4
+
+One actual LIS is:
+
+    [2, 3, 7, 101]
+
+Important:
+
+    ans = [2, 3, 7, 18]
+
+is NOT necessarily the actual LIS.
+
+It is only maintaining the best possible tail values
+for subsequences of different lengths.
+
+------------------------------------------------------------
+Why replacing an element is useful
+------------------------------------------------------------
+
+Consider:
+
+    ans = [2, 3, 7, 101]
+
+Suppose:
+
+    nums[i] = 18
+
+We cannot append 18 because:
+
+    18 < 101
+
+But replacing 101 with 18 gives:
+
+    [2, 3, 7, 18]
+
+Both represent an increasing subsequence of length 4.
+
+However:
+
+    [2, 3, 7, 18]
+
+has a smaller final value than:
+
+    [2, 3, 7, 101]
+
+This is better because future values such as:
+
+    20, 25, 30...
+
+can extend it.
+
+------------------------------------------------------------
+Why is the algorithm O(n log n)?
+------------------------------------------------------------
+
+We process every element once:
+
+    n elements
+
+For each element, we perform:
+
+    lower_bound()
+
+Binary search takes:
+
+    O(log n)
+
+Therefore:
+
+    O(n) × O(log n)
+
+    = O(n log n)
+
+------------------------------------------------------------
+Comparison with DP
+------------------------------------------------------------
+
+Traditional Dynamic Programming solution:
+
+    Time Complexity  : O(n²)
+    Space Complexity : O(n)
+
+Optimal Binary Search solution:
+
+    Time Complexity  : O(n log n)
+    Space Complexity : O(n)
+
+Therefore, this approach is significantly faster for
+large arrays.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. If nums is empty:
+
+       return 0
+
+2. Create an empty vector:
+
+       ans
+
+3. Add the first element:
+
+       ans.push_back(nums[0])
+
+4. Traverse the remaining elements.
+
+5. If:
+
+       nums[i] > ans.back()
+
+   append it:
+
+       ans.push_back(nums[i])
+
+6. Otherwise, find the first position where:
+
+       ans[index] >= nums[i]
+
+   using:
+
+       lower_bound()
+
+7. Replace that element with nums[i].
+
+8. Return:
+
+       ans.size()
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Each element is processed once.
+
+For each element, lower_bound() takes O(log n).
+
+Time Complexity  : O(n log n)
+
+The ans vector can contain at most n elements.
+
+Space Complexity : O(n)
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+
+    int solveoptimal(int n, vector<int>& nums) {
+
+        // -------------------------------------------------
+        // Edge Case:
+        // Empty array has LIS length 0
+        // -------------------------------------------------
+        if (n == 0) {
+            return 0;
+        }
+
+        // -------------------------------------------------
+        // ans stores the smallest possible tail values
+        // for increasing subsequences of different lengths.
+        // -------------------------------------------------
+        vector<int> ans;
+
+        ans.push_back(nums[0]);
+
+        // -------------------------------------------------
+        // Process remaining elements
+        // -------------------------------------------------
+        for (int i = 1; i < n; i++) {
+
+            // -------------------------------------------------
+            // If current element is greater than the last
+            // element, we can extend the subsequence.
+            // -------------------------------------------------
+            if (nums[i] > ans.back()) {
+                ans.push_back(nums[i]);
+            }
+
+            // -------------------------------------------------
+            // Otherwise, replace the first element which is
+            // greater than or equal to nums[i].
+            //
+            // lower_bound() gives that position.
+            // -------------------------------------------------
+            else {
+                int index =
+                    lower_bound(
+                        ans.begin(),
+                        ans.end(),
+                        nums[i]
+                    ) - ans.begin();
+
+                ans[index] = nums[i];
+            }
+        }
+
+        // -------------------------------------------------
+        // Size of ans represents the length of LIS.
+        // -------------------------------------------------
+        return ans.size();
+    }
+
+    int lengthOfLIS(vector<int>& nums) {
+
+        int n = nums.size();
+
+        return solveoptimal(n, nums);
+    }
+};
