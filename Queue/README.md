@@ -7,6 +7,7 @@ This folder contains **Queue** problems solved in **C++**. Each solution include
 | # | Problem | Difficulty | Status |
 |---|---|---|---|
 | 1 | Implement Queue using Stacks | Easy | ✅ |
+| 2 | Remove Invalid Parentheses | Hard | ✅ |
 
 ## 📌 Concepts Covered
 
@@ -28,4 +29,4 @@ This folder contains **Queue** problems solved in **C++**. Each solution include
 - Learn amortized O(1) operations using two-stack technique.
 - Write clean, optimized, and well-documented C++ solutions.
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
