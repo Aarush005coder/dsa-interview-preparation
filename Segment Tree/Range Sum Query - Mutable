@@ -1,0 +1,512 @@
+/*
+------------------------------------------------------------
+Problem    : Range Sum Query - Mutable
+Platform   : LeetCode
+Topic      : Segment Tree
+Difficulty : Medium
+
+Problem:
+Given an integer array nums, implement the NumArray class
+to support two operations:
+
+1. update(index, val):
+   Update nums[index] to val.
+
+2. sumRange(left, right):
+   Return the sum of elements from index left to right,
+   including both endpoints.
+
+Example:
+
+    nums = [1, 3, 5]
+
+    sumRange(0, 2) = 1 + 3 + 5 = 9
+
+    update(1, 2)
+
+    nums = [1, 2, 5]
+
+    sumRange(0, 2) = 1 + 2 + 5 = 8
+
+------------------------------------------------------------
+Approach
+------------------------------------------------------------
+
+We use:
+
+    Segment Tree
+
+A Segment Tree is a binary tree-like data structure that
+stores information about segments (ranges) of an array.
+
+Each node represents a range of indices.
+
+For example:
+
+    nums = [1, 3, 5]
+
+                 [0,2] = 9
+                 /       \
+          [0,1] = 4      [2,2] = 5
+           /     \
+      [0,0]=1   [1,1]=3
+
+The root stores the sum of the complete array.
+
+Each internal node stores the sum of its two children.
+
+Therefore:
+
+    tree[node] = tree[2 * node] + tree[2 * node + 1]
+
+------------------------------------------------------------
+Why Segment Tree?
+------------------------------------------------------------
+
+We need to support both:
+
+    1. Updating an element.
+    2. Querying the sum of a range.
+
+A simple array takes:
+
+    Update       : O(1)
+    Range Sum    : O(n)
+
+A Segment Tree supports both operations efficiently:
+
+    Update       : O(log n)
+    Range Sum    : O(log n)
+
+This makes it useful when many updates and range queries
+are performed.
+
+------------------------------------------------------------
+Segment Tree Array Representation
+------------------------------------------------------------
+
+We store the tree in a vector:
+
+    vector<long long> tree;
+
+For a node with index node:
+
+    Left Child  = 2 * node
+    Right Child = 2 * node + 1
+
+We use index 1 for the root.
+
+The tree vector has size:
+
+    4 * n
+
+This provides enough space for the segment tree.
+
+------------------------------------------------------------
+1. build() Function
+------------------------------------------------------------
+
+Purpose:
+Build the Segment Tree using the input array.
+
+Parameters:
+
+    node  -> Current tree node
+    start -> Starting index of its range
+    end   -> Ending index of its range
+
+CASE 1: Leaf Node
+
+If:
+
+    start == end
+
+The node represents one array element.
+
+Therefore:
+
+    tree[node] = nums[start]
+
+CASE 2: Internal Node
+
+Calculate the middle index:
+
+    mid = start + (end - start) / 2
+
+Build the left child:
+
+    build(nums, 2 * node, start, mid)
+
+Build the right child:
+
+    build(nums, 2 * node + 1, mid + 1, end)
+
+Finally, combine both sums:
+
+    tree[node] = tree[2 * node] + tree[2 * node + 1]
+
+------------------------------------------------------------
+2. updatefirst() Function
+------------------------------------------------------------
+
+Purpose:
+Update an array element and update all affected segment
+tree nodes.
+
+Suppose:
+
+    nums = [1, 3, 5]
+
+We perform:
+
+    update(1, 2)
+
+The array becomes:
+
+    nums = [1, 2, 5]
+
+First, find the leaf corresponding to index 1.
+
+Update its value:
+
+    tree[node] = val
+
+Then, while recursion returns, recalculate the sums
+of the parent nodes.
+
+For example:
+
+    Old sum of [0,1] = 1 + 3 = 4
+    New sum of [0,1] = 1 + 2 = 3
+
+The root is also updated:
+
+    Old total = 9
+    New total = 8
+
+Only the nodes along the path from the root to the
+updated leaf need to be recalculated.
+
+------------------------------------------------------------
+3. sol() Function
+------------------------------------------------------------
+
+Purpose:
+Calculate the sum of elements in the range [l, r].
+
+We handle three cases.
+
+CASE 1: No Overlap
+
+Condition:
+
+    r < start || end < l
+
+The current segment is completely outside the query range.
+
+Return:
+
+    0
+
+Why?
+
+This segment contributes nothing to the requested sum.
+
+CASE 2: Complete Overlap
+
+Condition:
+
+    l <= start && end <= r
+
+The current segment lies completely inside the query range.
+
+Return:
+
+    tree[node]
+
+Why?
+
+The segment tree already stores the sum of this complete
+segment, so we do not need to explore its children.
+
+CASE 3: Partial Overlap
+
+The current segment partially overlaps the query range.
+
+Calculate:
+
+    mid = start + (end - start) / 2
+
+Query the left and right children:
+
+    leftSum  = sol(left child)
+    rightSum = sol(right child)
+
+Return:
+
+    leftSum + rightSum
+
+------------------------------------------------------------
+Dry Run
+------------------------------------------------------------
+
+Input:
+
+    nums = [1, 3, 5]
+
+Build the Segment Tree:
+
+                 [0,2] = 9
+                 /       \
+          [0,1] = 4      [2,2] = 5
+           /     \
+      [0,0]=1   [1,1]=3
+
+------------------------------------------------------------
+Operation 1: sumRange(0, 2)
+------------------------------------------------------------
+
+Query:
+
+    left = 0
+    right = 2
+
+The complete array range [0,2] is covered.
+
+Therefore, return the root sum directly:
+
+    tree[1] = 9
+
+Output:
+
+    9
+
+------------------------------------------------------------
+Operation 2: update(1, 2)
+------------------------------------------------------------
+
+Original array:
+
+    [1, 3, 5]
+
+Update:
+
+    nums[1] = 2
+
+New array:
+
+    [1, 2, 5]
+
+Update the leaf for index 1:
+
+    tree value changes from 3 to 2.
+
+Recalculate the parent range [0,1]:
+
+    1 + 2 = 3
+
+Recalculate the root:
+
+    3 + 5 = 8
+
+Updated Segment Tree:
+
+                 [0,2] = 8
+                 /       \
+          [0,1] = 3      [2,2] = 5
+           /     \
+      [0,0]=1   [1,1]=2
+
+------------------------------------------------------------
+Operation 3: sumRange(0, 2)
+------------------------------------------------------------
+
+The complete range is covered by the root.
+
+Return:
+
+    tree[1] = 8
+
+Output:
+
+    8
+
+------------------------------------------------------------
+Final Output
+------------------------------------------------------------
+
+    [null, 9, null, 8]
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+BUILD:
+1. Store the array size n.
+2. Allocate a segment tree of size 4 * n.
+3. Recursively divide the array into two halves.
+4. Store array values in leaf nodes.
+5. Store the sum of children in every internal node.
+
+UPDATE:
+1. Start at the root.
+2. Find the child containing the target index.
+3. Continue until reaching the corresponding leaf.
+4. Replace the leaf value with val.
+5. Recalculate the sums of the ancestors.
+
+SUM RANGE:
+1. If the segment has no overlap with [left, right],
+   return 0.
+2. If the segment is completely inside the query range,
+   return its stored sum.
+3. Otherwise, query both children and add their results.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Let n be the number of elements.
+
+Building the Segment Tree:
+
+    Time Complexity  : O(n)
+    Space Complexity : O(n)
+
+Updating one element:
+
+    Time Complexity  : O(log n)
+
+Querying a range sum:
+
+    Time Complexity  : O(log n)
+
+Total Segment Tree Storage:
+
+    Space Complexity : O(n)
+
+------------------------------------------------------------
+*/
+
+class NumArray {
+private:
+    vector<long long> tree;
+    int n;
+
+    // -------------------------------------------------
+    // Builds the Segment Tree.
+    // Each node stores the sum of its index range.
+    // -------------------------------------------------
+    void build(vector<int>& nums, int node, int start, int end) {
+        if (start > end) {
+            return;
+        }
+
+        // A leaf node represents one array element.
+        if (start == end) {
+            tree[node] = nums[start];
+        }
+        else {
+            int mid = start + (end - start) / 2;
+
+            // Build the left and right subtrees.
+            build(nums, 2 * node, start, mid);
+            build(nums, 2 * node + 1, mid + 1, end);
+
+            // Combine the sums of both children.
+            tree[node] = tree[2 * node] + tree[2 * node + 1];
+        }
+    }
+
+    // -------------------------------------------------
+    // Updates one array index and recalculates the
+    // affected segment tree nodes.
+    // -------------------------------------------------
+    void updatefirst(int node, int start, int end, int idx, int val) {
+        if (start > end) {
+            return;
+        }
+
+        // Find the leaf representing the target index.
+        if (start == end) {
+            tree[node] = val;
+        }
+        else {
+            int mid = start + (end - start) / 2;
+
+            // Follow the child containing idx.
+            if (idx <= mid) {
+                updatefirst(2 * node, start, mid, idx, val);
+            }
+            else {
+                updatefirst(2 * node + 1, mid + 1, end, idx, val);
+            }
+
+            // Recalculate the parent sum after the update.
+            tree[node] = tree[2 * node] + tree[2 * node + 1];
+        }
+    }
+
+    // -------------------------------------------------
+    // Returns the sum of the query range [l, r].
+    // -------------------------------------------------
+    long long sol(int node, int start, int end, int l, int r) {
+        // Case 1: No overlap.
+        if (start > end || r < start || end < l) {
+            return 0;
+        }
+
+        // Case 2: Complete overlap.
+        if (l <= start && end <= r) {
+            return tree[node];
+        }
+
+        // Case 3: Partial overlap.
+        int mid = start + (end - start) / 2;
+
+        long long leftSum =
+            sol(2 * node, start, mid, l, r);
+
+        long long rightSum =
+            sol(2 * node + 1, mid + 1, end, l, r);
+
+        return leftSum + rightSum;
+    }
+
+public:
+    // -------------------------------------------------
+    // Constructor: Builds the Segment Tree.
+    // -------------------------------------------------
+    NumArray(vector<int>& nums) {
+        n = nums.size();
+
+        if (n == 0) {
+            return;
+        }
+
+        tree.resize(4 * n);
+        build(nums, 1, 0, n - 1);
+    }
+
+    // -------------------------------------------------
+    // Updates nums[index] to val.
+    // -------------------------------------------------
+    void update(int index, int val) {
+        if (n == 0) {
+            return;
+        }
+
+        updatefirst(1, 0, n - 1, index, val);
+    }
+
+    // -------------------------------------------------
+    // Returns the sum from left to right, inclusive.
+    // -------------------------------------------------
+    int sumRange(int left, int right) {
+        if (n == 0) {
+            return 0;
+        }
+
+        return (int)sol(1, 0, n - 1, left, right);
+    }
+};
