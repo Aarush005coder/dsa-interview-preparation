@@ -1,0 +1,397 @@
+/*
+------------------------------------------------------------
+Problem    : Remove Duplicate Letters
+Platform   : LeetCode
+Topic      : Greedy
+Difficulty : Medium
+
+Problem:
+Given a string s, remove duplicate letters so that every
+character appears exactly once.
+
+The result must be the smallest possible string in
+lexicographical order among all valid results.
+
+Example:
+
+    Input:
+        s = "bcabc"
+
+    Output:
+        "abc"
+
+------------------------------------------------------------
+What is Lexicographical Order?
+------------------------------------------------------------
+
+Lexicographical order means dictionary order.
+
+For example:
+
+    "abc" < "acb"
+    "acb" < "bac"
+
+We need to select one occurrence of every distinct character
+such that the resulting string is lexicographically smallest.
+
+------------------------------------------------------------
+Approach
+------------------------------------------------------------
+
+We use:
+
+    Greedy + Monotonic Stack + Last Occurrence Array
+
+We maintain three data structures:
+
+1. last[26]
+   Stores the last index where each character appears.
+
+2. visited[26]
+   Tracks whether a character is already present in the stack.
+
+3. stack<char>
+   Maintains the characters of the answer in the best
+   possible lexicographical order.
+
+------------------------------------------------------------
+Why Do We Store the Last Occurrence?
+------------------------------------------------------------
+
+Consider:
+
+    s = "bcabc"
+
+Last occurrence of each character:
+
+    b -> 3
+    c -> 4
+    a -> 2
+
+Suppose the current stack contains a character greater
+than the current character.
+
+We can remove that larger character only if it appears
+again later in the string.
+
+Why?
+
+If it appears again, we can insert it later and still
+include every distinct character in our answer.
+
+If it does not appear again, removing it would make it
+impossible to include that character in the final result.
+
+------------------------------------------------------------
+Why Do We Use a Stack?
+------------------------------------------------------------
+
+A stack helps us remove previously selected characters
+when a smaller character can improve the answer.
+
+For example:
+
+    Stack = [b, c]
+    Current character = a
+
+Since:
+
+    b > a
+
+and b appears again later, we can remove b.
+
+Then:
+
+    c > a
+
+and c also appears again later, so we remove c.
+
+Finally, we push a:
+
+    Stack = [a]
+
+This greedy process helps produce the smallest possible
+lexicographical result.
+
+------------------------------------------------------------
+Why Do We Use visited[]?
+------------------------------------------------------------
+
+Every character must appear exactly once.
+
+Before processing a character:
+
+    if (visited[ch - 'a'])
+
+we skip it because that character is already included
+in the stack.
+
+When removing a character from the stack, we mark it
+as not visited so that it can be added again later.
+
+------------------------------------------------------------
+Dry Run
+------------------------------------------------------------
+
+Input:
+
+    s = "bcabc"
+
+Step 1: Calculate last occurrences.
+
+    b -> 3
+    c -> 4
+    a -> 2
+
+Initially:
+
+    Stack   = []
+    visited = all false
+
+------------------------------------------------------------
+i = 0, ch = 'b'
+------------------------------------------------------------
+
+The stack is empty.
+
+Push 'b':
+
+    Stack = [b]
+
+Mark b as visited.
+
+------------------------------------------------------------
+i = 1, ch = 'c'
+------------------------------------------------------------
+
+Compare:
+
+    stack.top() = 'b'
+    ch          = 'c'
+
+Since:
+
+    'b' < 'c'
+
+we do not remove anything.
+
+Push 'c':
+
+    Stack = [b, c]
+
+------------------------------------------------------------
+i = 2, ch = 'a'
+------------------------------------------------------------
+
+Current character:
+
+    ch = 'a'
+
+First comparison:
+
+    stack.top() = 'c'
+    'c' > 'a'
+
+Check last occurrence:
+
+    last['c'] = 4 > 2
+
+Since c appears again later, remove c.
+
+    Stack = [b]
+
+Mark c as not visited.
+
+Second comparison:
+
+    stack.top() = 'b'
+    'b' > 'a'
+
+Check last occurrence:
+
+    last['b'] = 3 > 2
+
+Since b appears again later, remove b.
+
+    Stack = []
+
+Mark b as not visited.
+
+Now push a:
+
+    Stack = [a]
+
+------------------------------------------------------------
+i = 3, ch = 'b'
+------------------------------------------------------------
+
+The stack is [a].
+
+Since:
+
+    'a' < 'b'
+
+push b:
+
+    Stack = [a, b]
+
+------------------------------------------------------------
+i = 4, ch = 'c'
+------------------------------------------------------------
+
+The stack is [a, b].
+
+Since:
+
+    'b' < 'c'
+
+push c:
+
+    Stack = [a, b, c]
+
+------------------------------------------------------------
+Final Answer
+------------------------------------------------------------
+
+The stack contains:
+
+    [a, b, c]
+
+A stack returns elements in reverse order when popped.
+
+Therefore, we build the answer by popping all characters
+and then reversing the resulting string.
+
+    Answer = "abc"
+
+------------------------------------------------------------
+Important Condition
+------------------------------------------------------------
+
+    while (!si.empty() &&
+           si.top() > ch &&
+           last[si.top() - 'a'] > i)
+
+All three conditions are important:
+
+1. !si.empty()
+   Ensures the stack is not empty.
+
+2. si.top() > ch
+   The top character is larger than the current character,
+   so removing it may improve lexicographical order.
+
+3. last[si.top() - 'a'] > i
+   The top character appears again later, so removing it
+   will not prevent it from appearing in the final answer.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Create an array last[26] to store the last occurrence
+   of each character.
+2. Traverse the string and fill last[].
+3. Create an empty stack and visited[26].
+4. Traverse the string from left to right.
+5. If the current character is already visited, skip it.
+6. While the stack is not empty, its top is greater than
+   the current character, and the top character appears
+   again later:
+      a. Mark the top character as not visited.
+      b. Pop it from the stack.
+7. Push the current character and mark it as visited.
+8. Pop all characters into a string.
+9. Reverse the string and return it.
+
+------------------------------------------------------------
+Time Complexity
+------------------------------------------------------------
+
+Let n be the length of the string.
+
+Building the last occurrence array:
+
+    O(n)
+
+Processing the string:
+
+    O(n)
+
+Although there is a while loop inside the for loop,
+each character is pushed at most once and popped at most
+once.
+
+Therefore, the total stack-processing time is O(n).
+
+Reversing the answer:
+
+    O(n)
+
+Overall:
+
+    Time Complexity  : O(n)
+    Space Complexity : O(n)
+
+The auxiliary arrays have fixed size 26, while the stack
+and answer can each store up to n characters.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    string removeDuplicateLetters(string s) {
+        vector<int> last(26, 0);
+        vector<bool> visited(26, false);
+        stack<char> si;
+
+        // -------------------------------------------------
+        // Store the last occurrence of every character.
+        // -------------------------------------------------
+        for (int i = 0; i < s.size(); i++) {
+            last[s[i] - 'a'] = i;
+        }
+
+        // -------------------------------------------------
+        // Build the lexicographically smallest result.
+        // -------------------------------------------------
+        for (int i = 0; i < s.size(); i++) {
+            char ch = s[i];
+
+            // Skip characters already present in the stack.
+            if (visited[ch - 'a']) {
+                continue;
+            }
+
+            // Remove larger characters if they appear again
+            // later, allowing us to maintain a smaller result.
+            while (!si.empty() &&
+                   si.top() > ch &&
+                   last[si.top() - 'a'] > i) {
+
+                visited[si.top() - 'a'] = false;
+                si.pop();
+            }
+
+            // Include the current character exactly once.
+            si.push(ch);
+            visited[ch - 'a'] = true;
+        }
+
+        // -------------------------------------------------
+        // Extract characters from the stack.
+        // Stack order is reversed, so reverse the answer.
+        // -------------------------------------------------
+        string ans = "";
+
+        while (!si.empty()) {
+            ans += si.top();
+            si.pop();
+        }
+
+        reverse(ans.begin(), ans.end());
+
+        return ans;
+    }
+};
