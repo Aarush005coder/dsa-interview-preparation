@@ -100,7 +100,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Trie | 1 |
 | Graph | 1 |
 | Dynamic Programming | 10 |
-| Greedy | 5 |
+| Greedy | 6 |
 | Math | 13 |
 | Segment Tree | 1 |
 | Fenwick Tree | 0 |
@@ -174,7 +174,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **150**
+**Total Problems Solved:** **151**
 
 ---
 
