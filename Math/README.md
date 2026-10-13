@@ -21,6 +21,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 11 | Add Digits | Easy | ✅ |
 | 12 | Ugly Number | Easy | ✅ |
 | 13 | Nim Game | Easy | ✅ |
+| 14 | Power of Three | Easy | ✅ |
 
 ---
 
@@ -46,4 +47,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **13**
+**Problems Solved:** **14**
