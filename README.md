@@ -103,7 +103,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Greedy | 6 |
 | Math | 14 |
 | Segment Tree | 1 |
-| Fenwick Tree | 0 |
+| Fenwick Tree | 1 |
 | Union Find | 0 |
 | Miscellaneous | 0 |
 
@@ -174,7 +174,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **152**
+**Total Problems Solved:** **153**
 
 ---
 
