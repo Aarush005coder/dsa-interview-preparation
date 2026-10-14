@@ -1,0 +1,268 @@
+/*
+Problem    :   Count of Range Sum
+Platform   :   LeetCode
+Topic      :   Fenwick Tree (Binary Indexed Tree)
+Difficulty :   Hard
+
+Problem Description:
+--------------------
+Given an integer array nums and two integers lower and upper, count the
+number of subarrays whose sum lies in the inclusive range [lower, upper].
+
+The sum of a subarray nums[i...j] is:
+
+    S(i, j) = nums[i] + nums[i+1] + ... + nums[j]
+
+Example:
+--------
+Input:
+    nums = [-2, 5, -1]
+    lower = -2
+    upper = 2
+
+Output:
+    3
+
+Explanation:
+    Subarray [-2]      -> sum = -2
+    Subarray [-1]      -> sum = -1
+    Subarray [-2,5,-1] -> sum = 2
+
+Approach:
+---------
+Prefix Sum + Coordinate Compression + Fenwick Tree (BIT)
+
+1. Prefix Sum:
+   Calculate prefix sums so that the sum of any subarray can be found
+   by subtracting two prefix sums.
+
+   prefix[j] - prefix[i] = sum of nums[i...j-1]
+
+2. Convert the condition:
+   We need to count subarrays whose sum is between lower and upper.
+
+   lower <= prefix[j] - prefix[i] <= upper
+
+   Rearranging:
+
+   prefix[j] - upper <= prefix[i] <= prefix[j] - lower
+
+   Therefore, for each current prefix sum x, count previous prefix sums
+   in the range [x - upper, x - lower].
+
+3. Coordinate Compression:
+   Prefix sums may be negative or very large, so we cannot directly
+   use them as Fenwick Tree indices.
+
+   Store these values:
+       x
+       x - lower
+       x - upper
+
+   Sort them and remove duplicates. Each value can then be mapped
+   to a valid 1-based index.
+
+4. Fenwick Tree:
+   The Fenwick Tree stores the frequencies of previously encountered
+   prefix sums.
+
+   query(idx):
+       Returns the number of inserted values with compressed index <= idx.
+
+   update(idx, 1):
+       Adds one occurrence of a prefix sum.
+
+5. Count valid ranges:
+   left  = compressed index of x - upper
+   right = compressed index of x - lower
+
+   Number of valid previous prefix sums:
+
+       query(right) - query(left - 1)
+
+   Add this count to the answer, then insert the current prefix sum.
+
+Why do we insert the current prefix sum AFTER querying?
+--------------------------------------------------------
+A subarray must contain at least one element. If we insert the current
+prefix sum before querying, it could be counted against itself when
+zero lies in [lower, upper].
+
+By querying first, we count only earlier prefix sums.
+
+Dry Run:
+--------
+nums = [-2, 5, -1]
+lower = -2, upper = 2
+
+Prefix sums:
+    prefix[0] =  0
+    prefix[1] = -2
+    prefix[2] =  3
+    prefix[3] =  2
+
+Process each prefix sum:
+
+1. x = 0
+   Valid previous prefix sums must be in:
+       [0 - 2, 0 - (-2)] = [-2, 2]
+
+   Fenwick Tree is empty.
+   Count = 0
+   Insert 0.
+
+2. x = -2
+   Valid previous prefix sums must be in:
+       [-2 - 2, -2 - (-2)] = [-4, 0]
+
+   Previous prefix sums: [0]
+   Valid values: [0]
+   Count = 1
+   This represents subarray [-2].
+   Insert -2.
+
+3. x = 3
+   Valid previous prefix sums must be in:
+       [3 - 2, 3 - (-2)] = [1, 5]
+
+   Previous prefix sums: [0, -2]
+   Valid values: none
+   Count = 0
+   Insert 3.
+
+4. x = 2
+   Valid previous prefix sums must be in:
+       [2 - 2, 2 - (-2)] = [0, 4]
+
+   Previous prefix sums: [0, -2, 3]
+   Valid values: [0, 3]
+   Count = 2
+
+   These represent:
+       prefix 0 -> subarray [-2, 5, -1], sum = 2
+       prefix 3 -> subarray [-1], sum = -1
+
+Total answer = 1 + 0 + 2 = 3.
+
+Algorithm:
+----------
+1. Compute all prefix sums.
+2. Store each prefix sum x, x - lower, and x - upper.
+3. Sort and deduplicate these values.
+4. Create a Fenwick Tree for their compressed indices.
+5. For every prefix sum x:
+   a. Find the compressed indices of x - upper and x - lower.
+   b. Count previously inserted prefix sums in that range.
+   c. Add the count to the answer.
+   d. Insert x into the Fenwick Tree.
+6. Return the answer.
+
+Time Complexity:
+----------------
+O(n log n)
+
+- Building prefix sums: O(n)
+- Coordinate compression: O(n log n)
+- Fenwick Tree queries and updates: O(n log n)
+
+Space Complexity:
+-----------------
+O(n)
+
+Prefix sums, compressed values, and Fenwick Tree each require O(n) space.
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class FenwickTree {
+public:
+    vector<int> bit;
+    int n;
+
+    FenwickTree(int size) {
+        n = size;
+        bit.assign(n + 1, 0);
+    }
+
+    // Add val to the frequency at index idx.
+    void update(int idx, int val) {
+        while (idx <= n) {
+            bit[idx] += val;
+            idx += idx & (-idx);
+        }
+    }
+
+    // Count inserted elements whose compressed indices are <= idx.
+    int query(int idx) {
+        int sum = 0;
+
+        while (idx > 0) {
+            sum += bit[idx];
+            idx -= idx & (-idx);
+        }
+
+        return sum;
+    }
+};
+
+class Solution {
+public:
+    int countRangeSum(vector<int>& nums, int lower, int upper) {
+        int n = nums.size();
+
+        // Step 1: Calculate prefix sums.
+        vector<long long> prefix(n + 1, 0);
+
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+
+        // Step 2: Prepare values for coordinate compression.
+        vector<long long> values;
+
+        for (long long x : prefix) {
+            values.push_back(x);
+            values.push_back(x - lower);
+            values.push_back(x - upper);
+        }
+
+        // Step 3: Sort values and remove duplicates.
+        sort(values.begin(), values.end());
+
+        values.erase(
+            unique(values.begin(), values.end()),
+            values.end()
+        );
+
+        // Step 4: Create a Fenwick Tree.
+        FenwickTree bit(values.size());
+
+        long long ans = 0;
+
+        // Step 5: Process each prefix sum.
+        for (long long x : prefix) {
+
+            // Valid previous prefix sums are in [x-upper, x-lower].
+            int left = lower_bound(
+                values.begin(), values.end(), x - upper
+            ) - values.begin() + 1;
+
+            int right = lower_bound(
+                values.begin(), values.end(), x - lower
+            ) - values.begin() + 1;
+
+            // Count previously inserted prefix sums in the valid range.
+            ans += bit.query(right) - bit.query(left - 1);
+
+            // Insert the current prefix sum AFTER querying.
+            int idx = lower_bound(
+                values.begin(), values.end(), x
+            ) - values.begin() + 1;
+
+            bit.update(idx, 1);
+        }
+
+        return static_cast<int>(ans);
+    }
+};
