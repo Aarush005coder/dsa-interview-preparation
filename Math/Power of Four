@@ -1,0 +1,120 @@
+/*
+Problem    :  Power of Four
+Platform   :  LeetCode
+Topic      :  Math, Logarithms
+Difficulty :  Easy
+
+Problem Description:
+--------------------
+Given an integer n, return true if n is a power of four.
+Otherwise, return false.
+
+A number is a power of four if there exists a non-negative integer x
+such that:
+
+    n = 4^x
+
+Examples:
+---------
+Input:  n = 16
+Output: true
+
+Explanation:
+    16 = 4^2
+
+Input:  n = 8
+Output: false
+
+Explanation:
+    8 is not a power of four.
+
+Approach:
+---------
+Logarithmic Approach
+
+We use the logarithm formula:
+
+    log_b(n) = log(n) / log(b)
+
+Therefore:
+
+    x = log(n) / log(4)
+
+If n is a power of four, x must be an integer.
+
+For example:
+    n = 16
+    x = log(16) / log(4)
+    x = 2
+
+Since 2 is an integer, 16 is a power of four.
+
+Why do we check n <= 0?
+-----------------------
+Powers of four are always positive:
+
+    4^0 = 1
+    4^1 = 4
+    4^2 = 16
+    4^3 = 64
+
+Zero and negative numbers cannot be powers of four, so we return false.
+
+Why do we use floor(x)?
+-----------------------
+floor(x) returns the greatest integer less than or equal to x.
+
+If x = 2.0:
+    floor(x) = 2.0
+    x == floor(x) is true.
+
+If x = 1.5:
+    floor(x) = 1.0
+    x == floor(x) is false.
+
+Therefore, the code checks whether x is an integer.
+
+Important Limitation:
+---------------------
+Floating-point calculations can introduce precision errors.
+For some inputs, a mathematically integral logarithm may not be
+represented exactly as a double.
+
+A bit-manipulation solution avoids this floating-point issue.
+
+Algorithm:
+----------
+1. If n <= 0, return false.
+2. Calculate x = log10(n) / log10(4).
+3. If x equals floor(x), return true.
+4. Otherwise, return false.
+
+Time Complexity:
+----------------
+O(1) for fixed-width integer inputs, assuming logarithm operations
+take constant time.
+
+Space Complexity:
+-----------------
+O(1)
+
+Implementation:
+---------------
+*/
+
+class Solution {
+public:
+    bool isPowerOfFour(int n) {
+
+        // Powers of four must be positive.
+        if (n <= 0) {
+            return false;
+        }
+
+        // Calculate the exponent x such that n = 4^x.
+        double x = log10(n) / log10(4);
+
+        // A power of four must have an integer exponent.
+        return x == floor(x);
+    }
+};
