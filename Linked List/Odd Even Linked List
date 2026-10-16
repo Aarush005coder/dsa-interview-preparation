@@ -1,100 +1,171 @@
 /*
-------------------------------------------------------------
-Problem    : Odd Even Linked List
-Platform   : LeetCode
-Topic      : Linked List
-Difficulty : Medium
+Problem   :  Odd Even Linked List
+Platform  :  LeetCode
+Topic     :  Linked List
+Difficulty:  Medium
 
-Problem:
-Given the head of a singly linked list, group all the nodes with 
-odd indices together followed by the nodes with even indices, and 
-return the reordered list. The first node is considered odd, and 
-the second node is even, and so on. The relative order inside 
-both groups must remain as it was in the input.
+Problem Description:
+--------------------
+Given the head of a singly linked list, group nodes at odd indices
+first, followed by nodes at even indices.
+
+The relative order of nodes within each group must remain unchanged.
+
+Important:
+- Odd and even refer to node positions, not node values.
+- The first node is at index 1 (odd).
+- The second node is at index 2 (even).
+- Use O(n) time and O(1) extra space.
+
+Example:
+--------
+Input:  head = [1, 2, 3, 4, 5]
+Output: [1, 3, 5, 2, 4]
+
+Explanation:
+Original positions:
+    1 -> 2 -> 3 -> 4 -> 5
+    O    E    O    E    O
+
+Odd-indexed nodes:
+    1 -> 3 -> 5
+
+Even-indexed nodes:
+    2 -> 4
+
+Final list:
+    1 -> 3 -> 5 -> 2 -> 4
 
 Approach:
-We can solve this problem in-place by maintaining two separate 
-pointers: one for the odd-indexed nodes and one for the even-indexed 
-nodes. As we traverse the linked list, we rearrange the `next` 
-pointers to link all odd nodes together and all even nodes together. 
-Finally, we connect the end of the odd list to the head of the even list.
+---------
+Three pointers: odd, even, and other.
 
-Why does this work?
-Because we only need to rearrange the existing nodes without creating 
-new ones, we can achieve this in O(1) extra space. By keeping track 
-of the starting node of the even list (e.g., `evenHead`), we can 
-safely detach and reattach nodes. The `odd` pointer always jumps to 
-the next odd node (`even->next`), and the `even` pointer always jumps 
-to the next even node (`odd->next`). This ensures that the relative 
-order is preserved and no nodes are lost during traversal.
+1. odd:
+   Points to the current odd-indexed node.
+   Initially, it points to head.
+
+2. even:
+   Points to the current even-indexed node.
+   Initially, it points to head->next.
+
+3. other:
+   Stores the original first even-indexed node.
+   We need this pointer because the even list must be attached
+   after the odd list at the end.
+
+Why do we need these pointers?
+------------------------------
+We rearrange the existing links instead of creating new nodes.
+
+The odd pointer builds the odd-indexed chain, while the even pointer
+builds the even-indexed chain. The other pointer remembers where the
+even chain begins so we can attach it after finishing the odd chain.
 
 Algorithm:
-1. Handle edge cases: If the list is empty or has only one node, 
-   return `head` directly.
-2. Initialize an `odd` pointer to `head` (the first node).
-3. Initialize an `even` pointer to `head->next` (the second node).
-4. Store the starting node of the even list in a separate pointer 
-   `evenHead` to connect it later.
-5. Traverse the list using a `while` loop that continues as long 
-   as `even` and `even->next` are not null.
-6. Inside the loop, link the current `odd` node to the next odd 
-   node (`even->next`), and advance the `odd` pointer.
-7. Link the current `even` node to the next even node (`odd->next`), 
-   and advance the `even` pointer.
-8. After the loop terminates, link the last `odd` node to `evenHead`.
-9. Return the modified `head`.
+----------
+1. If the list is empty or has only one node, return head.
+2. Initialize odd = head.
+3. Initialize even = head->next.
+4. Save the first even node in other.
+5. While even and even->next both exist:
+   a. Connect the current odd node to the next odd node.
+   b. Move odd forward.
+   c. Connect the current even node to the next even node.
+   d. Move even forward.
+6. Attach the even list after the odd list using odd->next = other.
+7. Return head.
 
-Time Complexity : O(n)
+Dry Run:
+--------
+Input:
+    1 -> 2 -> 3 -> 4 -> 5
 
-Reason:
-We traverse the linked list exactly once, updating pointers in 
-constant time for each node, where n is the number of nodes in 
-the linked list.
+Initially:
+    odd   = 1
+    even  = 2
+    other = 2
 
-Space Complexity : O(1)
+Iteration 1:
+    odd->next = even->next
+    1 -> 3
 
-Reason:
-We only use a few extra pointers (`odd`, `even`, `evenHead`) 
-regardless of the input size, satisfying the strict in-place 
-memory requirement.
+    Move odd to 3.
 
-------------------------------------------------------------
+    even->next = odd->next
+    2 -> 4
+
+    Move even to 4.
+
+Iteration 2:
+    odd->next = even->next
+    3 -> 5
+
+    Move odd to 5.
+
+    even->next = odd->next
+    4 -> NULL
+
+    Move even to NULL.
+
+Loop stops because even == NULL.
+
+Attach the even list:
+    odd->next = other
+
+    5->next = 2
+
+Final list:
+    1 -> 3 -> 5 -> 2 -> 4 -> NULL
+
+Time Complexity:
+----------------
+O(n)
+Each node is processed a constant number of times.
+
+Space Complexity:
+-----------------
+O(1)
+Only a constant number of pointers are used. No additional
+linked list or array is created.
 */
 
 class Solution {
 public:
     ListNode* oddEvenList(ListNode* head) {
-        // Handle edge cases: empty list or single node
-        if (head == nullptr || head->next == nullptr) {
+
+        // Handle an empty list or a list with only one node.
+        if (head == NULL || head->next == NULL) {
             return head;
         }
 
-        // Pointer to track the current odd-indexed node
+        // Pointer to the current odd-indexed node.
         ListNode* odd = head;
-        
-        // Pointer to track the current even-indexed node
-        ListNode* even = head->next;
-        
-        // Store the head of the even list to connect it later
-        ListNode* evenHead = even;
 
-        // Traverse until we reach the end of the list
-        while (even != nullptr && even->next != nullptr) {
-            // Link the current odd node to the next odd node
+        // Pointer to the current even-indexed node.
+        ListNode* even = head->next;
+
+        // Save the beginning of the even-indexed list.
+        ListNode* other = even;
+
+        // Rearrange links while another odd node is available.
+        while (even != NULL && even->next != NULL) {
+
+            // Connect the current odd node to the next odd node.
             odd->next = even->next;
-            // Advance the odd pointer
+
+            // Advance the odd pointer.
             odd = odd->next;
 
-            // Link the current even node to the next even node
+            // Connect the current even node to the next even node.
             even->next = odd->next;
-            // Advance the even pointer
+
+            // Advance the even pointer.
             even = even->next;
         }
 
-        // Connect the end of the odd list to the head of the even list
-        odd->next = evenHead;
-        
-        // Return the modified original head
+        // Append the even-indexed list after the odd-indexed list.
+        odd->next = other;
+
         return head;
     }
 };
