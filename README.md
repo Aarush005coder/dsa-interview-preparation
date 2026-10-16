@@ -101,7 +101,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Graph | 1 |
 | Dynamic Programming | 10 |
 | Greedy | 6 |
-| Math | 14 |
+| Math | 15 |
 | Segment Tree | 1 |
 | Fenwick Tree | 1 |
 | Union Find | 0 |
@@ -174,7 +174,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **154**
+**Total Problems Solved:** **155**
 
 ---
 
