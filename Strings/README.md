@@ -20,6 +20,7 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 | 10 | Shortest Palindrome | Hard | ✅ |
 | 11 | Count and Say | Medium | ✅ |
 | 12 | Longest Valid Parentheses | Hard | ✅ |
+| 13 | Reverse String | Easy | ✅ |
 
 ---
 
@@ -48,4 +49,4 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 
 ---
 
-**Problems Solved:** **12**
+**Problems Solved:** **13**
