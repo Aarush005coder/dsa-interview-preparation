@@ -1,0 +1,151 @@
+/*
+------------------------------------------------------------
+Problem    : Reverse String
+Platform   : LeetCode
+Topic      : String
+Difficulty : Easy
+
+Problem:
+Write a function that reverses a string. The input string is
+given as an array of characters s.
+
+You must do this by modifying the input array in-place with
+O(1) extra memory.
+
+Approach:
+We can achieve this using the Two Pointers technique.
+
+One pointer starts at the beginning (left = 0).
+The other pointer starts at the end (right = s.length() - 1).
+
+We swap the characters at the left and right pointers, then
+move the left pointer forward and the right pointer backward
+until they meet or cross.
+
+Alternatively, we can just use the built-in std::reverse
+function, which does exactly this under the hood.
+
+Why do we use TWO pointers?
+
+Left pointer:
+    Tracks the current character from the beginning.
+
+Right pointer:
+    Tracks the corresponding character from the end to swap with.
+
+Example:
+s = ["h", "e", "l", "l", "o"]
+
+Start:
+    left = 0 ('h')
+    right = 4 ('o')
+
+Swap:
+    s[0] and s[4] are swapped.
+    Array becomes ["o", "e", "l", "l", "h"]
+
+Move pointers:
+    left = 1 ('e')
+    right = 3 ('l')
+
+Swap:
+    s[1] and s[3] are swapped.
+    Array becomes ["o", "l", "l", "e", "h"]
+
+Move pointers:
+    left = 2 ('l')
+    right = 2 ('l')
+
+Stop:
+    left is no longer less than right.
+
+So:
+    ["h", "e", "l", "l", "o"] -> ["o", "l", "l", "e", "h"]
+
+------------------------------------------------------------
+Dry Run: s = ["H", "a", "n", "n", "a", "H"]
+------------------------------------------------------------
+
+Initial:
+    ["H", "a", "n", "n", "a", "H"]
+
+Step 1:
+    left = 0 ('H'), right = 5 ('H')
+    Swap -> ["H", "a", "n", "n", "a", "H"] (No visual change)
+
+Step 2:
+    left = 1 ('a'), right = 4 ('a')
+    Swap -> ["H", "a", "n", "n", "a", "H"] (No visual change)
+
+Step 3:
+    left = 2 ('n'), right = 3 ('n')
+    Swap -> ["H", "a", "n", "n", "a", "H"] (No visual change)
+
+Step 4:
+    left = 3, right = 2
+    left >= right, stop.
+
+Answer:
+    ["H", "a", "n", "n", "a", "H"]
+
+------------------------------------------------------------
+Why not use a separate array?
+------------------------------------------------------------
+
+Because the problem explicitly requires O(1) extra memory
+and in-place modification.
+
+For example, creating a new array of the same size and
+copying elements in reverse order would require O(n) extra
+space, which violates the constraints.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize:
+       left = 0
+       right = s.size() - 1
+
+2. Loop while left < right:
+       swap(s[left], s[right])
+       left++
+       right--
+
+3. Return.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Each character is swapped exactly once.
+
+Time Complexity:
+    O(N)
+
+where N is the length of the string. We process N/2 pairs.
+
+Space Complexity:
+    O(1)
+
+since we only use two pointers, requiring constant extra space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    void reverseString(vector<char>& s) {
+        int left = 0;
+        int right = s.size() - 1;
+        
+        while (left < right) {
+            swap(s[left], s[right]);
+            left++;
+            right--;
+        }
+        
+        // Alternatively, simply use:
+        // reverse(s.begin(), s.end());
+    }
+};
