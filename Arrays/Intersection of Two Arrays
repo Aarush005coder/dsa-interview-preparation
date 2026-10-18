@@ -1,0 +1,172 @@
+/*
+------------------------------------------------------------
+Problem    : Intersection of Two Arrays
+Platform   : LeetCode
+Topic      : Array
+Difficulty : Easy
+
+Problem:
+Given two integer arrays nums1 and nums2, return an array of 
+their intersection. Each element in the result must be unique 
+and you may return the result in any order.
+
+Approach (Two Pointers with Sorting):
+1. Sort both input arrays. This allows us to traverse them 
+   linearly and compare elements efficiently.
+2. Use two pointers, `i` for nums1 and `j` for nums2, starting 
+   at index 0.
+3. Loop while both pointers are within bounds:
+   - If nums1[i] == nums2[j]:
+     - We found a common element.
+     - Check if it's already in our result vector `ans` to ensure 
+       uniqueness (since the problem requires unique elements).
+     - If not present, add it to `ans`.
+     - Increment both `i` and `j`.
+   - If nums1[i] < nums2[j]:
+     - The current element in nums1 is smaller, so we need a 
+       larger value from nums1 to match nums2[j]. Increment `i`.
+   - If nums1[i] > nums2[j]:
+     - The current element in nums2 is smaller, so we need a 
+       larger value from nums2 to match nums1[i]. Increment `j`.
+4. Return the result vector `ans`.
+
+Why sort first?
+Sorting brings identical elements together and allows the two-pointer 
+technique to work in O(N + M) time after sorting. Without sorting, 
+we would need nested loops (O(N*M)) or a hash set (O(N+M) time but 
+O(N) space).
+
+Example:
+nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+
+Step 1: Sort
+nums1 -> [4, 5, 9]
+nums2 -> [4, 4, 8, 9, 9]
+
+Step 2: Two Pointers
+i=0, j=0: nums1[0]=4, nums2[0]=4. Match!
+   ans is empty, so push 4. ans = [4]. i=1, j=1.
+
+i=1, j=1: nums1[1]=5, nums2[1]=4. 5 > 4.
+   Move j. j=2.
+
+i=1, j=2: nums1[1]=5, nums2[2]=8. 5 < 8.
+   Move i. i=2.
+
+i=2, j=2: nums1[2]=9, nums2[2]=8. 9 > 8.
+   Move j. j=3.
+
+i=2, j=3: nums1[2]=9, nums2[3]=9. Match!
+   ans.back() is 4, which != 9. Push 9. ans = [4, 9]. i=3, j=4.
+
+i=3 is out of bounds. Loop ends.
+
+Result: [4, 9]
+
+------------------------------------------------------------
+Dry Run: nums1 = [1,2,2,1], nums2 = [2,2]
+------------------------------------------------------------
+
+Step 1: Sort
+nums1 -> [1, 1, 2, 2]
+nums2 -> [2, 2]
+
+Step 2: Two Pointers
+i=0, j=0: nums1[0]=1, nums2[0]=2. 1 < 2.
+   Move i. i=1.
+
+i=1, j=0: nums1[1]=1, nums2[0]=2. 1 < 2.
+   Move i. i=2.
+
+i=2, j=0: nums1[2]=2, nums2[0]=2. Match!
+   ans is empty, so push 2. ans = [2]. i=3, j=1.
+
+i=3, j=1: nums1[3]=2, nums2[1]=2. Match!
+   ans.back() is 2, which == 2. Do NOT push (duplicate).
+   i=4, j=2.
+
+i=4 is out of bounds. Loop ends.
+
+Result: [2]
+
+------------------------------------------------------------
+Alternative Approach: Hash Set
+------------------------------------------------------------
+1. Insert all elements of nums1 into an unordered_set.
+2. Iterate through nums2. If an element exists in the set, 
+   add it to the result and remove it from the set to avoid 
+   duplicates in the result.
+3. Time: O(N + M), Space: O(N).
+
+------------------------------------------------------------
+Algorithm (Two Pointers)
+------------------------------------------------------------
+
+1. Sort nums1 and nums2.
+2. Initialize i = 0, j = 0.
+3. Initialize empty vector ans.
+4. While i < nums1.size() AND j < nums2.size():
+   a. If nums1[i] == nums2[j]:
+      - If ans is empty OR ans.back() != nums1[i]:
+          ans.push_back(nums1[i])
+      - i++, j++
+   b. Else if nums1[i] < nums2[j]:
+      - i++
+   c. Else:
+      - j++
+5. Return ans.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(N log N + M log M)
+    Due to sorting both arrays. The two-pointer traversal is 
+    O(N + M), which is dominated by the sorting step.
+
+Space Complexity:
+    O(1) extra space (excluding output vector)
+    If we ignore the space used by the sorting algorithm 
+    (which is often O(log N) for stack space in quicksort/introsort).
+    The output vector does not count as extra space per problem 
+    conventions usually, but strictly speaking it is O(K) where 
+    K is the size of the intersection.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        // Sort both arrays to enable two-pointer technique
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+
+        int i = 0;
+        int j = 0;
+        vector<int> ans;
+
+        // Traverse both arrays with two pointers
+        while(i < nums1.size() && j < nums2.size()){
+            if(nums1[i] == nums2[j]){
+                // Check for uniqueness in the result vector
+                // Only add if ans is empty or the last added element is different
+                if(ans.empty() || ans.back() != nums1[i]){
+                    ans.push_back(nums1[i]);
+                }
+                i++;
+                j++;
+            }
+            else if(nums1[i] < nums2[j]){
+                // Move pointer in nums1 forward to find a larger value
+                i++;
+            }
+            else{
+                // Move pointer in nums2 forward to find a larger value
+                j++;
+            }
+        }
+        return ans;
+    }
+};
