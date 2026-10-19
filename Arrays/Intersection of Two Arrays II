@@ -1,0 +1,169 @@
+/*
+------------------------------------------------------------
+Problem    : Intersection of Two Arrays II
+Platform   : LeetCode
+Topic      : Array 
+Difficulty : Easy
+
+Problem:
+Given two integer arrays nums1 and nums2, return an array of 
+their intersection. Each element in the result must appear as 
+many times as it shows in both arrays, and you may return the 
+result in any order.
+
+Approach:
+Unlike the first "Intersection of Two Arrays" problem, we now 
+need to preserve the frequency (multiplicity) of the intersecting 
+elements. 
+
+By sorting both arrays first, we can use the Two Pointers technique 
+to find matching elements. When a match is found, we add it to our 
+result and advance both pointers. This naturally handles the frequency 
+requirement because each element in `nums1` is paired with exactly 
+one corresponding element in `nums2` in a one-to-one fashion.
+
+Why do we use TWO pointers?
+
+Left pointer (i):
+    Tracks the current element in the sorted nums1.
+
+Right pointer (j):
+    Tracks the current element in the sorted nums2.
+
+Because the arrays are sorted, if nums1[i] < nums2[j], we know that 
+nums1[i] cannot possibly match nums2[j] or any subsequent elements 
+in nums2. Therefore, we must advance `i` to find a larger value. 
+The same logic applies in reverse.
+
+Example:
+nums1 = [1, 2, 2, 1], nums2 = [2, 2]
+
+Step 1: Sort both arrays
+nums1 -> [1, 1, 2, 2]
+nums2 -> [2, 2]
+
+Step 2: Two Pointers
+i = 0, j = 0: nums1[0] = 1, nums2[0] = 2. 
+    1 < 2, so advance i. (i = 1)
+
+i = 1, j = 0: nums1[1] = 1, nums2[0] = 2. 
+    1 < 2, so advance i. (i = 2)
+
+i = 2, j = 0: nums1[2] = 2, nums2[0] = 2. 
+    Match! Add 2 to ans. ans = [2]. Advance both. (i = 3, j = 1)
+
+i = 3, j = 1: nums1[3] = 2, nums2[1] = 2. 
+    Match! Add 2 to ans. ans = [2, 2]. Advance both. (i = 4, j = 2)
+
+i = 4 is out of bounds. Loop ends.
+
+Result: [2, 2]
+
+------------------------------------------------------------
+Dry Run: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+------------------------------------------------------------
+
+Step 1: Sort both arrays
+nums1 -> [4, 5, 9]
+nums2 -> [4, 4, 8, 9, 9]
+
+Step 2: Two Pointers
+i = 0, j = 0: nums1[0] = 4, nums2[0] = 4. 
+    Match! ans = [4]. (i = 1, j = 1)
+
+i = 1, j = 1: nums1[1] = 5, nums2[1] = 4. 
+    5 > 4, so advance j. (j = 2)
+
+i = 1, j = 2: nums1[1] = 5, nums2[2] = 8. 
+    5 < 8, so advance i. (i = 2)
+
+i = 2, j = 2: nums1[2] = 9, nums2[2] = 8. 
+    9 > 8, so advance j. (j = 3)
+
+i = 2, j = 3: nums1[2] = 9, nums2[3] = 9. 
+    Match! ans = [4, 9]. (i = 3, j = 4)
+
+i = 3 is out of bounds. Loop ends.
+
+Result: [4, 9]
+
+------------------------------------------------------------
+Alternative Approach: Hash Map (Frequency Count)
+------------------------------------------------------------
+If one array is significantly smaller than the other, or if the 
+arrays are already sorted, a Hash Map can be more efficient.
+
+1. Count the frequency of each element in the smaller array using 
+   an unordered_map.
+2. Iterate through the larger array. For each element, check if it 
+   exists in the map with a count > 0.
+3. If it does, add it to the result and decrement its count in the map.
+4. Time Complexity: O(N + M), Space Complexity: O(min(N, M)).
+
+------------------------------------------------------------
+Algorithm (Two Pointers)
+------------------------------------------------------------
+
+1. Sort nums1 and nums2 in ascending order.
+2. Initialize two pointers: i = 0, j = 0.
+3. Initialize an empty result vector `ans`.
+4. While i < nums1.size() AND j < nums2.size():
+   a. If nums1[i] == nums2[j]:
+        - Append nums1[i] to `ans`.
+        - Increment i and j.
+   b. Else if nums1[i] < nums2[j]:
+        - Increment i.
+   c. Else:
+        - Increment j.
+5. Return `ans`.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(N log N + M log M)
+    Sorting both arrays dominates the time complexity. The two-pointer 
+    traversal takes O(N + M) time, which is asymptotically smaller.
+
+Space Complexity:
+    O(1) auxiliary space (or O(log N + log M) depending on the 
+    sorting algorithm's stack space).
+    The output vector `ans` does not count as extra space per standard 
+    LeetCode conventions.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        // Sort both arrays to enable the two-pointer technique
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+
+        vector<int> ans;
+        int i = 0;
+        int j = 0;
+
+        // Traverse both arrays simultaneously
+        while(i < nums1.size() && j < nums2.size()){
+            if(nums1[i] == nums2[j]){
+                // Found a common element, add to result
+                ans.push_back(nums1[i]);
+                i++;
+                j++;
+            }
+            else if(nums1[i] < nums2[j]){
+                // Current element in nums1 is smaller, move its pointer forward
+                i++;
+            }
+            else{
+                // Current element in nums2 is smaller, move its pointer forward
+                j++;
+            }
+        }
+        
+        return ans;
+    }
+};
