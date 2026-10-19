@@ -23,6 +23,7 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 | 13 | Rotate Array | Medium | ✅ |
 | 14 | Contains Duplicate | Easy | ✅ |
 | 15 | Intersection of Two Arrays | Easy | ✅ |
+| 16 | Intersection of Two Arrays II | Easy | ✅ |
 
 ---
 
@@ -47,4 +48,4 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **15**
+**Problems Solved:** **16**
