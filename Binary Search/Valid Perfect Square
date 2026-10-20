@@ -1,0 +1,180 @@
+/*
+------------------------------------------------------------
+Problem    : Valid Perfect Square
+Platform   : LeetCode
+Topic      : Binary Search
+Difficulty : Easy
+
+Problem:
+Given a positive integer `num`, return `true` if `num` is a 
+perfect square or `false` otherwise.
+
+A perfect square is an integer that is the square of an integer. 
+In other words, it is the product of some integer with itself.
+
+Important:
+You must not use any built-in library function, such as `sqrt`.
+
+Approach:
+We can solve this efficiently using Binary Search. 
+Since we are looking for an integer `x` such that `x * x == num`, 
+we know that `x` must lie within a specific range. 
+
+For any `num >= 2`, the square root of `num` will never exceed `num / 2`. 
+Therefore, our search space is bounded between `2` and `num / 2`.
+
+We repeatedly divide this search space in half:
+1. Calculate the middle value `mid`.
+2. Compute `mid * mid`.
+3. If it equals `num`, we found our perfect square.
+4. If it is less than `num`, the answer must be in the right half.
+5. If it is greater than `num`, the answer must be in the left half.
+
+Why do we use Binary Search?
+A linear search checking every number from 1 to `num / 2` would take 
+O(N) time, which is too slow for large inputs (e.g., `num` up to 2^31 - 1). 
+Binary search reduces the search space by half at each step, resulting 
+in a much faster O(log N) time complexity.
+
+Why use `long long`?
+When `mid` is large (e.g., around 46,340), `mid * mid` can exceed the 
+maximum value of a 32-bit signed integer (`INT_MAX`), causing integer 
+overflow. Using `long long` prevents this.
+
+Example:
+num = 16
+
+Step 1: Base case check (16 >= 2, so proceed).
+Step 2: Initialize left = 2, right = 16 / 2 = 8.
+
+Iteration 1:
+    mid = 2 + (8 - 2) / 2 = 5
+    sq = 5 * 5 = 25
+    25 > 16, so move left half: right = mid - 1 = 4.
+
+Iteration 2:
+    left = 2, right = 4
+    mid = 2 + (4 - 2) / 2 = 3
+    sq = 3 * 3 = 9
+    9 < 16, so move right half: left = mid + 1 = 4.
+
+Iteration 3:
+    left = 4, right = 4
+    mid = 4 + (4 - 4) / 2 = 4
+    sq = 4 * 4 = 16
+    16 == 16. Match found! Return true.
+
+------------------------------------------------------------
+Dry Run: num = 14
+------------------------------------------------------------
+
+Step 1: Base case check (14 >= 2, so proceed).
+Step 2: Initialize left = 2, right = 14 / 2 = 7.
+
+Iteration 1:
+    left = 2, right = 7
+    mid = 2 + (7 - 2) / 2 = 4
+    sq = 4 * 4 = 16
+    16 > 14, so move left half: right = mid - 1 = 3.
+
+Iteration 2:
+    left = 2, right = 3
+    mid = 2 + (3 - 2) / 2 = 2
+    sq = 2 * 2 = 4
+    4 < 14, so move right half: left = mid + 1 = 3.
+
+Iteration 3:
+    left = 3, right = 3
+    mid = 3 + (3 - 3) / 2 = 3
+    sq = 3 * 3 = 9
+    9 < 14, so move right half: left = mid + 1 = 4.
+
+Iteration 4:
+    left = 4, right = 3
+    Condition `left <= right` is false. Loop terminates.
+
+Result: Return false.
+
+------------------------------------------------------------
+Alternative Approach: Newton's Method
+------------------------------------------------------------
+We can also use Newton's method (also known as the Babylonian method) 
+for finding square roots. 
+
+Formula: x_{k+1} = (x_k + num / x_k) / 2
+
+We start with an initial guess `x = num` and repeatedly apply the 
+formula until `x * x <= num`. This converges very quickly, often 
+faster than binary search in practice, though both are highly efficient.
+
+------------------------------------------------------------
+Algorithm (Binary Search)
+------------------------------------------------------------
+
+1. Handle base case:
+       if (num < 2) return true;  // 0 and 1 are perfect squares
+
+2. Initialize pointers:
+       left = 2
+       right = num / 2
+
+3. While left <= right:
+       mid = left + (right - left) / 2
+       sq = (long long)mid * mid
+
+       if sq == num:
+           return true
+       else if sq < num:
+           left = mid + 1
+       else:
+           right = mid - 1
+
+4. Return false (no integer square root found).
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(log N)
+    The search space is halved in each iteration, leading to 
+    logarithmic time complexity relative to the value of `num`.
+
+Space Complexity:
+    O(1)
+    We only use a few variables (`left`, `right`, `mid`, `sq`), 
+    requiring constant extra memory regardless of the input size.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    bool isPerfectSquare(int num) {
+        // Base case: 0 and 1 are perfect squares
+        if (num < 2) {
+            return true;
+        }
+
+        // Use long long to prevent integer overflow when squaring mid
+        long long left = 2;
+        long long right = num / 2;
+
+        while (left <= right) {
+            // Prevent overflow in mid calculation
+            long long mid = left + (right - left) / 2;
+            long long sq = mid * mid;
+
+            if (sq == num) {
+                return true;        // Found the perfect square
+            } else if (sq < num) {
+                left = mid + 1;     // Search in the right half
+            } else {
+                right = mid - 1;    // Search in the left half
+            }
+        }
+        
+        // No integer square root exists
+        return false;
+    }
+};
