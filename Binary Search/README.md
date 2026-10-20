@@ -12,6 +12,7 @@ This folder contains **Binary Search** problems solved in **C++**. Each solution
 | 2 | Find First and Last Position of Element in Sorted Array | Medium | ✅ |
 | 3 | Search Insert Position | Easy | ✅ |
 | 4 | Sqrt(x) | Easy | ✅ |
+| 5 | Valid Perfect Square | Easy | ✅ |
 
 ---
 
@@ -36,4 +37,4 @@ This folder contains **Binary Search** problems solved in **C++**. Each solution
 
 ---
 
-**Problems Solved:** **4**
+**Problems Solved:** **5**
