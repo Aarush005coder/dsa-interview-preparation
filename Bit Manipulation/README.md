@@ -14,6 +14,7 @@ This folder contains **Bit Manipulation** problems solved in **C++**. Each solut
 | 4 | Single Number II | Medium | ✅ |
 | 5 | Number of 1 Bits | Easy | ✅ |
 | 6 | Missing Number | Easy | ✅ |
+| 7 | Sum of Two Integers | Medium | ✅ |
 
 ---
 
@@ -38,4 +39,4 @@ This folder contains **Bit Manipulation** problems solved in **C++**. Each solut
 
 ---
 
-**Problems Solved:** **6**
+**Problems Solved:** **7**
