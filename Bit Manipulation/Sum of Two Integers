@@ -1,0 +1,147 @@
+/*
+------------------------------------------------------------
+Problem    : Sum of Two Integers
+Platform   : LeetCode
+Topic      : Bit Manipulation
+Difficulty : Medium
+
+Problem:
+Given two integers `a` and `b`, return the sum of the two 
+integers without using the operators `+` and `-`.
+
+Approach:
+We can compute the sum of two integers using Bitwise Operators. 
+Addition can be broken down into two parts:
+1. Sum without carry: This is exactly what the XOR operator (`^`) does.
+2. Carry: This is what the AND operator (`&`) does, but the carry 
+   needs to be shifted left by 1 position (`<< 1`) to be added to 
+   the next higher bit.
+
+We repeat this process, adding the "sum without carry" and the 
+"shifted carry", until the carry becomes 0. At that point, the 
+"sum without carry" holds the final result.
+
+Why do we use Bitwise Operators?
+Because the problem explicitly forbids the use of `+` and `-`. 
+Bitwise operations mimic the hardware-level addition process 
+used in Arithmetic Logic Units (ALUs).
+
+Example:
+a = 1 (0001), b = 2 (0010)
+
+Step 1:
+    sum without carry = a ^ b = 0001 ^ 0010 = 0011 (3)
+    carry = (a & b) << 1 = (0001 & 0010) << 1 = 0000 << 1 = 0000 (0)
+
+Step 2:
+    carry is 0, so the sum without carry (3) is our final answer.
+
+------------------------------------------------------------
+Dry Run: a = 2, b = 3
+------------------------------------------------------------
+
+Initial:
+    a = 2 (0010 in binary)
+    b = 3 (0011 in binary)
+
+Iteration 1:
+    b != 0, so we continue.
+    sum without carry = a ^ b 
+                      = 0010 ^ 0011 
+                      = 0001 (which is 1)
+    
+    carry = (unsigned)(a & b) << 1 
+          = (unsigned)(0010 & 0011) << 1 
+          = (unsigned)(0010) << 1 
+          = 0100 (which is 4)
+    
+    Recursive call: getSum(1, 4)
+
+Iteration 2:
+    a = 1 (0001)
+    b = 4 (0100)
+    b != 0, so we continue.
+    sum without carry = a ^ b 
+                      = 0001 ^ 0100 
+                      = 0101 (which is 5)
+    
+    carry = (unsigned)(a & b) << 1 
+          = (unsigned)(0001 & 0100) << 1 
+          = (unsigned)(0000) << 1 
+          = 0000 (which is 0)
+    
+    Recursive call: getSum(5, 0)
+
+Iteration 3:
+    a = 5
+    b = 0
+    b == 0, base case reached.
+    Return a, which is 5.
+
+Answer: 5
+
+------------------------------------------------------------
+Why use `unsigned` for the carry?
+------------------------------------------------------------
+
+In C++, left-shifting a negative signed integer is Undefined 
+Behavior (UB). 
+
+When `a & b` results in a negative number (i.e., the most 
+significant bit, or sign bit, is 1), shifting it left using a 
+signed type would invoke UB. 
+
+By casting `(a & b)` to `unsigned int`, we guarantee a well-defined 
+logical left shift. This allows the carry to correctly propagate 
+into the sign bit position when dealing with negative numbers, 
+relying on standard Two's Complement arithmetic.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Base Case:
+       If b == 0, return a. (No more carry to add)
+
+2. Recursive Step:
+       Calculate sum without carry: a ^ b
+       Calculate carry: (unsigned)(a & b) << 1
+       Return getSum(sum without carry, carry)
+
+(Note: This can also be written iteratively using a `while(b != 0)` 
+loop to achieve O(1) space complexity).
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(1)
+    The loop/recursion runs at most 32 times for a 32-bit integer, 
+    because the carry is shifted left by 1 in each step and will 
+    eventually fall off the 32nd bit and become 0. Thus, it is 
+    bounded by a constant.
+
+Space Complexity:
+    O(1) for iterative, O(1) for recursive.
+    The recursive approach uses at most 32 stack frames, which is 
+    bounded by a constant. An iterative approach would use strictly 
+    O(1) auxiliary space.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int getSum(int a, int b) {
+        // Base case: when there is no carry left, 'a' holds the final sum
+        if (b == 0) {
+            return a;
+        }
+
+        // a ^ b gives the sum of bits without considering carry
+        // (unsigned)(a & b) << 1 gives the carry, shifted to the next position
+        // We cast to unsigned to prevent undefined behavior when left-shifting negative numbers
+        return getSum(a ^ b, (unsigned)(a & b) << 1);
+    } 
+};
