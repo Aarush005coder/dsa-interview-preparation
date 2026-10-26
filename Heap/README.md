@@ -9,6 +9,7 @@ This folder contains **Heap** problems solved in **C++**. Each solution includes
 | **#** |           **Problem**               |     **Difficulty**   |   **Status**|
 | ---------------------------- | ------------------------------- | ------ | - |
 | 1                            | Kth Largest Element in an Array | Medium | ✅ |
+| 2                            | Find K Pairs with Smallest Sums | Medium | ✅ |
 
 ---
 
@@ -36,4 +37,4 @@ This folder contains **Heap** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **1**
+**Problems Solved:** **2**
