@@ -1,0 +1,187 @@
+/*
+------------------------------------------------------------
+Problem    : Find K Pairs with Smallest Sums
+Platform   : LeetCode
+Topic      : Heap / Priority Queue
+Difficulty : Medium
+
+Problem:
+You are given two integer arrays nums1 and nums2 sorted in 
+non-decreasing order and an integer k.
+
+Define a pair (u, v) which consists of one element from the 
+first array and one element from the second array.
+
+Return the k pairs (u1, v1), (u2, v2), ..., (uk, vk) with 
+the smallest sums.
+
+Approach:
+Since both arrays are sorted, the smallest possible sum is 
+always nums1[0] + nums2[0]. The next smallest sum must involve 
+either the next element in nums1 or the next element in nums2.
+
+This structure perfectly fits a Min-Heap (Priority Queue).
+We initialize the heap with the first element of nums2 paired 
+with the first min(k, nums1.size()) elements of nums1.
+
+Each entry in the heap stores: {sum, index_in_nums1, index_in_nums2}.
+
+In each step, we extract the minimum sum pair, add it to our 
+result, and then push the next pair from the same nums1 element 
+but the next nums2 element (i.e., index_in_nums2 + 1).
+
+Why do we use a Min-Heap?
+Because we need to repeatedly find and extract the smallest sum 
+among a set of candidate pairs. A Min-Heap allows us to do this 
+efficiently in O(log K) time per extraction, avoiding the need 
+to generate and sort all possible N * M pairs.
+
+Example:
+nums1 = [1, 7, 11], nums2 = [2, 4, 6], k = 3
+
+Step 1: Initialize Min-Heap
+Push pairs with nums2[0]:
+    (1+2, i=0, j=0) -> sum = 3
+    (7+2, i=1, j=0) -> sum = 9
+    (11+2, i=2, j=0) -> sum = 13
+
+Step 2: Extract k times
+k = 3:
+    Pop (3, 0, 0). Result: [[1, 2]].
+    Push next from nums2: (1+4, 0, 1) -> sum = 5.
+    Heap: (5, 0, 1), (9, 1, 0), (13, 2, 0)
+
+k = 2:
+    Pop (5, 0, 1). Result: [[1, 2], [1, 4]].
+    Push next from nums2: (1+6, 0, 2) -> sum = 7.
+    Heap: (7, 0, 2), (9, 1, 0), (13, 2, 0)
+
+k = 1:
+    Pop (7, 0, 2). Result: [[1, 2], [1, 4], [1, 6]].
+    j+1 is out of bounds, do not push.
+    Heap: (9, 1, 0), (13, 2, 0)
+
+k = 0: Stop.
+
+Result: [[1, 2], [1, 4], [1, 6]]
+
+------------------------------------------------------------
+Dry Run: nums1 = [1, 1, 2], nums2 = [1, 2, 3], k = 2
+------------------------------------------------------------
+
+Step 1: Initialize Min-Heap
+Push pairs with nums2[0]:
+    (1+1, i=0, j=0) -> sum = 2
+    (1+1, i=1, j=0) -> sum = 2
+    (2+1, i=2, j=0) -> sum = 3
+
+Step 2: Extract k times
+k = 2:
+    Pop (2, 0, 0). Result: [[1, 1]].
+    Push next from nums2: (1+2, 0, 1) -> sum = 3.
+    Heap: (2, 1, 0), (3, 0, 1), (3, 2, 0)
+
+k = 1:
+    Pop (2, 1, 0). Result: [[1, 1], [1, 1]].
+    Push next from nums2: (1+2, 1, 1) -> sum = 3.
+    Heap: (3, 0, 1), (3, 1, 1), (3, 2, 0)
+
+k = 0: Stop.
+
+Result: [[1, 1], [1, 1]]
+
+------------------------------------------------------------
+Why not generate all pairs and sort?
+------------------------------------------------------------
+
+Generating all pairs would take O(N * M) time and space, which 
+is highly inefficient and will result in Memory Limit Exceeded 
+(MLE) or Time Limit Exceeded (TLE) for large arrays.
+
+By using a Min-Heap, we only keep at most K elements in the 
+heap at any time, reducing the space complexity to O(K) and 
+the time complexity to O(K log K).
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Edge Case:
+       If nums1 or nums2 is empty, or k == 0, return empty list.
+
+2. Initialize Min-Heap:
+       Store tuples of {sum, i, j}.
+       For i from 0 to min(k, nums1.size()) - 1:
+           push {nums1[i] + nums2[0], i, 0}
+
+3. Extract K Pairs:
+       While k > 0 and heap is not empty:
+           Pop {sum, i, j} from heap.
+           Add {nums1[i], nums2[j]} to result.
+           
+           If j + 1 < nums2.size():
+               push {nums1[i] + nums2[j+1], i, j+1} to heap.
+           
+           k--
+
+4. Return result.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(K log K)
+    In the worst case, we perform K extractions and K insertions 
+    into the Min-Heap. Each heap operation takes O(log K) time 
+    since the heap size is at most K.
+
+Space Complexity:
+    O(K)
+    The Min-Heap will store at most K elements at any given time.
+    (Excluding the space required for the output array).
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+        vector<vector<int>> ans;
+
+        // Edge case: if either array is empty or k is 0
+        if(nums1.empty() || nums2.empty() || k == 0){
+            return ans;
+        }
+
+        // Min-Heap to store {sum, index_in_nums1, index_in_nums2}
+        // We use greater<> to make it a min-heap instead of the default max-heap
+        priority_queue<
+            tuple<int, int, int>,
+            vector<tuple<int, int, int>>,
+            greater<tuple<int, int, int>>
+        > minheap;
+
+        // Initialize the heap with the first element of nums2 
+        // paired with the first min(k, nums1.size()) elements of nums1
+        for(int i = 0; i < nums1.size() && i < k; i++){
+            minheap.push({nums1[i] + nums2[0], i, 0});
+        }
+
+        // Extract the smallest sum k times
+        while(k-- && !minheap.empty()){
+            auto [sum, i, j] = minheap.top();
+            minheap.pop();
+            
+            // Add the pair to our result
+            ans.push_back({nums1[i], nums2[j]});
+
+            // If there is a next element in nums2, push it to the heap
+            if(j + 1 < nums2.size()){
+                minheap.push({nums1[i] + nums2[j + 1], i, j + 1});
+            }
+        }
+        
+        return ans;
+    }
+};
