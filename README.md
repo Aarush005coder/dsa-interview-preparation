@@ -96,7 +96,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Trees | 0 |
 | Binary Tree | 20 |
 | Binary Search Tree | 3 |
-| Heap | 1 |
+| Heap | 2 |
 | Trie | 1 |
 | Graph | 1 |
 | Dynamic Programming | 10 |
@@ -174,7 +174,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **160**
+**Total Problems Solved:** **161**
 
 ---
 
