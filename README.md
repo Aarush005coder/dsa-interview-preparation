@@ -99,7 +99,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Heap | 2 |
 | Trie | 1 |
 | Graph | 1 |
-| Dynamic Programming | 10 |
+| Dynamic Programming | 11 |
 | Greedy | 6 |
 | Math | 15 |
 | Segment Tree | 1 |
@@ -174,7 +174,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **161**
+**Total Problems Solved:** **162**
 
 ---
 
