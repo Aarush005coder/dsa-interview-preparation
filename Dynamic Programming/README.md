@@ -18,6 +18,7 @@ This folder contains **Dynamic Programming** problems solved in **C++** as part 
 | 8 | House Robber | Medium | ✅ |
 | 9 | Perfect Squares | Medium | ✅ |
 | 10 | Longest Increasing Subsequence | Medium | ✅ |
+| 11 | Guess Number Higher or Lower II | Medium | ✅ |
 
 ---
 
@@ -102,4 +103,4 @@ When approaching a Dynamic Programming problem:
 
 ---
 
-**Problems Solved:** **10**
+**Problems Solved:** **11**
