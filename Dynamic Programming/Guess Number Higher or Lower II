@@ -1,0 +1,201 @@
+/*
+------------------------------------------------------------
+Problem    : Guess Number Higher or Lower II
+Platform   : LeetCode
+Topic      : Dynamic Programming / Minimax / Interval DP
+Difficulty : Medium
+
+Problem:
+We are playing a guessing game. A number is picked between 1 and n.
+Every time you guess a wrong number x, you pay x dollars. 
+If you guess the right number, you win and pay nothing.
+Given n, return the minimum amount of money you need to guarantee 
+a win regardless of what number is picked.
+
+Approach:
+This is a classic Minimax problem that can be solved using 
+Interval Dynamic Programming (DP).
+
+We define `dp[start][end]` as the minimum cost to guarantee a win 
+for the range of numbers from `start` to `end`.
+
+For any range `[start, end]`, we can choose to guess any number `i` 
+where `start <= i <= end`. 
+If we guess `i`, two things can happen:
+1. The target is lower: We pay `i` and must solve the subproblem `[start, i-1]`.
+2. The target is higher: We pay `i` and must solve the subproblem `[i+1, end]`.
+
+Since we want to guarantee a win regardless of the target, we must 
+prepare for the worst-case scenario. Therefore, the cost of guessing `i` is:
+    cost(i) = i + max(dp[start][i-1], dp[i+1][end])
+
+To find the optimal strategy, we want to minimize this worst-case cost 
+over all possible guesses `i` in the range:
+    dp[start][end] = min(cost(i)) for all i in [start, end]
+
+Why do we use Interval DP?
+Because the problem has optimal substructure: the optimal solution for 
+a range `[start, end]` depends entirely on the optimal solutions of its 
+smaller sub-ranges. We build the solution bottom-up, starting from 
+ranges of length 1 (cost = 0) up to the full range `[1, n]`.
+
+Example:
+n = 4
+
+Step 1: Base cases (ranges of length 1)
+dp[1][1] = 0, dp[2][2] = 0, dp[3][3] = 0, dp[4][4] = 0
+(If only 1 number is left, we guess it and pay $0).
+
+Step 2: Ranges of length 2
+dp[3][4]: 
+  Guess 3: cost = 3 + max(dp[3][2], dp[4][4]) = 3 + 0 = 3
+  Guess 4: cost = 4 + max(dp[3][3], dp[5][4]) = 4 + 0 = 4
+  min(3, 4) = 3. So, dp[3][4] = 3.
+
+dp[2][3]:
+  Guess 2: cost = 2 + 0 = 2
+  Guess 3: cost = 3 + 0 = 3
+  min(2, 3) = 2. So, dp[2][3] = 2.
+
+dp[1][2]:
+  Guess 1: cost = 1 + 0 = 1
+  Guess 2: cost = 2 + 0 = 2
+  min(1, 2) = 1. So, dp[1][2] = 1.
+
+Step 3: Ranges of length 3
+dp[2][4]:
+  Guess 2: 2 + max(0, dp[3][4]=3) = 5
+  Guess 3: 3 + max(dp[2][2]=0, dp[4][4]=0) = 3
+  Guess 4: 4 + max(dp[2][3]=2, 0) = 6
+  min(5, 3, 6) = 3. So, dp[2][4] = 3.
+
+Step 4: Full range [1, 4]
+dp[1][4]:
+  Guess 1: 1 + max(0, dp[2][4]=3) = 4
+  Guess 2: 2 + max(0, dp[3][4]=3) = 5
+  Guess 3: 3 + max(dp[1][2]=1, dp[4][4]=0) = 4
+  Guess 4: 4 + max(dp[1][3]=2, 0) = 6
+  min(4, 5, 4, 6) = 4.
+
+Result: dp[1][4] = 4.
+
+------------------------------------------------------------
+Dry Run: n = 3
+------------------------------------------------------------
+
+Initialize dp table of size 5x4 with 0s.
+
+Length 1 (start == end):
+dp[1][1] = 0, dp[2][2] = 0, dp[3][3] = 0
+
+Length 2:
+dp[2][3]: 
+  i=2: 2 + max(dp[2][1], dp[3][3]) = 2 + 0 = 2
+  i=3: 3 + max(dp[2][2], dp[4][3]) = 3 + 0 = 3
+  dp[2][3] = min(2, 3) = 2
+
+dp[1][2]:
+  i=1: 1 + max(dp[1][0], dp[2][2]) = 1 + 0 = 1
+  i=2: 2 + max(dp[1][1], dp[3][2]) = 2 + 0 = 2
+  dp[1][2] = min(1, 2) = 1
+
+Length 3:
+dp[1][3]:
+  i=1: 1 + max(0, dp[2][3]=2) = 3
+  i=2: 2 + max(dp[1][1]=0, dp[3][3]=0) = 2
+  i=3: 3 + max(dp[1][2]=1, 0) = 4
+  dp[1][3] = min(3, 2, 4) = 2
+
+Answer: dp[1][3] = 2.
+
+------------------------------------------------------------
+Why not use Binary Search (Greedy Midpoint)?
+------------------------------------------------------------
+
+In the classic "Guess Number Higher or Lower I", we minimize the 
+*number of guesses*, so picking the midpoint is optimal. 
+
+However, in this problem, we minimize the *sum of the values* of 
+wrong guesses. The cost of guessing a high number is much greater 
+than guessing a low number. 
+
+For example, in range [1, 10], guessing 5 costs $5 if wrong, but 
+guessing 9 costs $9. A greedy midpoint approach does not account 
+for the asymmetric cost of the guesses, making DP necessary.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize a 2D DP table `dp` of size (n+2) x (n+1) with 0s.
+   (Size n+2 prevents out-of-bounds when accessing i+1).
+
+2. Iterate `start` from n down to 1:
+   Iterate `end` from `start` to n:
+   
+   a. If start >= end, cost is 0 (continue).
+   
+   b. Otherwise, initialize `min_cost = INT_MAX`.
+   
+   c. For each possible guess `i` from `start` to `end`:
+        cost = i + max(dp[start][i-1], dp[i+1][end])
+        min_cost = min(min_cost, cost)
+        
+   d. dp[start][end] = min_cost
+
+3. Return dp[1][n].
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(N^3)
+    There are O(N^2) states (start, end pairs). For each state, 
+    we iterate `i` from `start` to `end`, which takes O(N) time.
+    Total time = O(N^2 * N) = O(N^3).
+
+Space Complexity:
+    O(N^2)
+    We use a 2D DP table of size (n+2) x (n+1) to store the 
+    minimum cost for every possible sub-range.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int getMoneyAmount(int n) {
+        // dp[start][end] stores the min cost to guarantee a win in range [start, end]
+        // We use n+2 for rows to safely access dp[i+1][end] without out-of-bounds errors
+        vector<vector<int>> dp(n + 2, vector<int>(n + 1, 0));
+        
+        // Build the DP table bottom-up
+        // Start from the end and move backwards to ensure subproblems are solved first
+        for (int start = n; start >= 1; start--) {
+            for (int end = start; end <= n; end++) {
+                
+                // Base case: If the range has 1 or 0 elements, cost is 0
+                if (start >= end) {
+                    continue;
+                }
+                
+                // We want to find the minimum of the maximum possible costs
+                int min_cost = INT_MAX;
+                
+                // Try every possible guess 'i' in the current range [start, end]
+                for (int i = start; i <= end; i++) {
+                    // Cost of guessing 'i' is 'i' plus the worst-case scenario of the remaining ranges
+                    int cost = i + max(dp[start][i - 1], dp[i + 1][end]);
+                    min_cost = min(min_cost, cost);
+                }
+                
+                // Store the optimal (minimum) worst-case cost for this range
+                dp[start][end] = min_cost;
+            }
+        }
+        
+        // The answer for the full range [1, n]
+        return dp[1][n];
+    }
+};
