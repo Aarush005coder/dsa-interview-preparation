@@ -1,0 +1,184 @@
+/*
+------------------------------------------------------------
+Problem    : Lexicographical Numbers
+Platform   : LeetCode
+Topic      : Math / Tree Traversal (Pre-order)
+Difficulty : Medium
+
+Problem:
+Given an integer n, return all the numbers in the range [1, n] 
+sorted in lexicographical (dictionary) order.
+
+Important:
+You must write an algorithm that runs in O(n) time and uses 
+O(1) extra space (excluding the output array).
+
+Approach:
+We can visualize the numbers from 1 to n as nodes in a 10-ary 
+tree (or Trie). 
+- The root has children 1 to 9.
+- Each node `x` has children `x * 10` to `x * 10 + 9`.
+
+Lexicographical order is exactly the Pre-order Traversal of this tree:
+1. Visit the current node.
+2. Try to go deeper to the first child (`x * 10`) if it is <= n.
+3. If we cannot go deeper, move to the next sibling (`x + 1`).
+4. If moving to the next sibling exceeds `n` or creates a trailing 
+   zero (meaning we finished a branch, e.g., 19 -> 20), we must 
+   move up the tree by dividing by 10 until we can safely increment.
+
+Why do we use this iterative approach?
+A recursive Depth-First Search (DFS) would naturally produce this 
+order but would use O(log N) call stack space. By simulating the 
+DFS iteratively with a single integer variable `count`, we strictly 
+meet the O(1) auxiliary space requirement while visiting each number 
+exactly once in O(N) time.
+
+Example:
+n = 13
+
+Start with count = 1.
+1. Push 1. Can we go deeper? 1 * 10 = 10 <= 13. Yes, count = 10.
+2. Push 10. Can we go deeper? 10 * 10 = 100 > 13. No. 
+   Next sibling: 10 + 1 = 11.
+3. Push 11. Next sibling: 12.
+4. Push 12. Next sibling: 13.
+5. Push 13. Can we go deeper? No. Next sibling: 13 + 1 = 14 > 13. 
+   So we move up the tree: 13 / 10 = 1. Next sibling of 1 is 1 + 1 = 2.
+6. Push 2. Next sibling: 3.
+... continue until we have pushed exactly `n` elements.
+
+------------------------------------------------------------
+Dry Run: n = 13
+------------------------------------------------------------
+
+Initialize: ans = [], count = 1
+
+i = 0: 
+    ans = [1]
+    count * 10 (10) <= 13 -> count = 10
+
+i = 1: 
+    ans = [1, 10]
+    count * 10 (100) > 13. 
+    count >= 13 is False. 
+    count++ -> 11. (11 % 10 != 0)
+
+i = 2: 
+    ans = [1, 10, 11]
+    count * 10 (110) > 13. 
+    count >= 13 is False. 
+    count++ -> 12.
+
+i = 3: 
+    ans = [1, 10, 11, 12]
+    count * 10 (120) > 13. 
+    count >= 13 is False. 
+    count++ -> 13.
+
+i = 4: 
+    ans = [1, 10, 11, 12, 13]
+    count * 10 (130) > 13. 
+    count >= 13 is True -> count /= 10 -> 1.
+    count++ -> 2. (2 % 10 != 0)
+
+i = 5: 
+    ans = [1, 10, 11, 12, 13, 2]
+    count * 10 (20) > 13. 
+    count >= 13 is False. 
+    count++ -> 3.
+
+... (continues similarly for 4, 5, 6, 7, 8)
+
+i = 12: 
+    ans = [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9]
+    count = 9. 
+    count * 10 (90) > 13. 
+    count >= 13 is False. 
+    count++ -> 10. 
+    10 % 10 == 0 -> count /= 10 -> 1. (Loop ends)
+
+Result: [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9]
+
+------------------------------------------------------------
+Why not use String Sorting?
+------------------------------------------------------------
+
+Converting all numbers to strings and sorting them would take 
+O(N log N) time and require O(N) extra space to store the string 
+representations. This violates the problem's strict constraints 
+of O(N) time and O(1) auxiliary space.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize an empty vector `ans` and `count = 1`.
+2. Loop exactly `n` times:
+   a. Push `count` to `ans`.
+   b. If `count * 10 <= n`, we go deeper in the tree: 
+          count *= 10
+   c. Else, we try to move to the next sibling:
+          i. If `count >= n`, we must move up the tree first: 
+             count /= 10
+          ii. Increment count: count++
+          iii. While `count % 10 == 0` (we finished a branch), 
+               move up the tree: count /= 10
+3. Return `ans`.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(N)
+    We perform a constant number of arithmetic operations for each 
+    of the `n` numbers. The inner `while` loop divides by 10, which 
+    happens at most once per digit transition, amortizing to O(1) 
+    per element.
+
+Space Complexity:
+    O(1)
+    Excluding the output array `ans`, we only use a single integer 
+    variable `count`, satisfying the strict O(1) auxiliary space 
+    requirement.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    vector<int> lexicalOrder(int n) {
+        vector<int> ans;
+        int count = 1;
+        
+        // We need exactly n numbers in the result
+        for (int i = 0; i < n; i++) {
+            ans.push_back(count);
+
+            // Try to go deeper in the 10-ary tree (e.g., 1 -> 10)
+            if (count * 10 <= n) {
+                count *= 10;
+            } 
+            else {
+                // If we are at the maximum limit, we must step back 
+                // up the tree before incrementing to avoid exceeding n
+                if (count >= n) {
+                    count /= 10;
+                }
+                
+                // Move to the next sibling
+                count++;
+
+                // If we hit a trailing zero (e.g., 19 -> 20), it means 
+                // we finished a branch. We must step back up the tree 
+                // until we are at a valid node that doesn't end in 0.
+                while (count % 10 == 0) {
+                    count /= 10;
+                }
+            }
+        }
+        
+        return ans;
+    }
+};
