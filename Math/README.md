@@ -23,6 +23,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 13 | Nim Game | Easy | ✅ |
 | 14 | Power of Three | Easy | ✅ |
 | 15 | Power of Four | Easy | ✅ |
+| 16 | Lexicographical Numbers | Medium | ✅ |
 
 ---
 
@@ -48,4 +49,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **15**
+**Problems Solved:** **16**
