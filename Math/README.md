@@ -24,6 +24,7 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 | 14 | Power of Three | Easy | ✅ |
 | 15 | Power of Four | Easy | ✅ |
 | 16 | Lexicographical Numbers | Medium | ✅ |
+| 17 | Find the Difference | Easy | ✅ |
 
 ---
 
@@ -49,4 +50,4 @@ This folder contains **Math** problems solved in **C++**. Each solution includes
 
 ---
 
-**Problems Solved:** **16**
+**Problems Solved:** **17**
