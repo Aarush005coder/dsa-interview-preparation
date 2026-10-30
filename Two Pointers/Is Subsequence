@@ -1,0 +1,176 @@
+/*
+------------------------------------------------------------
+Problem    : Is Subsequence
+Platform   : LeetCode
+Topic      : Two Pointers 
+Difficulty : Easy
+
+Problem:
+Given two strings s and t, return true if s is a subsequence 
+of t, or false otherwise.
+
+A subsequence of a string is a new string that is formed from 
+the original string by deleting some (can be none) of the 
+characters without disturbing the relative positions of the 
+remaining characters. 
+
+(i.e., "ace" is a subsequence of "abcde" while "aec" is not).
+
+Approach:
+We can solve this efficiently using the Two Pointers technique.
+We use one pointer `i` to traverse string `s` and another pointer 
+`j` to traverse string `t`.
+
+We iterate through `t` using `j`. Whenever the character at `t[j]` 
+matches the character at `s[i]`, we have found the next required 
+character for our subsequence, so we advance the pointer `i`.
+Regardless of whether there is a match, we always advance `j` to 
+continue searching in `t`.
+
+If `i` reaches the end of `s`, it means we successfully found all 
+characters of `s` in `t` in the correct relative order.
+
+Why do we use TWO pointers?
+Pointer `i` keeps track of our progress in matching the target 
+subsequence `s`.
+Pointer `j` scans through the source string `t` to find the 
+matching characters. This ensures we only traverse each string 
+at most once, achieving linear time complexity.
+
+Example:
+s = "abc", t = "ahbgdc"
+
+Step 1: i = 0, j = 0
+s[0] = 'a', t[0] = 'a'. Match!
+Increment i -> i = 1. Increment j -> j = 1.
+
+Step 2: i = 1, j = 1
+s[1] = 'b', t[1] = 'h'. No match.
+Increment j -> j = 2.
+
+Step 3: i = 1, j = 2
+s[1] = 'b', t[2] = 'b'. Match!
+Increment i -> i = 2. Increment j -> j = 3.
+
+Step 4: i = 2, j = 3
+s[2] = 'c', t[3] = 'g'. No match.
+Increment j -> j = 4.
+
+Step 5: i = 2, j = 4
+s[2] = 'c', t[4] = 'd'. No match.
+Increment j -> j = 5.
+
+Step 6: i = 2, j = 5
+s[2] = 'c', t[5] = 'c'. Match!
+Increment i -> i = 3. Increment j -> j = 6.
+
+Loop ends because j == t.size().
+Check if i == s.size() -> 3 == 3. True!
+
+------------------------------------------------------------
+Dry Run: s = "axc", t = "ahbgdc"
+------------------------------------------------------------
+
+Initialize: i = 0, j = 0
+
+Step 1: i = 0, j = 0
+s[0] = 'a', t[0] = 'a'. Match!
+i = 1, j = 1.
+
+Step 2: i = 1, j = 1
+s[1] = 'x', t[1] = 'h'. No match.
+j = 2.
+
+Step 3: i = 1, j = 2
+s[1] = 'x', t[2] = 'b'. No match.
+j = 3.
+
+Step 4: i = 1, j = 3
+s[1] = 'x', t[3] = 'g'. No match.
+j = 4.
+
+Step 5: i = 1, j = 4
+s[1] = 'x', t[4] = 'd'. No match.
+j = 5.
+
+Step 6: i = 1, j = 5
+s[1] = 'x', t[5] = 'c'. No match.
+j = 6.
+
+Loop ends because j == t.size().
+Check if i == s.size() -> 1 == 3. False!
+
+Return false.
+
+------------------------------------------------------------
+Follow-up: What if there are lots of incoming s strings?
+------------------------------------------------------------
+If we have to check many different strings `s1, s2, s3...` against 
+the SAME string `t`, the two-pointer approach takes O(N) per query, 
+which might be too slow.
+
+Optimization:
+1. Preprocess `t`: Create a map/array of lists that stores the 
+   indices of each character in `t`.
+   Example: t = "ahbgdc" -> 'a': [0], 'h': [1], 'b': [2], etc.
+2. For each query string `s`, iterate through its characters.
+3. For each character, use Binary Search (e.g., `std::lower_bound`) 
+   on its list of indices to find the smallest index that is strictly 
+   greater than the index of the previously matched character.
+4. If such an index exists, update the previous index and continue. 
+   If not, return false.
+
+Time Complexity for preprocessing: O(N)
+Time Complexity per query: O(M log N) where M is the length of s.
+
+------------------------------------------------------------
+Algorithm (Two Pointers)
+------------------------------------------------------------
+
+1. Initialize two pointers:
+       i = 0 (for string s)
+       j = 0 (for string t)
+
+2. Loop while i < s.size() AND j < t.size():
+   a. If s[i] == t[j]:
+          i++ (Move to the next character in s)
+   b. j++ (Always move to the next character in t)
+
+3. After the loop, check if we matched all characters of s:
+       return (i == s.size())
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(N)
+    where N is the length of string `t`. In the worst case, we 
+    iterate through the entire string `t` once. The pointer `j` 
+    increments exactly N times.
+
+Space Complexity:
+    O(1)
+    We only use two integer variables (`i` and `j`) for the pointers, 
+    requiring constant extra memory regardless of the input size.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int i = 0, j = 0;
+
+        // Traverse both strings with two pointers
+        while (i < s.size() && j < t.size()) {
+            if (s[i] == t[j]) {
+                ++i;          // Match found, move to the next char in s
+            }
+            j++;             // Always move to the next char in t
+        }
+        
+        // If i reached the end of s, all characters were found in order
+        return i == s.size();        
+    }
+};
