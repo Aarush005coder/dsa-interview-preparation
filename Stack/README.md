@@ -13,6 +13,7 @@ This folder contains **Stack** problems solved in **C++**. Each solution include
 | 3 | Evaluate Reverse Polish Notation | Medium | ✅ |
 | 4 | Basic Calculator | Hard | ✅ |
 | 5 | Implement Stack using Queues | Easy | ✅ |
+| 6 | Decode String | Medium | ✅ |
 
 ---
 
@@ -39,4 +40,4 @@ This folder contains **Stack** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **5**
+**Problems Solved:** **6**
