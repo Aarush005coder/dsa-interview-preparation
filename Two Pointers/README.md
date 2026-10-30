@@ -16,6 +16,7 @@ This folder contains **Two Pointers** problems solved in **C++**. Each solution 
 | 6 | Remove Duplicates from Sorted Array II | Medium | ✅ |
 | 7 | Valid Palindrome | Easy | ✅ |
 | 8 | Move Zeroes | Easy | ✅ |
+| 8 | Is Subsequence | Easy | ✅ |
 
 ---
 
@@ -57,4 +58,4 @@ This technique helps reduce time complexity and is one of the most important pat
 
 ---
 
-**Problems Solved:** **8**
+**Problems Solved:** **9**
