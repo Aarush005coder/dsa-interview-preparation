@@ -1,0 +1,144 @@
+/*
+------------------------------------------------------------
+Problem    : Integer Replacement
+Platform   : LeetCode
+Topic      : Math 
+Difficulty : Medium
+
+Problem:
+Given a positive integer n, you can apply one of the following operations:
+1. If n is even, replace n with n / 2.
+2. If n is odd, replace n with either n + 1 or n - 1.
+
+Return the minimum number of operations needed for n to become 1.
+
+Approach:
+We can solve this using a Greedy approach combined with Bit Manipulation.
+Our goal is to reach 1 as quickly as possible. Since dividing by 2 reduces 
+the number much faster than adding or subtracting 1, we want to maximize 
+the number of times we can divide by 2. This means we want to eliminate 
+trailing zeros in the binary representation of n.
+
+- If n is even, we have no choice but to divide by 2.
+- If n is odd, we must choose between n + 1 and n - 1. We should choose 
+  the operation that results in a number divisible by 4 (i.e., ends in 
+  '00' in binary), so we can divide by 2 at least twice in a row.
+
+Looking at the binary representation of an odd number:
+- If it ends in '01' (n % 4 == 1), subtracting 1 makes it end in '00'.
+- If it ends in '11' (n % 4 == 3), adding 1 makes it end in '00' (with a carry).
+
+Exception:
+The number 3 (binary '11') is a special case. 
+If we add 1, we get 4 -> 2 -> 1 (3 steps).
+If we subtract 1, we get 2 -> 1 (2 steps).
+So for n = 3, we should always subtract 1.
+
+Why use `long long`?
+If n is the maximum 32-bit signed integer (2^31 - 1), adding 1 will cause 
+an integer overflow. Using a 64-bit integer (`long long`) prevents this.
+
+Example:
+n = 15 (Binary: 1111)
+
+Step 1: 15 is odd. 15 % 4 == 3. Add 1 -> 16. (count = 1)
+Step 2: 16 is even. Divide by 2 -> 8. (count = 2)
+Step 3: 8 is even. Divide by 2 -> 4. (count = 3)
+Step 4: 4 is even. Divide by 2 -> 2. (count = 4)
+Step 5: 2 is even. Divide by 2 -> 1. (count = 5)
+
+Result: 5 operations.
+
+------------------------------------------------------------
+Dry Run: n = 3
+------------------------------------------------------------
+
+Initialize: x = 3, count = 0
+
+Iteration 1:
+    x = 3 (odd)
+    x == 3 is True, so we subtract 1.
+    x = 2
+    count = 1
+
+Iteration 2:
+    x = 2 (even)
+    x /= 2 -> x = 1
+    count = 2
+
+Loop ends because x == 1.
+Return count = 2.
+
+------------------------------------------------------------
+Why not use BFS or Recursion with Memoization?
+------------------------------------------------------------
+
+While BFS or Top-Down DP with memoization would correctly find the 
+shortest path, they require O(N) space and time, which is inefficient 
+and will result in Memory Limit Exceeded (MLE) or Time Limit Exceeded 
+(TLE) for large values of n (up to 2^31 - 1).
+
+The greedy bitwise approach runs in O(log N) time and O(1) space, 
+making it highly optimal.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize x = n (as long long) and count = 0.
+2. Loop while x != 1:
+   a. If x is even (x % 2 == 0):
+          x /= 2
+   b. If x is odd:
+          i. If x == 3 OR x % 4 == 1:
+                 x--
+          ii. Else (x % 4 == 3):
+                 x++
+   c. Increment count.
+3. Return count.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(log N)
+    In each step, we either divide by 2 or add/subtract 1 to make it 
+    divisible by 4, followed by division by 2. The number of bits in 
+    N is log2(N), so we perform at most 2 * log2(N) operations.
+
+Space Complexity:
+    O(1)
+    We only use a couple of variables (`x` and `count`), requiring 
+    constant extra memory.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int integerReplacement(int n) {
+        long long x = n;
+        int count = 0;
+        
+        while(x != 1){
+            if(x % 2 == 0){
+                x /= 2;
+            }
+            else{
+                if(x == 3){
+                    x--;
+                }
+                else if(x % 4 == 1){
+                    x--;
+                }
+                else{
+                    x++;
+                }
+            }
+            count++;
+        }
+        
+        return count;
+    }
+};
