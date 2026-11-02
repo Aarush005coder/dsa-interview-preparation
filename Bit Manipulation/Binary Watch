@@ -1,0 +1,164 @@
+/*
+------------------------------------------------------------
+Problem    : Binary Watch
+Platform   : LeetCode
+Topic      : Bit Manipulation / Enumeration
+Difficulty : Easy
+
+Problem:
+A binary watch has 4 LEDs on the top to represent the hours 
+(0-11), and 6 LEDs on the bottom to represent the minutes (0-59). 
+Each LED represents a zero or one, with the least significant bit 
+on the right.
+
+Given an integer `turnedOn` which represents the number of LEDs 
+that are currently on, return all possible times the watch could 
+represent. You may return the answer in any order.
+
+Rules for formatting:
+1. The hour must not contain a leading zero (e.g., "01:00" is 
+   invalid; it should be "1:00").
+2. The minute must consist of two digits and may contain a 
+   leading zero (e.g., "10:2" is invalid; it should be "10:02").
+
+Approach:
+Since the range of valid hours (0 to 11) and minutes (0 to 59) 
+is extremely small, we can use a Brute Force Enumeration approach.
+We simply iterate through all 12 * 60 = 720 possible time 
+combinations. For each combination, we count the number of set 
+bits (1s) in the binary representation of the hour and the minute. 
+If the total number of set bits equals `turnedOn`, we format the 
+time according to the rules and add it to our result list.
+
+Why do we use `__builtin_popcount`?
+`__builtin_popcount` is a highly optimized GCC built-in function 
+that counts the number of 1s in the binary representation of an 
+integer. It is much faster and cleaner than writing a manual loop 
+to shift and count bits. (Note: For `long long`, one would use 
+`__builtin_popcountll`, but standard `int` is sufficient here).
+
+Example:
+turnedOn = 1
+
+We need exactly 1 LED to be on.
+This means either the hour has 1 bit set and minutes have 0, 
+OR the hour has 0 bits set and minutes have 1.
+
+Hours with 1 bit set: 1 (0001), 2 (0010), 4 (0100), 8 (1000)
+Minutes with 0 bits set: 0 (000000)
+-> Times: "1:00", "2:00", "4:00", "8:00"
+
+Hours with 0 bits set: 0 (0000)
+Minutes with 1 bit set: 1, 2, 4, 8, 16, 32
+-> Times: "0:01", "0:02", "0:04", "0:08", "0:16", "0:32"
+
+Total valid times: 10.
+
+------------------------------------------------------------
+Dry Run: turnedOn = 1
+------------------------------------------------------------
+
+Initialize: ans = []
+
+Loop i from 0 to 11 (hours):
+  Loop j from 0 to 59 (minutes):
+    
+    Check i = 0, j = 0:
+      popcount(0) + popcount(0) = 0 + 0 = 0 != 1. Skip.
+      
+    Check i = 0, j = 1:
+      popcount(0) + popcount(1) = 0 + 1 = 1 == 1. Match!
+      Format: i=0 -> "0", j=1 < 10 -> "01". 
+      Add "0:01" to ans.
+      
+    Check i = 0, j = 2:
+      popcount(0) + popcount(2) = 0 + 1 = 1 == 1. Match!
+      Format: "0:02". Add to ans.
+      
+    ... (continues for j = 4, 8, 16, 32)
+    
+    Check i = 1, j = 0:
+      popcount(1) + popcount(0) = 1 + 0 = 1 == 1. Match!
+      Format: i=1 -> "1", j=0 < 10 -> "00".
+      Add "1:00" to ans.
+      
+    ... (continues for i = 2, 4, 8 with j = 0)
+
+Result: 
+["0:01", "0:02", "0:04", "0:08", "0:16", "0:32", 
+ "1:00", "2:00", "4:00", "8:00"]
+
+------------------------------------------------------------
+Why not use Backtracking / DFS?
+------------------------------------------------------------
+
+We could use backtracking to generate combinations of bits, but 
+given the tiny search space (720 combinations), a simple nested 
+loop is significantly easier to write, read, and debug. The 
+overhead of recursion is unnecessary here.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize an empty vector of strings `ans`.
+2. Loop `i` from 0 to 11 (representing hours):
+3.   Loop `j` from 0 to 59 (representing minutes):
+4.     If `__builtin_popcount(i) + __builtin_popcount(j) == turnedOn`:
+         a. Convert `i` to string.
+         b. Append ":".
+         c. If `j < 10`, append "0" (to handle leading zero for minutes).
+         d. Append `j` as string.
+         e. Add the formatted time to `ans`.
+5. Return `ans`.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(1)
+    The nested loops run exactly 12 * 60 = 720 times, regardless 
+    of the input `turnedOn`. The operations inside the loop 
+    (popcount, string formatting) take constant time. Thus, the 
+    time complexity is strictly bounded by a constant.
+
+Space Complexity:
+    O(1)
+    Excluding the space required for the output vector `ans`, 
+    we only use a few integer variables for the loops and 
+    formatting, requiring constant extra memory.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    vector<string> readBinaryWatch(int turnedOn) {
+        vector<string> ans;
+        
+        // Iterate through all possible hours (0 to 11)
+        for(int i = 0; i < 12; i++){
+            // Iterate through all possible minutes (0 to 59)
+            for(int j = 0; j < 60; j++){
+                
+                // Check if the total number of set bits matches turnedOn
+                if(__builtin_popcount(i) + __builtin_popcount(j) == turnedOn){
+                    
+                    // Format the time string
+                    string t = to_string(i) + ":";
+                    
+                    // Minutes must be two digits, so add a leading zero if < 10
+                    if(j < 10){
+                        t += "0";
+                    }
+                    
+                    t += to_string(j);
+                    ans.push_back(t);
+                }
+            }
+        }
+        
+        return ans;
+    }
+};
