@@ -93,7 +93,7 @@ Solve two Data Structures & Algorithms problems every day while focusing on:
 | Backtracking | 11 |
 | Stack | 6 |
 | Queue | 2 |
-| Trees | 0 |
+| Trees | 1 |
 | Binary Tree | 20 |
 | Binary Search Tree | 3 |
 | Heap | 2 |
@@ -174,7 +174,7 @@ Each solution includes:
 
 ---
 
-**Total Problems Solved:** **168**
+**Total Problems Solved:** **169**
 
 ---
 
