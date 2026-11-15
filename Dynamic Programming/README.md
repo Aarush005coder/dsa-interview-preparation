@@ -19,6 +19,7 @@ This folder contains **Dynamic Programming** problems solved in **C++** as part 
 | 9 | Perfect Squares | Medium | ✅ |
 | 10 | Longest Increasing Subsequence | Medium | ✅ |
 | 11 | Guess Number Higher or Lower II | Medium | ✅ |
+| 12 | Partition Equal Subset Sum | Medium | ✅ |
 
 ---
 
@@ -103,4 +104,4 @@ When approaching a Dynamic Programming problem:
 
 ---
 
-**Problems Solved:** **11**
+**Problems Solved:** **12**
