@@ -1,0 +1,182 @@
+/*
+------------------------------------------------------------
+Problem    : Partition Equal Subset Sum
+Platform   : LeetCode
+Topic      : Dynamic Programming / 0/1 Knapsack
+Difficulty : Medium
+
+Problem:
+Given an integer array nums, return true if you can partition 
+the array into two subsets such that the sum of the elements 
+in both subsets is equal, or false otherwise.
+
+Approach:
+This problem is a classic variation of the 0/1 Knapsack problem. 
+If we can find a subset of the array that sums up to exactly 
+`total_sum / 2`, then the remaining elements will naturally sum 
+up to the other `total_sum / 2`. This means the array can be 
+partitioned into two equal subsets.
+
+First, we calculate the total sum of the array. If the total sum 
+is odd, it is mathematically impossible to partition it into two 
+equal integer sums, so we return `false` immediately.
+
+If the sum is even, our target becomes `total_sum / 2`. We then 
+use a 2D Dynamic Programming (DP) table to determine if this 
+target is achievable. 
+
+`dp[index][target]` represents whether it is possible to achieve 
+the `target` sum using a subset of elements from `index` to `n-1`.
+
+For each element, we have two choices:
+1. Include it: We subtract its value from the target and check 
+   if the remaining target can be achieved with the remaining elements.
+2. Exclude it: We keep the target the same and check if it can be 
+   achieved with the remaining elements.
+
+Why do we use Dynamic Programming?
+A naive recursive approach would explore all 2^N subsets, leading 
+to Time Limit Exceeded (TLE). DP stores the results of overlapping 
+subproblems in a table, reducing the time complexity to O(N * Target).
+
+Example:
+nums = [1, 5, 11, 5]
+
+Step 1: Total sum = 1 + 5 + 11 + 5 = 22.
+Step 2: 22 is even, so target = 22 / 2 = 11.
+Step 3: Can we form a subset that sums to 11? 
+        Yes: 1 + 5 + 5 = 11. (The remaining element is 11).
+Step 4: Return true.
+
+------------------------------------------------------------
+Dry Run: nums = [1, 5, 11, 5]
+------------------------------------------------------------
+
+Total sum = 22, Target = 11, n = 4.
+DP table size: 5 x 12 (index 0 to 4, target 0 to 11).
+Base case: dp[i][0] = 1 for all i (sum 0 is always possible).
+
+Iteration (bottom-up, index from 3 down to 0):
+
+index = 3 (nums[3] = 5):
+  target = 5: 
+    incl = dp[4][5 - 5] = dp[4][0] = 1
+    excl = dp[4][5] = 0
+    dp[3][5] = 1 OR 0 = 1
+
+index = 2 (nums[2] = 11):
+  target = 11:
+    incl = dp[3][11 - 11] = dp[3][0] = 1
+    excl = dp[3][11] = 0
+    dp[2][11] = 1 OR 0 = 1
+
+... (continues for index = 1 and index = 0)
+
+Eventually, dp[0][11] is evaluated. Since we can form 11, 
+the value propagates up, and dp[0][11] becomes 1.
+
+Result: dp[0][11] == 1 -> return true.
+
+------------------------------------------------------------
+Why `target - 0` in the code?
+------------------------------------------------------------
+
+In the provided code, the exclude case is written as:
+    bool excl = dp[index+1][target - 0];
+
+Subtracting 0 is mathematically redundant, so `target - 0` is 
+simply `target`. This line correctly represents the choice of 
+*not* including the current element, meaning the target sum we 
+need to achieve remains unchanged, and we move to the next index.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Calculate the total sum of the array.
+2. If total sum is odd, return false.
+3. Set target = total sum / 2.
+4. Initialize a 2D DP table of size (n+1) x (target+1) with 0.
+5. Set dp[i][0] = 1 for all i from 0 to n (base case).
+6. Iterate `index` from n-1 down to 0:
+   a. Iterate `target` from 0 to total/2:
+      i. Check if we can include the current element:
+         if target >= nums[index], incl = dp[index+1][target - nums[index]]
+      ii. Check if we can exclude the current element:
+         excl = dp[index+1][target]
+      iii. dp[index][target] = incl OR excl
+7. Return dp[0][target].
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(N * Target)
+    where N is the number of elements in the array and Target is 
+    total_sum / 2. We fill a 2D table of this size, performing 
+    constant time operations for each cell.
+
+Space Complexity:
+    O(N * Target)
+    for the 2D DP table. 
+    (Note: This can be optimized to O(Target) space by using a 
+    1D DP array and iterating the target backwards, since each 
+    row only depends on the immediately preceding row).
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int solve(int n, vector<int>& nums, int total){
+        // DP table: dp[index][target]
+        // Size is (n+1) x (total+1) to handle base cases safely
+        vector<vector<int>> dp(n + 1, vector<int>(total + 1, 0));
+        
+        // Base case: A sum of 0 is always achievable with an empty subset
+        for(int i = 0; i <= n; i++){
+            dp[i][0] = 1;
+        }
+
+        // Fill the DP table bottom-up
+        for(int index = n - 1; index >= 0; index--){
+            for(int target = 0; target <= total / 2; target++){
+                
+                // Option 1: Include the current element (if it doesn't exceed the target)
+                bool incl = 0;
+                if(target - nums[index] >= 0){
+                    incl = dp[index + 1][target - nums[index]];
+                }
+                
+                // Option 2: Exclude the current element (target remains the same)
+                // Note: target - 0 is just target
+                bool excl = dp[index + 1][target];
+                
+                // We can achieve the target if EITHER option works
+                dp[index][target] = incl || excl;
+            }
+        }
+        
+        // The answer is whether we can achieve total/2 starting from index 0
+        return dp[0][total / 2];
+    }
+
+    bool canPartition(vector<int>& nums) {
+        int total = 0;
+        int n = nums.size();
+        
+        // Calculate the total sum of the array
+        for(int i = 0; i < n; i++){
+            total += nums[i];
+        }
+
+        // If the total sum is odd, it cannot be partitioned into two equal integers
+        if(total & 1){
+            return 0; // false
+        }
+        
+        // If even, delegate to the DP solver
+        return solve(n, nums, total);
+    }
+};
