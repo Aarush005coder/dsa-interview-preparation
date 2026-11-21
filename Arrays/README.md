@@ -24,6 +24,7 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 | 14 | Contains Duplicate | Easy | ✅ |
 | 15 | Intersection of Two Arrays | Easy | ✅ |
 | 16 | Intersection of Two Arrays II | Easy | ✅ |
+| 17 | Maximum Subarray | Medium | ✅ |
 
 ---
 
