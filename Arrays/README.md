@@ -49,4 +49,4 @@ This folder contains **Array** problems solved in **C++**. Each solution include
 
 ---
 
-**Problems Solved:** **16**
+**Problems Solved:** **17**
