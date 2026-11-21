@@ -1,0 +1,145 @@
+/*
+------------------------------------------------------------
+Problem    : Maximum Subarray
+Platform   : LeetCode
+Topic      : Array / Kadane's Algorithm
+Difficulty : Medium
+
+Problem:
+Given an integer array `nums`, find the subarray with the 
+largest sum, and return its sum.
+
+Approach:
+We can solve this optimally using **Kadane's Algorithm**. 
+The core idea is to iterate through the array while maintaining 
+a running `sum` of the current subarray. We also keep track of 
+the maximum sum encountered so far in a variable `maxi`.
+
+At each step, we add the current element to `sum`. 
+If `sum` becomes negative, it means the current subarray is 
+acting as a "dead weight" and will only decrease the sum of any 
+future subarrays it is attached to. Therefore, we reset `sum` 
+to 0, effectively starting a new subarray from the next element.
+
+Why do we use Kadane's Algorithm?
+A brute-force approach would involve generating all possible 
+subarrays and calculating their sums, which would take O(N^2) 
+or O(N^3) time. Kadane's Algorithm uses a greedy approach to 
+solve the problem in a single pass, reducing the time complexity 
+to O(N) while using O(1) extra space.
+
+Example:
+nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+
+Step 1: Initialize sum = 0, maxi = INT_MIN
+Step 2: i = 0, num = -2. 
+        sum = -2. maxi = max(INT_MIN, -2) = -2. 
+        sum < 0, so reset sum = 0.
+Step 3: i = 1, num = 1. 
+        sum = 1. maxi = max(-2, 1) = 1.
+Step 4: i = 2, num = -3. 
+        sum = -2. maxi = 1. 
+        sum < 0, so reset sum = 0.
+Step 5: i = 3, num = 4. 
+        sum = 4. maxi = max(1, 4) = 4.
+Step 6: i = 4, num = -1. 
+        sum = 3. maxi = 4.
+Step 7: i = 5, num = 2. 
+        sum = 5. maxi = max(4, 5) = 5.
+Step 8: i = 6, num = 1. 
+        sum = 6. maxi = max(5, 6) = 6.
+Step 9: i = 7, num = -5. 
+        sum = 1. maxi = 6.
+Step 10: i = 8, num = 4. 
+         sum = 5. maxi = 6.
+
+Result: 6 (from the subarray [4, -1, 2, 1])
+
+------------------------------------------------------------
+Dry Run: nums = [1]
+------------------------------------------------------------
+
+Initialize: sum = 0, maxi = INT_MIN
+
+Iteration 1 (i = 0):
+    num = 1
+    sum = 0 + 1 = 1
+    maxi = max(INT_MIN, 1) = 1
+    sum is not < 0, so we do not reset it.
+
+Loop ends.
+Return maxi = 1.
+
+------------------------------------------------------------
+Why reset `sum` to 0 when it's negative?
+------------------------------------------------------------
+
+Because a negative prefix will only decrease the sum of any 
+subarray that follows it. 
+
+For example, if the current running sum is -3, and the next 
+elements are [5, 2], starting a fresh subarray from 5 gives 
+a sum of 7. If we carried over the -3, the sum would be 
+-3 + 5 + 2 = 4. By dropping the negative prefix, we maximize 
+our potential sum.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize:
+       sum = 0
+       maxi = INT_MIN
+
+2. Loop through each element `num` in `nums`:
+   a. Add `num` to `sum`:
+          sum += num
+   b. Update the maximum sum found so far:
+          maxi = max(maxi, sum)
+   c. If the running sum becomes negative, reset it:
+          if (sum < 0) sum = 0
+
+3. Return `maxi`.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(N)
+    where N is the number of elements in the array. We traverse 
+    the array exactly once, performing constant-time operations 
+    at each step.
+
+Space Complexity:
+    O(1)
+    We only use two integer variables (`sum` and `maxi`), 
+    requiring constant extra memory regardless of the input size.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int sum = 0;
+        int maxi = INT_MIN;
+
+        for(int i = 0; i < nums.size(); i++){
+            // Add the current element to the running sum
+            sum += nums[i];
+            
+            // Update the maximum sum encountered so far
+            maxi = max(maxi, sum);
+
+            // If the running sum drops below zero, it will only 
+            // decrease the sum of future subarrays. Reset it to 0 
+            // to start a fresh subarray from the next element.
+            if(sum < 0){
+                sum = 0;
+            }
+        }
+
+        return maxi;
+    }
+};
