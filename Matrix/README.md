@@ -15,6 +15,7 @@ This folder contains **Matrix** problems solved in **C++** as part of my DSA pre
 | 5 | Maximal Square | Medium | ✅ |
 | 6 | Search a 2D Matrix II | Medium | ✅ |
 | 7 | Rotate Image | Medium | ✅ |
+| 8 | Spiral Matrix | Medium | ✅ |
 
 ---
 
@@ -39,4 +40,4 @@ This folder contains **Matrix** problems solved in **C++** as part of my DSA pre
 
 ---
 
-**Problems Solved:** **7**
+**Problems Solved:** **8**
