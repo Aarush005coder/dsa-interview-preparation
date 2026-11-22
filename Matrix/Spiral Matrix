@@ -1,0 +1,209 @@
+/*
+------------------------------------------------------------
+Problem    : Spiral Matrix
+Platform   : LeetCode
+Topic      : Matrix / Simulation
+Difficulty : Medium
+
+Problem:
+Given an m x n matrix, return all elements of the matrix in 
+spiral order.
+
+Approach:
+We can solve this by simulating the spiral traversal using 
+four boundary pointers: `startingRow`, `endingRow`, 
+`startingCol`, and `endingCol`. 
+
+We traverse the matrix in four directions repeatedly:
+1. Left to Right (along the top row)
+2. Top to Bottom (along the right column)
+3. Right to Left (along the bottom row)
+4. Bottom to Top (along the left column)
+
+After completing each direction, we shrink the corresponding 
+boundary inward. We continue this process until the boundaries 
+cross each other, meaning all elements have been visited.
+
+Why do we use FOUR pointers?
+- `startingRow` & `endingRow`: Track the top and bottom boundaries 
+  of the unvisited sub-matrix.
+- `startingCol` & `endingCol`: Track the left and right boundaries 
+  of the unvisited sub-matrix.
+This allows us to systematically peel off the outer layers of 
+the matrix like an onion, moving inward until nothing is left.
+
+Example:
+matrix = [[1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9]]
+
+Boundaries: startRow=0, endRow=2, startCol=0, endCol=2
+
+1. Left to Right (row 0): 1, 2, 3. startRow becomes 1.
+2. Top to Bottom (col 2): 6, 9. endCol becomes 1.
+3. Right to Left (row 2): 8, 7. endRow becomes 1.
+4. Bottom to Top (col 0): 4. startCol becomes 1.
+
+Next iteration:
+1. Left to Right (row 1): 5. startRow becomes 2.
+Loop terminates because startRow (2) > endRow (1).
+
+Result: [1, 2, 3, 6, 9, 8, 7, 4, 5]
+
+------------------------------------------------------------
+Dry Run: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+------------------------------------------------------------
+
+Initialize: 
+  m = 3, n = 3
+  startRow = 0, startCol = 0
+  endRow = 2, endCol = 2
+  result = []
+
+Iteration 1:
+  1. Left to Right (col 0 to 2, row 0):
+     Add 1, 2, 3. result = [1, 2, 3]
+     startRow++ -> 1
+
+  2. Top to Bottom (row 1 to 2, col 2):
+     Add 6, 9. result = [1, 2, 3, 6, 9]
+     endCol-- -> 1
+
+  3. Check startRow (1) <= endRow (2): True
+     Right to Left (col 1 to 0, row 2):
+     Add 8, 7. result = [1, 2, 3, 6, 9, 8, 7]
+     endRow-- -> 1
+
+  4. Check startCol (0) <= endCol (1): True
+     Bottom to Top (row 1 to 1, col 0):
+     Add 4. result = [1, 2, 3, 6, 9, 8, 7, 4]
+     startCol++ -> 1
+
+Iteration 2:
+  1. Left to Right (col 1 to 1, row 1):
+     Add 5. result = [1, 2, 3, 6, 9, 8, 7, 4, 5]
+     startRow++ -> 2
+
+  2. Top to Bottom (row 2 to 1, col 1):
+     Loop doesn't run (2 > 1).
+     endCol-- -> 0
+
+  3. Check startRow (2) <= endRow (1): False. Skip.
+  4. Check startCol (1) <= endCol (0): False. Skip.
+
+Loop terminates (startRow > endRow).
+Result: [1, 2, 3, 6, 9, 8, 7, 4, 5]
+
+------------------------------------------------------------
+Why do we need the `if` conditions for the last two loops?
+------------------------------------------------------------
+
+The `if (startingRow <= endingRow)` and `if (startingCol <= endingCol)` 
+checks are absolutely crucial for **rectangular (non-square) matrices**.
+
+Imagine a 3x4 matrix (3 rows, 4 columns). After traversing the top 
+row and right column, the boundaries might shrink such that the 
+"bottom row" and "left column" are actually the exact same elements 
+we just traversed. Without the `if` checks, we would add those 
+elements to our result a second time, causing duplicates. 
+The `if` conditions ensure we only traverse if there is still a 
+valid, unvisited row or column left.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize boundaries:
+       startingRow = 0, endingRow = m - 1
+       startingCol = 0, endingCol = n - 1
+
+2. Loop while startingRow <= endingRow AND startingCol <= endingCol:
+   a. Traverse Left to Right (top row):
+          for col from startingCol to endingCol
+          endingRow++ (shrink top boundary)
+          
+   b. Traverse Top to Bottom (right column):
+          for row from startingRow to endingRow
+          endingCol-- (shrink right boundary)
+          
+   c. If startingRow <= endingRow:
+          Traverse Right to Left (bottom row):
+          for col from endingCol down to startingCol
+          endingRow-- (shrink bottom boundary)
+          
+   d. If startingCol <= endingCol:
+          Traverse Bottom to Top (left column):
+          for row from endingRow down to startingRow
+          startingCol++ (shrink left boundary)
+
+3. Return the result array.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(M * N)
+    where M is the number of rows and N is the number of columns. 
+    We visit and process every single element in the matrix exactly 
+    once.
+
+Space Complexity:
+    O(1) auxiliary space.
+    Excluding the output array `result` (which is required to store 
+    the answer), we only use four integer variables for the boundaries, 
+    requiring constant extra memory.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> result;
+        int m = matrix.size();
+        int n = matrix[0].size();
+
+        // Initialize the four boundaries of the matrix
+        int startingRow = 0;
+        int startingCol = 0;
+        int endingRow = m - 1;
+        int endingCol = n - 1;
+
+        // Loop until the boundaries cross each other
+        while(startingRow <= endingRow && startingCol <= endingCol){
+            
+            // 1. Traverse from Left to Right along the top row
+            for(int col = startingCol; col <= endingCol; col++){
+                result.push_back(matrix[startingRow][col]);
+            }
+            startingRow++; // Shrink the top boundary
+
+            // 2. Traverse from Top to Bottom along the right column
+            for(int row = startingRow; row <= endingRow; row++){
+                result.push_back(matrix[row][endingCol]);
+            }
+            endingCol--; // Shrink the right boundary
+
+            // 3. Traverse from Right to Left along the bottom row
+            // Check if there is still a valid row left to traverse
+            if(startingRow <= endingRow){
+                for(int col = endingCol; col >= startingCol; col--){
+                    result.push_back(matrix[endingRow][col]);
+                }
+                endingRow--; // Shrink the bottom boundary
+            }
+
+            // 4. Traverse from Bottom to Top along the left column
+            // Check if there is still a valid column left to traverse
+            if(startingCol <= endingCol){
+                for(int row = endingRow; row >= startingRow; row--){
+                    result.push_back(matrix[row][startingCol]);
+                }
+                startingCol++; // Shrink the left boundary
+            }
+        }
+
+        return result;
+    }
+};
