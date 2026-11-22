@@ -1,0 +1,159 @@
+/*
+------------------------------------------------------------
+Problem    : Rotate Image
+Platform   : LeetCode
+Topic      : Matrix
+Difficulty : Medium
+
+Problem:
+You are given an n x n 2D matrix representing an image. 
+Rotate the image by 90 degrees (clockwise).
+
+Important:
+You have to rotate the image in-place, which means you have 
+to modify the input 2D matrix directly. DO NOT allocate 
+another 2D matrix and do the rotation.
+
+Approach:
+The most elegant way to rotate a matrix 90 degrees clockwise 
+in-place is a two-step process:
+1. Transpose the Matrix: Swap elements across the main diagonal. 
+   This converts rows into columns.
+2. Reverse Each Row: Reverse the elements in every individual row.
+
+Why does Transpose + Reverse work?
+Mathematically, a 90-degree clockwise rotation maps an element 
+at `(i, j)` to `(j, n - 1 - i)`.
+- Transposing maps `(i, j)` to `(j, i)`.
+- Reversing the row maps `(j, i)` to `(j, n - 1 - i)`.
+Combining these two steps perfectly achieves the desired rotation 
+without needing any extra memory.
+
+Example:
+matrix = [[1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9]]
+
+Step 1: Transpose (swap matrix[i][j] with matrix[j][i])
+[[1, 4, 7],
+ [2, 5, 8],
+ [3, 6, 9]]
+
+Step 2: Reverse each row
+[[7, 4, 1],
+ [8, 5, 2],
+ [9, 6, 3]]
+
+------------------------------------------------------------
+Dry Run: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+------------------------------------------------------------
+
+Step 1: Transpose
+i = 0:
+  j = 1: swap matrix[0][1] and matrix[1][0] -> (2 and 4)
+  j = 2: swap matrix[0][2] and matrix[2][0] -> (3 and 7)
+i = 1:
+  j = 2: swap matrix[1][2] and matrix[2][1] -> (6 and 8)
+
+Matrix after transpose:
+[[1, 4, 7],
+ [2, 5, 8],
+ [3, 6, 9]]
+
+Step 2: Reverse Rows
+Row 0: [1, 4, 7] -> swap 1 & 7 -> [7, 4, 1]
+Row 1: [2, 5, 8] -> swap 2 & 8 -> [8, 5, 2]
+Row 2: [3, 6, 9] -> swap 3 & 9 -> [9, 6, 3]
+
+Final Matrix:
+[[7, 4, 1],
+ [8, 5, 2],
+ [9, 6, 3]]
+
+------------------------------------------------------------
+Why use XOR for swapping?
+------------------------------------------------------------
+
+The provided code uses the XOR bitwise operator to swap two 
+integers without using a temporary variable:
+    a = a ^ b;
+    b = b ^ a; // b becomes original 'a'
+    a = a ^ b; // a becomes original 'b'
+
+While this is a clever trick to save a tiny bit of memory, in 
+modern C++, using `std::swap(matrix[i][j], matrix[j][i])` is 
+generally preferred because it is more readable and the compiler 
+optimizes it just as well (or better) for primitive types like `int`.
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Transpose the Matrix:
+   For i from 0 to n-1:
+     For j from i+1 to n-1:
+       Swap matrix[i][j] and matrix[j][i]
+
+2. Reverse Each Row:
+   For each row r from 0 to n-1:
+     Initialize start pointer s = 0, end pointer e = n-1
+     While s < e:
+       Swap matrix[r][s] and matrix[r][e]
+       s++, e--
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(N^2)
+    where N is the dimension of the matrix (number of rows/columns).
+    Transposing takes O(N^2 / 2) operations, and reversing the rows 
+    takes O(N * N / 2) operations. Both are proportional to N^2.
+
+Space Complexity:
+    O(1)
+    The rotation is done entirely in-place. We only use a few 
+    integer variables for pointers and loop counters, requiring 
+    constant extra memory.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+
+        // Step 1: Transpose the matrix
+        // We start j from i+1 to avoid swapping elements twice 
+        // and to leave the main diagonal elements untouched.
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                // XOR swap to exchange matrix[i][j] and matrix[j][i]
+                matrix[i][j] = matrix[i][j] ^ matrix[j][i];
+                matrix[j][i] = matrix[j][i] ^ matrix[i][j];
+                matrix[i][j] = matrix[i][j] ^ matrix[j][i];
+                
+                // Note: std::swap(matrix[i][j], matrix[j][i]); 
+                // is the standard and more readable alternative.
+            }
+        }
+
+        // Step 2: Reverse each row
+        for (int r = 0; r < n; r++) {
+            int s = 0;
+            int e = n - 1;
+
+            while (s < e) {
+                // XOR swap to exchange matrix[r][s] and matrix[r][e]
+                matrix[r][s] = matrix[r][s] ^ matrix[r][e];
+                matrix[r][e] = matrix[r][e] ^ matrix[r][s];
+                matrix[r][s] = matrix[r][s] ^ matrix[r][e];
+
+                s++;
+                e--;
+            }
+        }
+    }
+};
