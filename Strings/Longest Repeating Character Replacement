@@ -1,0 +1,195 @@
+/*
+------------------------------------------------------------
+Problem    : Longest Repeating Character Replacement
+Platform   : LeetCode
+Topic      : String
+Difficulty : Medium
+
+Problem:
+You are given a string `s` and an integer `k`. You can choose 
+any character of the string and change it to any other uppercase 
+English character. You can perform this operation at most `k` times.
+
+Return the length of the longest substring containing the same 
+letter you can get after performing the above operations.
+
+Approach:
+We can solve this efficiently using the Sliding Window technique.
+The core idea is to maintain a window `[left, right]` that represents 
+a valid substring. 
+
+For any window, the minimum number of replacements needed to make 
+all characters the same is:
+    replacements_needed = (window_length) - (max_frequency_of_any_char_in_window)
+
+If `replacements_needed <= k`, the window is valid, and we can try 
+to expand it by moving the `right` pointer. 
+If `replacements_needed > k`, the window is invalid. We must shrink 
+it from the left by moving the `left` pointer until the window becomes 
+valid again.
+
+Why do we use a Sliding Window?
+A brute-force approach would check every possible substring, taking 
+O(N^2) time. A sliding window allows us to find the longest valid 
+substring in a single pass, O(N), by dynamically adjusting the 
+boundaries based on the number of allowed replacements.
+
+Example:
+s = "ABAB", k = 2
+
+Window expands:
+"A" -> max_freq = 1, replacements = 1 - 1 = 0 <= 2 (Valid)
+"AB" -> max_freq = 1, replacements = 2 - 1 = 1 <= 2 (Valid)
+"ABA" -> max_freq = 2 ('A'), replacements = 3 - 2 = 1 <= 2 (Valid)
+"ABAB" -> max_freq = 2, replacements = 4 - 2 = 2 <= 2 (Valid)
+
+Max length found = 4.
+
+------------------------------------------------------------
+Dry Run: s = "AABABBA", k = 1
+------------------------------------------------------------
+
+Initialize: count = [0...0], left = 0, max1 = 0, freq = 0
+
+i = 0 ('A'):
+  count['A'] = 1. max1 = max(0, 1) = 1.
+  Window size = 1. Replacements = 1 - 1 = 0 <= 1. Valid.
+  freq = max(0, 1) = 1.
+
+i = 1 ('A'):
+  count['A'] = 2. max1 = max(1, 2) = 2.
+  Window size = 2. Replacements = 2 - 2 = 0 <= 1. Valid.
+  freq = max(1, 2) = 2.
+
+i = 2 ('B'):
+  count['B'] = 1. max1 remains 2.
+  Window size = 3. Replacements = 3 - 2 = 1 <= 1. Valid.
+  freq = max(2, 3) = 3.
+
+i = 3 ('A'):
+  count['A'] = 3. max1 = max(2, 3) = 3.
+  Window size = 4. Replacements = 4 - 3 = 1 <= 1. Valid.
+  freq = max(3, 4) = 4.
+
+i = 4 ('B'):
+  count['B'] = 2. max1 remains 3.
+  Window size = 5. Replacements = 5 - 3 = 2 > 1. INVALID!
+  
+  While loop triggers:
+    count[s[0]] ('A') decrements to 2. left becomes 1.
+    Window size is now 4. Replacements = 4 - 3 = 1 <= 1. Loop ends.
+  freq = max(4, 4) = 4.
+
+i = 5 ('B'):
+  count['B'] = 3. max1 = max(3, 3) = 3.
+  Window size = 5 (left=1, right=5). Replacements = 5 - 3 = 2 > 1. INVALID!
+  
+  While loop triggers:
+    count[s[1]] ('A') decrements to 1. left becomes 2.
+    Window size is now 4. Replacements = 4 - 3 = 1 <= 1. Loop ends.
+  freq = max(4, 4) = 4.
+
+i = 6 ('A'):
+  count['A'] = 2. max1 remains 3.
+  Window size = 5 (left=2, right=6). Replacements = 5 - 3 = 2 > 1. INVALID!
+  
+  While loop triggers:
+    count[s[2]] ('B') decrements to 2. left becomes 3.
+    Window size is now 4. Replacements = 4 - 3 = 1 <= 1. Loop ends.
+  freq = max(4, 4) = 4.
+
+Result: 4.
+
+------------------------------------------------------------
+Why do we NOT decrease `max1` when the window shrinks?
+------------------------------------------------------------
+
+This is the most common interview question for this problem! 
+Notice that in the `while` loop, we decrement the count of the 
+character at `left`, but we *never* update `max1` to the new 
+maximum frequency of the shrunk window.
+
+This is a deliberate and brilliant optimization. 
+We only care about finding a window *larger* than the current 
+maximum length (`freq`). For a window to be larger, it MUST have 
+a higher `max1` than we've seen before. If the current window 
+doesn't have a higher `max1`, it cannot possibly yield a longer 
+valid substring than the one we already found. 
+
+By keeping `max1` as the historical maximum, we avoid an O(26) 
+loop to recalculate the max frequency every time we shrink, 
+keeping the time complexity strictly O(N).
+
+------------------------------------------------------------
+Algorithm
+------------------------------------------------------------
+
+1. Initialize:
+       count array of size 26 with 0s
+       left = 0, max1 = 0, freq = 0
+
+2. Loop `i` from 0 to s.size() - 1:
+   a. Increment count of current character: count[s[i] - 'A']++
+   b. Update max frequency: max1 = max(max1, count[s[i] - 'A'])
+   
+   c. Check if window is invalid:
+       while ((i - left + 1) - max1 > k):
+           Decrement count of left character: count[s[left] - 'A']--
+           Shrink window: left++
+           
+   d. Update max valid window length:
+       freq = max(freq, i - left + 1)
+
+3. Return freq.
+
+------------------------------------------------------------
+Complexity
+------------------------------------------------------------
+
+Time Complexity:
+    O(N)
+    where N is the length of the string. The `right` pointer `i` 
+    moves forward N times. The `left` pointer also moves forward 
+    at most N times across the entire execution. Thus, each 
+    character is processed at most twice.
+
+Space Complexity:
+    O(1) or O(26)
+    The `count` array always stores exactly 26 integers (for 
+    uppercase English letters), which is constant space regardless 
+    of the input string length.
+
+------------------------------------------------------------
+*/
+
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        // Frequency array to store counts of each uppercase English letter
+        vector<int> count(26, 0);
+        
+        int left = 0;
+        int max1 = 0;   // Max frequency of a single character in the current window
+        int freq = 0;   // Max length of a valid window found so far
+
+        for (int i = 0; i < s.size(); i++) {
+            // Include the current character in the window
+            count[s[i] - 'A']++;
+            
+            // Update the maximum frequency of any single character seen so far
+            max1 = max(max1, count[s[i] - 'A']);
+
+            // If the number of replacements needed exceeds k, the window is invalid.
+            // We shrink the window from the left until it becomes valid again.
+            while ((i - left + 1) - max1 > k) {
+                count[s[left] - 'A']--;
+                left++;
+            }
+            
+            // Update the maximum valid window length
+            freq = max(freq, i - left + 1);
+        }
+        
+        return freq;
+    }
+};
