@@ -22,6 +22,7 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 | 12 | Longest Valid Parentheses | Hard | ✅ |
 | 13 | Reverse String | Easy | ✅ |
 | 14 | Add Strings | Easy | ✅ |
+| 15 | Longest Repeating Character Replacement | Medium | ✅ |
 
 ---
 
@@ -50,4 +51,4 @@ This folder contains **String** problems solved in **C++**. Each solution includ
 
 ---
 
-**Problems Solved:** **14**
+**Problems Solved:** **15**
