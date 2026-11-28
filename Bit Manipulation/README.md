@@ -16,6 +16,7 @@ This folder contains **Bit Manipulation** problems solved in **C++**. Each solut
 | 6 | Missing Number | Easy | ✅ |
 | 7 | Sum of Two Integers | Medium | ✅ |
 | 8 | Binary Watch | Easy | ✅ |
+| 9 | Reverse Bits | Easy | ✅ |
 
 ---
 
